@@ -1,8 +1,13 @@
 ---
 title: "04_ICB"
-author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
   html_notebook:
     fig_height: 8
     fig_width: 12
@@ -18,4 +23,67 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document will look at coverage of Russian military interventions from 1991-2015 in the ICB data and identify variables of interest.
+
+The ICB data comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
+
+# Preparation
+## Load data
+The ICB data exists in two forms. ICB1 is system-level data and ICB2 is actor-level data. We'll primarily be using the actor-level data but will load both.
+```{r}
+# Load system-level data
+icb_sys <- read.csv(file = paste0(here::here(), '/inst/extdata/icb1v12.csv'))
+
+# Load actor-level data
+icb_actor <- read.csv(file = paste0(here::here(), '/inst/extdata/icb2v12.csv'))
+
+```
+
+## Subset
+We are only interests in cases since 1991 where Russia was an actor (primarily as an initiator)
+```{r}
+# Subset to post-1991 cases
+icb_actor_rus <- subset(icb_actor, yrtrig > "1990")
+
+# Subset to cases involving Russia
+icb_actor_rus <- subset(icb_actor_rus, actor == "RUS")
+
+crisis_count <- nrow(icb_actor_rus)
+crisis_list <- icb_actor_rus$crisname
+```
+
+There are `r crisis_count` ICB crises post-1991 in which Russia was a crisis actor. This includes `r crisis_list`.
+
+# Summary statistics
+Identify variables of interest regarding the means employed, intensity of crises, casualties, etc. From looking over the codebook that includes the following:
+
+CENVIO = centrality of violence
+
+SEVVIO = intensity of violence
+
+OUTCOM = content of crisis outcome
+
+OUTESR = escalation of reduction of tension
+
+TRGTERRA = elapsed time between perception of trigger and termination
+
+RESTERRA = elapsed time between response and termination
+
+GEOG = geographic location of crisis
+
+CRACTLOC = distance of crisis actor from location of crisis
+
+NOACTR = number of actors involved
+
+VIOL = violence associated with crisis actor
+```{r}
+# Keep identifier variables
+vars_id <- c("crisno", "cracid", "actor", "systrgyr", "crisname")
+vars_interest <- c("cenvio", "sevvio", "outcom", "outesr", "trgterra", "resterra", "geog", "cractloc", "noactr", "viol")
+
+
+
+
 ```
