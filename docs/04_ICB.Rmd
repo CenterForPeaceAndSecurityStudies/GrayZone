@@ -57,33 +57,58 @@ crisis_list <- icb_actor_rus$crisname
 There are `r crisis_count` ICB crises post-1991 in which Russia was a crisis actor. This includes `r crisis_list`.
 
 # Summary statistics
+## Choose variables
 Identify variables of interest regarding the means employed, intensity of crises, casualties, etc. From looking over the codebook that includes the following:
 
 CENVIO = centrality of violence
-
+  1-4, least to most
 SEVVIO = intensity of violence
-
+  1-4, least to most
 OUTCOM = content of crisis outcome
-
+  1-4, victory to defeat
 OUTESR = escalation of reduction of tension
-
-TRGTERRA = elapsed time between perception of trigger and termination
-
-RESTERRA = elapsed time between response and termination
-
+  1 escalation, 2 de-escalation
+TRGTERRA = elapsed time between perception of trigger and termination (count in days)
+RESTERRA = elapsed time between response and termination (count in days)
 GEOG = geographic location of crisis
-
+  (9) Central Asia
+  (10) West Asia (Turkey, Armenia, Azerbaijan, Georgia and Cyprus)
+  (11) East Asia
+  (12) South-East Asia
+  (13) South Asia
+  (15) Middle East (countries from the UN’s West Asia category not listed above)
+  (20) West Africa
+  (21) North Africa
+  (22) East Africa
+  (23) Southern Africa
+  (24) Central Africa
+  (30) Euro-Asia (Russia)
+  (31) East Europe
+  (32) Central Europe (Germany, East Germany, Austria, Switzerland)
+  (33) West Europe
+  (34) North Europe
+  (35) South Europe
+  (41) North America
+  (42) Central America (including Caribbean countries)
+  (43) South America
+  (51) Australasia (including Oceania countries)
 CRACTLOC = distance of crisis actor from location of crisis
-
-NOACTR = number of actors involved
-
+  1-4, closest to farthest
+NOACTR = number of actors involved (count)
 VIOL = violence associated with crisis actor
+  1-4, least to most
 ```{r}
 # Keep identifier variables
 vars_id <- c("crisno", "cracid", "actor", "systrgyr", "crisname")
 vars_interest <- c("cenvio", "sevvio", "outcom", "outesr", "trgterra", "resterra", "geog", "cractloc", "noactr", "viol")
 
+vars_keep <- c(vars_id, vars_interest)
 
+icb_actor_rus <- icb_actor_rus[ , vars_keep]
+```
 
+## Summary
+Make a table summarizing the data on Russian crisis participation
+```{r}
 
 ```
