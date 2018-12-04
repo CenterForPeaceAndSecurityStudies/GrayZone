@@ -1,0 +1,30 @@
+---
+title: "01 Cleaning"
+author: "J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+<style>
+    body .main-container {
+        max-width: 100%;
+    }
+</style>
+
+This is the entry point for the paper "An Empirical Approach to Defining Domains" 
+
+# Save file
+The following rds file should now be identical to mctl_combined_reshape.csv except that Serbia is now included in this one (it was previously dropped during a ccode merge).
+```{r}
+saveRDS(mctl, paste0(here::here(), "/data/","name.rds"))
+```

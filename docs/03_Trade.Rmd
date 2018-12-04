@@ -1,0 +1,56 @@
+---
+title: "03_Trade"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Research assistance for this rmd provided by Cole Reynolds
+
+```{r}
+# Read in data
+trade <- read.csv("C:/Users/coles/Dropbox/Gray Zone/COW_Trade_4.0/Dyadic_COW_4.0.csv")
+
+# Create dataframe to be filled in
+russia <- data.frame(Chenchya = 1:2,  Kosovo = 1:2, Estonia = 1:2,  Georgia= 1:2, Ukraine = 1:2, Syria = 1:2, 'United States' = 1:2)
+colnames(russia) = c("Chechnya 1994", "Kosovo 1999", "Estonia 2007", "Georgia 2008", "Ukraine 2014", "Syria 2015", "United States 2016")
+rownames(russia) <- c("Trade", "Natural Gas Exports")
+russia[!is.na(russia)] <- NA
+
+# Trade
+## Kosovo 1999
+russia["Trade","Kosovo 1999"] <- trade[trade$importer1 == "Kosovo" & trade$importer2 == "Russia" & trade$year == 1999, "flow1"] + trade[trade$importer1 == "Kosovo" & trade$importer2 == "Russia" & trade$year == 1999, "flow2"] # completely missing
+
+## Estonia 2007
+russia["Trade","Estonia 2007"] <- trade[trade$importer1 == "Russia" & trade$importer2 == "Estonia" & trade$year == 2007, "flow1"] + trade[trade$importer1 == "Russia" & trade$importer2 == "Estonia" & trade$year == 2007, "flow2"] 
+
+## Georgia 2008
+russia["Trade","Georgia 2008"] <- trade[trade$importer1 == "Russia" & trade$importer2 == "Georgia" & trade$year == 2008, "flow1"] + trade[trade$importer1 == "Russia" & trade$importer2 == "Georgia" & trade$year == 2008, "flow2"] 
+
+## Ukraine 2014
+russia["Trade","Ukraine 2014"] <- trade[trade$importer1 == "Russia" & trade$importer2 == "Ukraine" & trade$year == 2014, "flow1"] + trade[trade$importer1 == "Russia" & trade$importer2 == "Ukraine" & trade$year == 2014, "flow2"] 
+
+## Syria 2015
+russia["Trade","Syria 2015"] <- trade[trade$importer1 == "Russia" & trade$importer2 == "Syria" & trade$year == 2014, "flow1"] + trade[trade$importer1 == "Russia" & trade$importer2 == "Syria" & trade$year == 2014, "flow2"] # last available year
+
+## United States 2016
+russia["Trade","United States 2016"] <- trade[trade$importer1 == "United States of America" & trade$importer2 == "Russia" & trade$year == 2014, "flow1"] + trade[trade$importer1 == "United States of America" & trade$importer2 == "Russia" & trade$year == 2014, "flow2"]# last available year
+
+# Save the csv
+saveRDS(russia, paste0(here::here(), "/data/","russia_trade.rds"))
+```

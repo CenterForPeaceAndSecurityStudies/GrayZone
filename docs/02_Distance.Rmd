@@ -1,0 +1,142 @@
+---
+title: "02_Distance"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Research assistance for this rmd provided by Cole Reynolds
+
+```{r}
+library(cshapes)
+
+# Make the two tables
+## United States
+us <- data.frame(Capital = 1:7, Centroid = 1:7, Minimum = 1:7)
+rownames(us) = c("Chechnya 1994","Kosovo 1999","Estonia 2007","Georgia 2008","Ukraine 2014","Syria 2015","United States 2016")
+us[!is.na(us)] <- NA
+## Russia
+russia <- data.frame(Capital = 1:7, Centroid = 1:7, Minimum = 1:7)
+rownames(russia) = c("Chechnya 1994","Kosovo 1999","Estonia 2007","Georgia 2008","Ukraine 2014","Syria 2015","United States 2016")
+russia[!is.na(russia)] <- NA
+
+# Chechnya 1994
+## capital
+us["Chechnya 1994", "Capital"] <- geosphere::distVincentyEllipsoid(c(-77.0369,38.9072), c(45.6815, 43.3169), a=6378137, b=6356752.3142, f=1/298.257223563)/1609.34
+russia["Chechnya 1994", "Capital"] <- geosphere::distVincentyEllipsoid(c(37.6173, 55.7558), c(45.6815, 43.3169), a=6378137, b=6356752.3142, f=1/298.257223563)/1609.34
+## centroid
+us["Chechnya 1994", "Centroid"] <- geosphere::distVincentyEllipsoid(c(-112.4617, 45.67955), c(45.72, 43.4), a=6378137, b=6356752.3142, f=1/298.257223563)/1609.34
+russia["Chechnya 1994", "Centroid"] <- geosphere::distVincentyEllipsoid(c(96.68656, 61.98052), c(45.72, 43.4), a=6378137, b=6356752.3142, f=1/298.257223563)/1609.34
+## minimum
+us["Chechnya 1994", "Minimum"] <- 4936  # approximate
+russia["Chechnya 1994", "Minimum"] <- 0
+
+# Kosovo 1999 (gained independence in 2008)
+## capital
+kosovo_year <- distmatrix(as.Date("2008-2-17"), type="capdist")
+us["Kosovo 1999","Capital"] <- kosovo_year["2","347"]/1.60934 #divide by constant to convert to miles
+russia["Kosovo 1999","Capital"] <- kosovo_year["365","347"]/1.60934
+## centroid
+kosovo_year <- distmatrix(as.Date("2008-2-17"), type="centdist")
+us["Kosovo 1999","Centroid"] <- kosovo_year["2","347"]/1.60934
+russia["Kosovo 1999","Centroid"] <- kosovo_year["365","347"]/1.60934
+## minimum
+kosovo_year <- distmatrix(as.Date("2008-2-17"), type="mindist")
+us["Kosovo 1999","Minimum"] <- kosovo_year["2","347"]/1.60934
+russia["Kosovo 1999","Minimum"] <- kosovo_year["365","347"]/1.60934
+
+# Estonia 2007
+## capital
+estonia_year <- distmatrix(as.Date("2007-1-1"), type="capdist")
+us["Estonia 2007","Capital"] <- estonia_year["2","366"]/1.60934
+russia["Estonia 2007","Capital"] <- estonia_year["365","366"]/1.60934
+## centroid
+estonia_year <- distmatrix(as.Date("2007-1-1"), type="centdist")
+us["Estonia 2007","Centroid"] <- estonia_year["2","366"]/1.60934
+russia["Estonia 2007","Centroid"] <- estonia_year["365","366"]/1.60934
+## minimum
+estonia_year <- distmatrix(as.Date("2007-1-1"), type="mindist")
+us["Estonia 2007","Minimum"] <- estonia_year["2","366"]/1.60934
+russia["Estonia 2007","Minimum"] <- estonia_year["365","366"]/1.60934
+
+# Georgia 2008
+## capital
+georgia_year <- distmatrix(as.Date("2008-1-1"), type="capdist")
+us["Georgia 2008","Capital"] <- georgia_year["2","372"]/1.60934
+russia["Georgia 2008","Capital"] <- georgia_year["365","372"]/1.60934
+## centroid
+georgia_year <- distmatrix(as.Date("2008-1-1"), type="centdist")
+us["Georgia 2008","Centroid"] <- georgia_year["2","372"]/1.60934
+russia["Georgia 2008","Centroid"] <- georgia_year["365","372"]/1.60934
+## minimum
+georgia_year <- distmatrix(as.Date("2008-1-1"), type="mindist")
+us["Georgia 2008","Minimum"] <- georgia_year["2","372"]/1.60934
+russia["Georgia 2008","Minimum"] <- georgia_year["365","372"]/1.60934
+
+# Ukraine 2014
+## capital
+ukraine_year <- distmatrix(as.Date("2014-1-1"), type="capdist")
+us["Ukraine 2014","Capital"] <- ukraine_year["2","369"]/1.60934
+russia["Ukraine 2014","Capital"] <- ukraine_year["365","369"]/1.60934
+## centroid
+ukraine_year <- distmatrix(as.Date("2014-1-1"), type="centdist")
+us["Ukraine 2014","Centroid"] <- ukraine_year["2","369"]/1.60934
+russia["Ukraine 2014","Centroid"] <- ukraine_year["365","369"]/1.60934
+## minimum
+ukraine_year <- distmatrix(as.Date("2014-1-1"), type="mindist")
+us["Ukraine 2014","Minimum"] <- ukraine_year["2","369"]/1.60934
+russia["Ukraine 2014","Minimum"] <- ukraine_year["365","369"]/1.60934
+
+# Syria 2015
+## capital
+syria_year <- distmatrix(as.Date("2015-1-1"), type="capdist")
+us["Syria 2015","Capital"] <- syria_year["2","652"]/1.60934
+russia["Syria 2015","Capital"] <- syria_year["365","652"]/1.60934
+## centroid
+syria_year <- distmatrix(as.Date("2015-1-1"), type="centdist")
+us["Syria 2015","Centroid"] <- syria_year["2","652"]/1.60934
+russia["Syria 2015","Centroid"] <- syria_year["365","652"]/1.60934
+## minimum
+syria_year <- distmatrix(as.Date("2015-1-1"), type="mindist")
+us["Syria 2015","Minimum"] <- syria_year["2","652"]/1.60934
+russia["Syria 2015","Minimum"] <- syria_year["365","652"]/1.60934
+
+# United States 2016
+## capital
+us_year <- distmatrix(as.Date("2016-1-1"), type="capdist")
+us["United States 2016","Capital"] <- us_year["2","2"]/1.60934
+russia["United States 2016","Capital"] <- us_year["365","2"]/1.60934
+## centroid
+us_year <- distmatrix(as.Date("2016-1-1"), type="centdist")
+us["United States 2016","Centroid"] <- us_year["2","2"]/1.60934
+russia["United States 2016","Centroid"] <- us_year["365","2"]/1.60934
+## minimum
+us_year <- distmatrix(as.Date("2016-1-1"), type="mindist")
+us["United States 2016","Minimum"] <- us_year["2","2"]/1.60934
+russia["United States 2016","Minimum"] <- us_year["365","2"]/1.60934
+## minimum from Russia to continental US
+continentalUS_russia_min <- geosphere::distVincentyEllipsoid(c( -124.721483, 48.389246), c(-169.673451, 66.048753), a=6378137, b=6356752.3142, f=1/298.257223563)/1609.34
+
+# Round the values
+russia <- round(russia)
+us <- round(us)
+
+# Save the csvs
+saveRDS(russia, paste0(here::here(), "/data/","russia_distances.rds"))
+saveRDS(us, paste0(here::here(), "/data/","us_distances.rds"))
+```
