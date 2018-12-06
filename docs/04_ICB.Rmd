@@ -30,6 +30,12 @@ This document will look at coverage of Russian military interventions from 1991-
 The ICB data comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
 
 # Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+```
+
 ## Load data
 The ICB data exists in two forms. ICB1 is system-level data and ICB2 is actor-level data. We'll primarily be using the actor-level data but will load both.
 ```{r}
@@ -60,55 +66,90 @@ There are `r crisis_count` ICB crises post-1991 in which Russia was a crisis act
 ## Choose variables
 Identify variables of interest regarding the means employed, intensity of crises, casualties, etc. From looking over the codebook that includes the following:
 
-CENVIO = centrality of violence
+* CENVIO = centrality of violence
   1-4, least to most
-SEVVIO = intensity of violence
+
+* SEVVIO = intensity of violence
   1-4, least to most
-OUTCOM = content of crisis outcome
+
+* OUTCOM = content of crisis outcome
   1-4, victory to defeat
-OUTESR = escalation of reduction of tension
+
+* OUTESR = escalation of reduction of tension
   1 escalation, 2 de-escalation
-TRGTERRA = elapsed time between perception of trigger and termination (count in days)
-RESTERRA = elapsed time between response and termination (count in days)
-GEOG = geographic location of crisis
-  (9) Central Asia
-  (10) West Asia (Turkey, Armenia, Azerbaijan, Georgia and Cyprus)
-  (11) East Asia
-  (12) South-East Asia
-  (13) South Asia
-  (15) Middle East (countries from the UN’s West Asia category not listed above)
-  (20) West Africa
-  (21) North Africa
-  (22) East Africa
-  (23) Southern Africa
-  (24) Central Africa
-  (30) Euro-Asia (Russia)
-  (31) East Europe
-  (32) Central Europe (Germany, East Germany, Austria, Switzerland)
-  (33) West Europe
-  (34) North Europe
-  (35) South Europe
-  (41) North America
-  (42) Central America (including Caribbean countries)
-  (43) South America
-  (51) Australasia (including Oceania countries)
-CRACTLOC = distance of crisis actor from location of crisis
+
+* TRGTERRA = elapsed time between perception of trigger and termination (count in days)
+
+* GEOG = geographic location of crisis
+  - (9) Central Asia
+  - (10) West Asia (Turkey, Armenia, Azerbaijan, Georgia and Cyprus)
+  - (11) East Asia
+  - (12) South-East Asia
+  - (13) South Asia
+  - (15) Middle East (countries from the UN’s West Asia category not listed above)
+  - (20) West Africa
+  - (21) North Africa
+  - (22) East Africa
+  - (23) Southern Africa
+  - (24) Central Africa
+  - (30) Euro-Asia (Russia)
+  - (31) East Europe
+  - (32) Central Europe (Germany, East Germany, Austria, Switzerland)
+  - (33) West Europe
+  - (34) North Europe
+  - (35) South Europe
+  - (41) North America
+  - (42) Central America (including Caribbean countries)
+  - (43) South America
+  - (51) Australasia (including Oceania countries)
+
+* CRACTLOC = distance of crisis actor from location of crisis
   1-4, closest to farthest
-NOACTR = number of actors involved (count)
-VIOL = violence associated with crisis actor
+
+* NOACTR = number of actors involved (count)
+
+* VIOL = violence associated with crisis actor
   1-4, least to most
 ```{r}
 # Keep identifier variables
-vars_id <- c("crisno", "cracid", "actor", "systrgyr", "crisname")
-vars_interest <- c("cenvio", "sevvio", "outcom", "outesr", "trgterra", "resterra", "geog", "cractloc", "noactr", "viol")
+vars_id <- c("crisno", "systrgyr", "crisname")
+vars_interest <- c("cenvio", "sevvio", "outcom", "outesr", "trgterra", "geog", "cractloc", "noactr", "viol")
 
 vars_keep <- c(vars_id, vars_interest)
 
 icb_actor_rus <- icb_actor_rus[ , vars_keep]
+
+# Reorder the variables
+icb_actor_rus <- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
+
+# Rename variables for readability
+icb_actor_rus <- icb_actor_rus %>% dplyr::rename('Crisis No' = crisno,
+                                                 'Year' = systrgyr,
+                                                 'Crisis Name' = crisname,
+                                                 'Crisis Violence Centrality' = cenvio,
+                                                 'Crisis Violence Severity' = sevvio,
+                                                 'Outcome' = outcom,
+                                                 'Escalation' = outesr,
+                                                 'Duration (days)' = trgterra,
+                                                 'Location' = geog,
+                                                 'Distance from Actor' = cractloc,
+                                                 'No. of Actors' = noactr,
+                                                 'Actor Violence Severity' = viol)
+
+# Recode some variables to be more intuitive
+icb_actor_rus$Escalation <- car::recode(icb_actor_rus$Escalation, "2 = 0; 3 = NA")
+icb_actor_rus$Location <- car::recode(icb_actor_rus$Location, "10 = 'West Asia'; 31 = 'East Europe'")
+icb_actor_rus$Outcome <- car::recode(icb_actor_rus$Outcome, "1 = 'Victory'; 2 = 'Compromise'; 3 = 'Stalemate'; 4 = 'Defeat'")
+icb_actor_rus$`Distance from Actor` <- car::recode(icb_actor_rus$`Distance from Actor`, "1 = 'Home territory'; 2 = 'Sub-region'; 3 = 'Same continent'")
 ```
 
 ## Summary
 Make a table summarizing the data on Russian crisis participation
 ```{r}
-
+formattable::formattable(icb_actor_rus,
+                         align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "l", "l", "c"),
+                         list(formattable::area(col = c('Crisis Violence Centrality', 'Crisis Violence Severity', 'Actor Violence Severity')) 
+                              ~ formattable::color_tile("red", "red4")))
 ```
+
+

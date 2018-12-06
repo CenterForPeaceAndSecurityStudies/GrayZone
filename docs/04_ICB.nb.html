@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-04" />
+<meta name="date" content="2018-12-05" />
 
 <title>04_ICB</title>
 
@@ -2881,7 +2881,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">04_ICB</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-04</em></h4>
+<h4 class="date"><em>2018-12-05</em></h4>
 
 </div>
 
@@ -2893,36 +2893,48 @@ div.tocify {
 <p>The ICB data comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.</p>
 <div id="preparation" class="section level1">
 <h1><span class="header-section-number">1</span> Preparation</h1>
+<div id="load-packages" class="section level2">
+<h2><span class="header-section-number">1.1</span> Load packages</h2>
+<p>Pipe operators have trouble loading for individual commands</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcbmBgYCJ9 -->
+<pre class="r"><code>library(magrittr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
 <div id="load-data" class="section level2">
-<h2><span class="header-section-number">1.1</span> Load data</h2>
+<h2><span class="header-section-number">1.2</span> Load data</h2>
 <p>The ICB data exists in two forms. ICB1 is system-level data and ICB2 is actor-level data. We’ll primarily be using the actor-level data but will load both.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIHN5c3RlbS1sZXZlbCBkYXRhXG5pY2JfYWN0b3IgPC0gcmVhZFJEUyhmaWxlID0gcGFzdGUwKGhlcmU6OmhlcmUoKSwgJy9pbnN0L2V4dGRhdGEvaWNiMXYxMi5jc3YnKSlcblxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIHN5c3RlbS1sZXZlbCBkYXRhXG5pY2Jfc3lzIDwtIHJlYWQuY3N2KGZpbGUgPSBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAnL2luc3QvZXh0ZGF0YS9pY2IxdjEyLmNzdicpKVxuXG4jIExvYWQgYWN0b3ItbGV2ZWwgZGF0YVxuaWNiX2FjdG9yIDwtIHJlYWQuY3N2KGZpbGUgPSBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAnL2luc3QvZXh0ZGF0YS9pY2IydjEyLmNzdicpKVxuXG5gYGAifQ== -->
 <pre class="r"><code># Load system-level data
-icb_actor &lt;- readRDS(file = paste0(here::here(), '/inst/extdata/icb1v12.csv'))
+icb_sys &lt;- read.csv(file = paste0(here::here(), '/inst/extdata/icb1v12.csv'))
+
+# Load actor-level data
+icb_actor &lt;- read.csv(file = paste0(here::here(), '/inst/extdata/icb2v12.csv'))
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gcmVhZFJEUyhmaWxlID0gcGFzdGUwKGhlcmU6OmhlcmUoKSwgXCIvaW5zdC9leHRkYXRhL2ljYjF2MTIuY3N2XCIpKSA6IFxuICB1bmtub3duIGlucHV0IGZvcm1hdFxuIn0= -->
-<pre><code>Error in readRDS(file = paste0(here::here(), &quot;/inst/extdata/icb1v12.csv&quot;)) : 
-  unknown input format</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="subset" class="section level2">
-<h2><span class="header-section-number">1.2</span> Subset</h2>
+<h2><span class="header-section-number">1.3</span> Subset</h2>
 <p>We are only interests in cases since 1991 where Russia was an actor (primarily as an initiator)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWNiX2FjdG9yX3J1cyRjcmlzbmFtZVxuXG5gYGAifQ== -->
-<pre class="r"><code>icb_actor_rus$crisname
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTdWJzZXQgdG8gcG9zdC0xOTkxIGNhc2VzXG5pY2JfYWN0b3JfcnVzIDwtIHN1YnNldChpY2JfYWN0b3IsIHlydHJpZyA+IFwiMTk5MFwiKVxuXG4jIFN1YnNldCB0byBjYXNlcyBpbnZvbHZpbmcgUnVzc2lhXG5pY2JfYWN0b3JfcnVzIDwtIHN1YnNldChpY2JfYWN0b3JfcnVzLCBhY3RvciA9PSBcIlJVU1wiKVxuXG5jcmlzaXNfY291bnQgPC0gbnJvdyhpY2JfYWN0b3JfcnVzKVxuY3Jpc2lzX2xpc3QgPC0gaWNiX2FjdG9yX3J1cyRjcmlzbmFtZVxuYGBgIn0= -->
+<pre class="r"><code># Subset to post-1991 cases
+icb_actor_rus &lt;- subset(icb_actor, yrtrig &gt; &quot;1990&quot;)
+
+# Subset to cases involving Russia
+icb_actor_rus &lt;- subset(icb_actor_rus, actor == &quot;RUS&quot;)
+
+crisis_count &lt;- nrow(icb_actor_rus)
+crisis_list &lt;- icb_actor_rus$crisname</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFBBTktJU0kgR09SR0UgICAgICAgICAgICAgIFMuIE9TU0VUSUEvQUJLSEFaSUEgICAgICAgIFJVU1NPLUdFT1JHSUFOIFdBUiAgICAgICAgIENSSU1FQS1ET05CQVNTICAgICAgICAgICAgIFRVUktFWS1SVVNTSUEgSkVUIElOQ0lERU5UXG40NzUgTGV2ZWxzOiBBQUxBTkQgSVNMQU5EUyBBQkxFIEFSQ0hFUiA4MyBBQk9SVC4gQ09VUCBJTkRPTkVTSUEgQUVHRUFOIFNFQSBJIEFFR0VBTiBTRUEgSUkgQUVHRUFOIFNFQSBJSUkgQUVHRUFOIFNFQSBJViBBRkdIQU5JU1RBTiBJTlZBU0lPTiAuLi4gWkFNQklBIFJBSURcbiJ9 -->
-<pre><code>[1] PANKISI GORGE              S. OSSETIA/ABKHAZIA        RUSSO-GEORGIAN WAR         CRIMEA-DONBASS             TURKEY-RUSSIA JET INCIDENT
-475 Levels: AALAND ISLANDS ABLE ARCHER 83 ABORT. COUP INDONESIA AEGEAN SEA I AEGEAN SEA II AEGEAN SEA III AEGEAN SEA IV AFGHANISTAN INVASION ... ZAMBIA RAID</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>There are 5 ICB crises post-1991 in which Russia was a crisis actor. This includes PANKISI GORGE, S. OSSETIA/ABKHAZIA, RUSSO-GEORGIAN WAR, CRIMEA-DONBASS, TURKEY-RUSSIA JET INCIDENT.</p>
@@ -2933,9 +2945,129 @@ icb_actor &lt;- readRDS(file = paste0(here::here(), '/inst/extdata/icb1v12.csv')
 <div id="choose-variables" class="section level2">
 <h2><span class="header-section-number">2.1</span> Choose variables</h2>
 <p>Identify variables of interest regarding the means employed, intensity of crises, casualties, etc. From looking over the codebook that includes the following:</p>
-<p>CENVIO = centrality of violence 1-4, least to most SEVVIO = intensity of violence 1-4, least to most OUTCOM = content of crisis outcome 1-4, victory to defeat OUTESR = escalation of reduction of tension 1 escalation, 2 de-escalation TRGTERRA = elapsed time between perception of trigger and termination (count in days) RESTERRA = elapsed time between response and termination (count in days) GEOG = geographic location of crisis (9) Central Asia (10) West Asia (Turkey, Armenia, Azerbaijan, Georgia and Cyprus) (11) East Asia (12) South-East Asia (13) South Asia (15) Middle East (countries from the UN’s West Asia category not listed above) (20) West Africa (21) North Africa (22) East Africa (23) Southern Africa (24) Central Africa (30) Euro-Asia (Russia) (31) East Europe (32) Central Europe (Germany, East Germany, Austria, Switzerland) (33) West Europe (34) North Europe (35) South Europe (41) North America (42) Central America (including Caribbean countries) (43) South America (51) Australasia (including Oceania countries) CRACTLOC = distance of crisis actor from location of crisis 1-4, closest to farthest NOACTR = number of actors involved (count) VIOL = violence associated with crisis actor 1-4, least to most</p>
+<ul>
+<li><p>CENVIO = centrality of violence 1-4, least to most</p></li>
+<li><p>SEVVIO = intensity of violence 1-4, least to most</p></li>
+<li><p>OUTCOM = content of crisis outcome 1-4, victory to defeat</p></li>
+<li><p>OUTESR = escalation of reduction of tension 1 escalation, 2 de-escalation</p></li>
+<li><p>TRGTERRA = elapsed time between perception of trigger and termination (count in days)</p></li>
+<li>GEOG = geographic location of crisis
+<ul>
+<li><ol start="9" style="list-style-type: decimal">
+<li>Central Asia</li>
+</ol></li>
+<li><ol start="10" style="list-style-type: decimal">
+<li>West Asia (Turkey, Armenia, Azerbaijan, Georgia and Cyprus)</li>
+</ol></li>
+<li><ol start="11" style="list-style-type: decimal">
+<li>East Asia</li>
+</ol></li>
+<li><ol start="12" style="list-style-type: decimal">
+<li>South-East Asia</li>
+</ol></li>
+<li><ol start="13" style="list-style-type: decimal">
+<li>South Asia</li>
+</ol></li>
+<li><ol start="15" style="list-style-type: decimal">
+<li>Middle East (countries from the UN’s West Asia category not listed above)</li>
+</ol></li>
+<li><ol start="20" style="list-style-type: decimal">
+<li>West Africa</li>
+</ol></li>
+<li><ol start="21" style="list-style-type: decimal">
+<li>North Africa</li>
+</ol></li>
+<li><ol start="22" style="list-style-type: decimal">
+<li>East Africa</li>
+</ol></li>
+<li><ol start="23" style="list-style-type: decimal">
+<li>Southern Africa</li>
+</ol></li>
+<li><ol start="24" style="list-style-type: decimal">
+<li>Central Africa</li>
+</ol></li>
+<li><ol start="30" style="list-style-type: decimal">
+<li>Euro-Asia (Russia)</li>
+</ol></li>
+<li><ol start="31" style="list-style-type: decimal">
+<li>East Europe</li>
+</ol></li>
+<li><ol start="32" style="list-style-type: decimal">
+<li>Central Europe (Germany, East Germany, Austria, Switzerland)</li>
+</ol></li>
+<li><ol start="33" style="list-style-type: decimal">
+<li>West Europe</li>
+</ol></li>
+<li><ol start="34" style="list-style-type: decimal">
+<li>North Europe</li>
+</ol></li>
+<li><ol start="35" style="list-style-type: decimal">
+<li>South Europe</li>
+</ol></li>
+<li><ol start="41" style="list-style-type: decimal">
+<li>North America</li>
+</ol></li>
+<li><ol start="42" style="list-style-type: decimal">
+<li>Central America (including Caribbean countries)</li>
+</ol></li>
+<li><ol start="43" style="list-style-type: decimal">
+<li>South America</li>
+</ol></li>
+<li><ol start="51" style="list-style-type: decimal">
+<li>Australasia (including Oceania countries)</li>
+</ol></li>
+</ul></li>
+<li><p>CRACTLOC = distance of crisis actor from location of crisis 1-4, closest to farthest</p></li>
+<li><p>NOACTR = number of actors involved (count)</p></li>
+<li><p>VIOL = violence associated with crisis actor 1-4, least to most</p></li>
+</ul>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBLZWVwIGlkZW50aWZpZXIgdmFyaWFibGVzXG52YXJzX2lkIDwtIGMoXCJjcmlzbm9cIiwgXCJzeXN0cmd5clwiLCBcImNyaXNuYW1lXCIpXG52YXJzX2ludGVyZXN0IDwtIGMoXCJjZW52aW9cIiwgXCJzZXZ2aW9cIiwgXCJvdXRjb21cIiwgXCJvdXRlc3JcIiwgXCJ0cmd0ZXJyYVwiLCBcImdlb2dcIiwgXCJjcmFjdGxvY1wiLCBcIm5vYWN0clwiLCBcInZpb2xcIilcblxudmFyc19rZWVwIDwtIGModmFyc19pZCwgdmFyc19pbnRlcmVzdClcblxuaWNiX2FjdG9yX3J1cyA8LSBpY2JfYWN0b3JfcnVzWyAsIHZhcnNfa2VlcF1cblxuIyBSZW9yZGVyIHRoZSB2YXJpYWJsZXNcbmljYl9hY3Rvcl9ydXMgPC0gaWNiX2FjdG9yX3J1c1sgLCBjKCdjcmlzbm8nLCAnY3Jpc25hbWUnLCAnc3lzdHJneXInLCAnY2VudmlvJywgJ3NldnZpbycsICd2aW9sJywgJ291dGVzcicsICdvdXRjb20nLCAndHJndGVycmEnLCAnZ2VvZycsICdjcmFjdGxvYycsICdub2FjdHInKV1cblxuIyBSZW5hbWUgdmFyaWFibGVzIGZvciByZWFkYWJpbGl0eVxuaWNiX2FjdG9yX3J1cyA8LSBpY2JfYWN0b3JfcnVzICU+JSBkcGx5cjo6cmVuYW1lKCdDcmlzaXMgTm8nID0gY3Jpc25vLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdZZWFyJyA9IHN5c3RyZ3lyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdDcmlzaXMgTmFtZScgPSBjcmlzbmFtZSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnQ3Jpc2lzIFZpb2xlbmNlIENlbnRyYWxpdHknID0gY2VudmlvLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdDcmlzaXMgVmlvbGVuY2UgU2V2ZXJpdHknID0gc2V2dmlvLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdPdXRjb21lJyA9IG91dGNvbSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnRXNjYWxhdGlvbicgPSBvdXRlc3IsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0R1cmF0aW9uIChkYXlzKScgPSB0cmd0ZXJyYSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnTG9jYXRpb24nID0gZ2VvZyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnRGlzdGFuY2UgZnJvbSBBY3RvcicgPSBjcmFjdGxvYyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnTm8uIG9mIEFjdG9ycycgPSBub2FjdHIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0FjdG9yIFZpb2xlbmNlIFNldmVyaXR5JyA9IHZpb2wpXG5cbiMgUmVjb2RlIHNvbWUgdmFyaWFibGVzIHRvIGJlIG1vcmUgaW50dWl0aXZlXG5pY2JfYWN0b3JfcnVzJEVzY2FsYXRpb24gPC0gY2FyOjpyZWNvZGUoaWNiX2FjdG9yX3J1cyRFc2NhbGF0aW9uLCBcIjIgPSAwOyAzID0gTkFcIilcbmljYl9hY3Rvcl9ydXMkTG9jYXRpb24gPC0gY2FyOjpyZWNvZGUoaWNiX2FjdG9yX3J1cyRMb2NhdGlvbiwgXCIxMCA9ICdXZXN0IEFzaWEnOyAzMSA9ICdFYXN0IEV1cm9wZSdcIilcbmBgYCJ9 -->
+<pre class="r"><code># Keep identifier variables
+vars_id &lt;- c(&quot;crisno&quot;, &quot;systrgyr&quot;, &quot;crisname&quot;)
+vars_interest &lt;- c(&quot;cenvio&quot;, &quot;sevvio&quot;, &quot;outcom&quot;, &quot;outesr&quot;, &quot;trgterra&quot;, &quot;geog&quot;, &quot;cractloc&quot;, &quot;noactr&quot;, &quot;viol&quot;)
+
+vars_keep &lt;- c(vars_id, vars_interest)
+
+icb_actor_rus &lt;- icb_actor_rus[ , vars_keep]
+
+# Reorder the variables
+icb_actor_rus &lt;- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
+
+# Rename variables for readability
+icb_actor_rus &lt;- icb_actor_rus %&gt;% dplyr::rename('Crisis No' = crisno,
+                                                 'Year' = systrgyr,
+                                                 'Crisis Name' = crisname,
+                                                 'Crisis Violence Centrality' = cenvio,
+                                                 'Crisis Violence Severity' = sevvio,
+                                                 'Outcome' = outcom,
+                                                 'Escalation' = outesr,
+                                                 'Duration (days)' = trgterra,
+                                                 'Location' = geog,
+                                                 'Distance from Actor' = cractloc,
+                                                 'No. of Actors' = noactr,
+                                                 'Actor Violence Severity' = viol)
+
+# Recode some variables to be more intuitive
+icb_actor_rus$Escalation &lt;- car::recode(icb_actor_rus$Escalation, &quot;2 = 0; 3 = NA&quot;)
+icb_actor_rus$Location &lt;- car::recode(icb_actor_rus$Location, &quot;10 = 'West Asia'; 31 = 'East Europe'&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbiJ9 -->
+<pre><code>NAs introduced by coercion</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWNiX2FjdG9yX3J1cyRPdXRjb21lIDwtIGNhcjo6cmVjb2RlKGljYl9hY3Rvcl9ydXMkT3V0Y29tZSwgXCIxID0gJ1ZpY3RvcnknOyAyID0gJ0NvbXByb21pc2UnOyAzID0gJ1N0YWxlbWF0ZSc7IDQgPSAnRGVmZWF0J1wiKVxuYGBgIn0= -->
+<pre class="r"><code>icb_actor_rus$Outcome &lt;- car::recode(icb_actor_rus$Outcome, &quot;1 = 'Victory'; 2 = 'Compromise'; 3 = 'Stalemate'; 4 = 'Defeat'&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbiJ9 -->
+<pre><code>NAs introduced by coercion</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWNiX2FjdG9yX3J1cyRgRGlzdGFuY2UgZnJvbSBBY3RvcmAgPC0gY2FyOjpyZWNvZGUoaWNiX2FjdG9yX3J1cyRgRGlzdGFuY2UgZnJvbSBBY3RvcmAsIFwiMSA9ICdIb21lIHRlcnJpdG9yeSc7IDIgPSAnU3ViLXJlZ2lvbic7IDMgPSAnU2FtZSBjb250aW5lbnQnXCIpXG5gYGAifQ== -->
+<pre class="r"><code>icb_actor_rus$`Distance from Actor` &lt;- car::recode(icb_actor_rus$`Distance from Actor`, &quot;1 = 'Home territory'; 2 = 'Sub-region'; 3 = 'Same continent'&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbiJ9 -->
+<pre><code>NAs introduced by coercion</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -2944,11 +3076,23 @@ icb_actor &lt;- readRDS(file = paste0(here::here(), '/inst/extdata/icb1v12.csv')
 <p>Make a table summarizing the data on Russian crisis participation</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm9ybWF0dGFibGU6OmZvcm1hdHRhYmxlKGljYl9hY3Rvcl9ydXMsXG4gICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ24gPSBjKFwibFwiLCBcImxcIiwgXCJjXCIsIFwiY1wiLCBcImNcIiwgXCJjXCIsIFwiY1wiLCBcImNcIiwgXCJjXCIsIFwibFwiLCBcImxcIiwgXCJjXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3QoZm9ybWF0dGFibGU6OmFyZWEoY29sID0gYygnQ3Jpc2lzIFZpb2xlbmNlIENlbnRyYWxpdHknLCAnQ3Jpc2lzIFZpb2xlbmNlIFNldmVyaXR5JywgJ0FjdG9yIFZpb2xlbmNlJykpIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfiBmb3JtYXR0YWJsZTo6Y29sb3JfdGlsZShcInJlZFwiLCBcInJlZDRcIikpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>formattable::formattable(icb_actor_rus,
+                         align = c(&quot;l&quot;, &quot;l&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;l&quot;, &quot;l&quot;, &quot;c&quot;),
+                         list(formattable::area(col = c('Crisis Violence Centrality', 'Crisis Violence Severity', 'Actor Violence')) 
+                              ~ formattable::color_tile(&quot;red&quot;, &quot;red4&quot;)))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYFsuZGF0YS5mcmFtZWAoeCwgcm93LCBjb2wpIDogdW5kZWZpbmVkIGNvbHVtbnMgc2VsZWN0ZWRcbiJ9 -->
+<pre><code>Error in `[.data.frame`(x, row, col) : undefined columns selected</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDRfSUNCIgphdXRob3I6IEogQW5kcmVzIEdhbm5vbiwgRXJpayBHYXJ0emtlLCBhbmQgSm9uIExpbmRzYXksIENlbnRlciBmb3IgUGVhY2UgYW5kIFNlY3VyaXR5CiAgU3R1ZGllcyAoY1BBU1MpCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICBkZl9wcmludDogcGFnZWQKICAgIHRvYzogeWVzCiAgICB0b2NfZGVwdGg6ICc1JwogIGh0bWxfbm90ZWJvb2s6CiAgICBmaWdfaGVpZ2h0OiA4CiAgICBmaWdfd2lkdGg6IDEyCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgdGhlbWU6IGZsYXRseQogICAgdG9jOiB5ZXMKICAgIHRvY19kZXB0aDogNQogICAgdG9jX2Zsb2F0OgogICAgICBjb2xsYXBzZWQ6IHllcwplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgpUaGlzIGRvY3VtZW50IHdpbGwgbG9vayBhdCBjb3ZlcmFnZSBvZiBSdXNzaWFuIG1pbGl0YXJ5IGludGVydmVudGlvbnMgZnJvbSAxOTkxLTIwMTUgaW4gdGhlIElDQiBkYXRhIGFuZCBpZGVudGlmeSB2YXJpYWJsZXMgb2YgaW50ZXJlc3QuCgpUaGUgSUNCIGRhdGEgY29tZXMgZnJvbSBCcmVjaGVyLCBNaWNoYWVsIGFuZCBKb25hdGhhbiBXaWxrZW5mZWxkICgyMDAwKS4gQSBTdHVkeSBvZiBDcmlzaXMuIEFubiBBcmJvcjogVW5pdmVyc2l0eSBvZiBNaWNoaWdhbiBQcmVzcy4KCiMgUHJlcGFyYXRpb24KIyMgTG9hZCBkYXRhClRoZSBJQ0IgZGF0YSBleGlzdHMgaW4gdHdvIGZvcm1zLiBJQ0IxIGlzIHN5c3RlbS1sZXZlbCBkYXRhIGFuZCBJQ0IyIGlzIGFjdG9yLWxldmVsIGRhdGEuIFdlJ2xsIHByaW1hcmlseSBiZSB1c2luZyB0aGUgYWN0b3ItbGV2ZWwgZGF0YSBidXQgd2lsbCBsb2FkIGJvdGguCmBgYHtyfQojIExvYWQgc3lzdGVtLWxldmVsIGRhdGEKaWNiX3N5cyA8LSByZWFkLmNzdihmaWxlID0gcGFzdGUwKGhlcmU6OmhlcmUoKSwgJy9pbnN0L2V4dGRhdGEvaWNiMXYxMi5jc3YnKSkKCiMgTG9hZCBhY3Rvci1sZXZlbCBkYXRhCmljYl9hY3RvciA8LSByZWFkLmNzdihmaWxlID0gcGFzdGUwKGhlcmU6OmhlcmUoKSwgJy9pbnN0L2V4dGRhdGEvaWNiMnYxMi5jc3YnKSkKCmBgYAoKIyMgU3Vic2V0CldlIGFyZSBvbmx5IGludGVyZXN0cyBpbiBjYXNlcyBzaW5jZSAxOTkxIHdoZXJlIFJ1c3NpYSB3YXMgYW4gYWN0b3IgKHByaW1hcmlseSBhcyBhbiBpbml0aWF0b3IpCmBgYHtyfQojIFN1YnNldCB0byBwb3N0LTE5OTEgY2FzZXMKaWNiX2FjdG9yX3J1cyA8LSBzdWJzZXQoaWNiX2FjdG9yLCB5cnRyaWcgPiAiMTk5MCIpCgojIFN1YnNldCB0byBjYXNlcyBpbnZvbHZpbmcgUnVzc2lhCmljYl9hY3Rvcl9ydXMgPC0gc3Vic2V0KGljYl9hY3Rvcl9ydXMsIGFjdG9yID09ICJSVVMiKQoKY3Jpc2lzX2NvdW50IDwtIG5yb3coaWNiX2FjdG9yX3J1cykKY3Jpc2lzX2xpc3QgPC0gaWNiX2FjdG9yX3J1cyRjcmlzbmFtZQpgYGAKClRoZXJlIGFyZSBgciBjcmlzaXNfY291bnRgIElDQiBjcmlzZXMgcG9zdC0xOTkxIGluIHdoaWNoIFJ1c3NpYSB3YXMgYSBjcmlzaXMgYWN0b3IuIFRoaXMgaW5jbHVkZXMgYHIgY3Jpc2lzX2xpc3RgLgoKIyBTdW1tYXJ5IHN0YXRpc3RpY3MKIyMgQ2hvb3NlIHZhcmlhYmxlcwpJZGVudGlmeSB2YXJpYWJsZXMgb2YgaW50ZXJlc3QgcmVnYXJkaW5nIHRoZSBtZWFucyBlbXBsb3llZCwgaW50ZW5zaXR5IG9mIGNyaXNlcywgY2FzdWFsdGllcywgZXRjLiBGcm9tIGxvb2tpbmcgb3ZlciB0aGUgY29kZWJvb2sgdGhhdCBpbmNsdWRlcyB0aGUgZm9sbG93aW5nOgoKQ0VOVklPID0gY2VudHJhbGl0eSBvZiB2aW9sZW5jZQogIDEtNCwgbGVhc3QgdG8gbW9zdApTRVZWSU8gPSBpbnRlbnNpdHkgb2YgdmlvbGVuY2UKICAxLTQsIGxlYXN0IHRvIG1vc3QKT1VUQ09NID0gY29udGVudCBvZiBjcmlzaXMgb3V0Y29tZQogIDEtNCwgdmljdG9yeSB0byBkZWZlYXQKT1VURVNSID0gZXNjYWxhdGlvbiBvZiByZWR1Y3Rpb24gb2YgdGVuc2lvbgogIDEgZXNjYWxhdGlvbiwgMiBkZS1lc2NhbGF0aW9uClRSR1RFUlJBID0gZWxhcHNlZCB0aW1lIGJldHdlZW4gcGVyY2VwdGlvbiBvZiB0cmlnZ2VyIGFuZCB0ZXJtaW5hdGlvbiAoY291bnQgaW4gZGF5cykKUkVTVEVSUkEgPSBlbGFwc2VkIHRpbWUgYmV0d2VlbiByZXNwb25zZSBhbmQgdGVybWluYXRpb24gKGNvdW50IGluIGRheXMpCkdFT0cgPSBnZW9ncmFwaGljIGxvY2F0aW9uIG9mIGNyaXNpcwogICg5KSBDZW50cmFsIEFzaWEKICAoMTApIFdlc3QgQXNpYSAoVHVya2V5LCBBcm1lbmlhLCBBemVyYmFpamFuLCBHZW9yZ2lhIGFuZCBDeXBydXMpCiAgKDExKSBFYXN0IEFzaWEKICAoMTIpIFNvdXRoLUVhc3QgQXNpYQogICgxMykgU291dGggQXNpYQogICgxNSkgTWlkZGxlIEVhc3QgKGNvdW50cmllcyBmcm9tIHRoZSBVTuKAmXMgV2VzdCBBc2lhIGNhdGVnb3J5IG5vdCBsaXN0ZWQgYWJvdmUpCiAgKDIwKSBXZXN0IEFmcmljYQogICgyMSkgTm9ydGggQWZyaWNhCiAgKDIyKSBFYXN0IEFmcmljYQogICgyMykgU291dGhlcm4gQWZyaWNhCiAgKDI0KSBDZW50cmFsIEFmcmljYQogICgzMCkgRXVyby1Bc2lhIChSdXNzaWEpCiAgKDMxKSBFYXN0IEV1cm9wZQogICgzMikgQ2VudHJhbCBFdXJvcGUgKEdlcm1hbnksIEVhc3QgR2VybWFueSwgQXVzdHJpYSwgU3dpdHplcmxhbmQpCiAgKDMzKSBXZXN0IEV1cm9wZQogICgzNCkgTm9ydGggRXVyb3BlCiAgKDM1KSBTb3V0aCBFdXJvcGUKICAoNDEpIE5vcnRoIEFtZXJpY2EKICAoNDIpIENlbnRyYWwgQW1lcmljYSAoaW5jbHVkaW5nIENhcmliYmVhbiBjb3VudHJpZXMpCiAgKDQzKSBTb3V0aCBBbWVyaWNhCiAgKDUxKSBBdXN0cmFsYXNpYSAoaW5jbHVkaW5nIE9jZWFuaWEgY291bnRyaWVzKQpDUkFDVExPQyA9IGRpc3RhbmNlIG9mIGNyaXNpcyBhY3RvciBmcm9tIGxvY2F0aW9uIG9mIGNyaXNpcwogIDEtNCwgY2xvc2VzdCB0byBmYXJ0aGVzdApOT0FDVFIgPSBudW1iZXIgb2YgYWN0b3JzIGludm9sdmVkIChjb3VudCkKVklPTCA9IHZpb2xlbmNlIGFzc29jaWF0ZWQgd2l0aCBjcmlzaXMgYWN0b3IKICAxLTQsIGxlYXN0IHRvIG1vc3QKYGBge3J9CiMgS2VlcCBpZGVudGlmaWVyIHZhcmlhYmxlcwp2YXJzX2lkIDwtIGMoImNyaXNubyIsICJjcmFjaWQiLCAiYWN0b3IiLCAic3lzdHJneXIiLCAiY3Jpc25hbWUiKQp2YXJzX2ludGVyZXN0IDwtIGMoImNlbnZpbyIsICJzZXZ2aW8iLCAib3V0Y29tIiwgIm91dGVzciIsICJ0cmd0ZXJyYSIsICJyZXN0ZXJyYSIsICJnZW9nIiwgImNyYWN0bG9jIiwgIm5vYWN0ciIsICJ2aW9sIikKCnZhcnNfa2VlcCA8LSBjKHZhcnNfaWQsIHZhcnNfaW50ZXJlc3QpCgppY2JfYWN0b3JfcnVzIDwtIGljYl9hY3Rvcl9ydXNbICwgdmFyc19rZWVwXQpgYGAKCiMjIFN1bW1hcnkKTWFrZSBhIHRhYmxlIHN1bW1hcml6aW5nIHRoZSBkYXRhIG9uIFJ1c3NpYW4gY3Jpc2lzIHBhcnRpY2lwYXRpb24KYGBge3J9CgpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDRfSUNCIgphdXRob3I6IEogQW5kcmVzIEdhbm5vbiwgRXJpayBHYXJ0emtlLCBhbmQgSm9uIExpbmRzYXksIENlbnRlciBmb3IgUGVhY2UgYW5kIFNlY3VyaXR5CiAgU3R1ZGllcyAoY1BBU1MpCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICBkZl9wcmludDogcGFnZWQKICAgIHRvYzogeWVzCiAgICB0b2NfZGVwdGg6ICc1JwogIGh0bWxfbm90ZWJvb2s6CiAgICBmaWdfaGVpZ2h0OiA4CiAgICBmaWdfd2lkdGg6IDEyCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgdGhlbWU6IGZsYXRseQogICAgdG9jOiB5ZXMKICAgIHRvY19kZXB0aDogNQogICAgdG9jX2Zsb2F0OgogICAgICBjb2xsYXBzZWQ6IHllcwplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgpUaGlzIGRvY3VtZW50IHdpbGwgbG9vayBhdCBjb3ZlcmFnZSBvZiBSdXNzaWFuIG1pbGl0YXJ5IGludGVydmVudGlvbnMgZnJvbSAxOTkxLTIwMTUgaW4gdGhlIElDQiBkYXRhIGFuZCBpZGVudGlmeSB2YXJpYWJsZXMgb2YgaW50ZXJlc3QuCgpUaGUgSUNCIGRhdGEgY29tZXMgZnJvbSBCcmVjaGVyLCBNaWNoYWVsIGFuZCBKb25hdGhhbiBXaWxrZW5mZWxkICgyMDAwKS4gQSBTdHVkeSBvZiBDcmlzaXMuIEFubiBBcmJvcjogVW5pdmVyc2l0eSBvZiBNaWNoaWdhbiBQcmVzcy4KCiMgUHJlcGFyYXRpb24KIyMgTG9hZCBwYWNrYWdlcwpQaXBlIG9wZXJhdG9ycyBoYXZlIHRyb3VibGUgbG9hZGluZyBmb3IgaW5kaXZpZHVhbCBjb21tYW5kcwpgYGB7cn0KbGlicmFyeShtYWdyaXR0cikKYGBgCgojIyBMb2FkIGRhdGEKVGhlIElDQiBkYXRhIGV4aXN0cyBpbiB0d28gZm9ybXMuIElDQjEgaXMgc3lzdGVtLWxldmVsIGRhdGEgYW5kIElDQjIgaXMgYWN0b3ItbGV2ZWwgZGF0YS4gV2UnbGwgcHJpbWFyaWx5IGJlIHVzaW5nIHRoZSBhY3Rvci1sZXZlbCBkYXRhIGJ1dCB3aWxsIGxvYWQgYm90aC4KYGBge3J9CiMgTG9hZCBzeXN0ZW0tbGV2ZWwgZGF0YQppY2Jfc3lzIDwtIHJlYWQuY3N2KGZpbGUgPSBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAnL2luc3QvZXh0ZGF0YS9pY2IxdjEyLmNzdicpKQoKIyBMb2FkIGFjdG9yLWxldmVsIGRhdGEKaWNiX2FjdG9yIDwtIHJlYWQuY3N2KGZpbGUgPSBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAnL2luc3QvZXh0ZGF0YS9pY2IydjEyLmNzdicpKQoKYGBgCgojIyBTdWJzZXQKV2UgYXJlIG9ubHkgaW50ZXJlc3RzIGluIGNhc2VzIHNpbmNlIDE5OTEgd2hlcmUgUnVzc2lhIHdhcyBhbiBhY3RvciAocHJpbWFyaWx5IGFzIGFuIGluaXRpYXRvcikKYGBge3J9CiMgU3Vic2V0IHRvIHBvc3QtMTk5MSBjYXNlcwppY2JfYWN0b3JfcnVzIDwtIHN1YnNldChpY2JfYWN0b3IsIHlydHJpZyA+ICIxOTkwIikKCiMgU3Vic2V0IHRvIGNhc2VzIGludm9sdmluZyBSdXNzaWEKaWNiX2FjdG9yX3J1cyA8LSBzdWJzZXQoaWNiX2FjdG9yX3J1cywgYWN0b3IgPT0gIlJVUyIpCgpjcmlzaXNfY291bnQgPC0gbnJvdyhpY2JfYWN0b3JfcnVzKQpjcmlzaXNfbGlzdCA8LSBpY2JfYWN0b3JfcnVzJGNyaXNuYW1lCmBgYAoKVGhlcmUgYXJlIGByIGNyaXNpc19jb3VudGAgSUNCIGNyaXNlcyBwb3N0LTE5OTEgaW4gd2hpY2ggUnVzc2lhIHdhcyBhIGNyaXNpcyBhY3Rvci4gVGhpcyBpbmNsdWRlcyBgciBjcmlzaXNfbGlzdGAuCgojIFN1bW1hcnkgc3RhdGlzdGljcwojIyBDaG9vc2UgdmFyaWFibGVzCklkZW50aWZ5IHZhcmlhYmxlcyBvZiBpbnRlcmVzdCByZWdhcmRpbmcgdGhlIG1lYW5zIGVtcGxveWVkLCBpbnRlbnNpdHkgb2YgY3Jpc2VzLCBjYXN1YWx0aWVzLCBldGMuIEZyb20gbG9va2luZyBvdmVyIHRoZSBjb2RlYm9vayB0aGF0IGluY2x1ZGVzIHRoZSBmb2xsb3dpbmc6CgoqIENFTlZJTyA9IGNlbnRyYWxpdHkgb2YgdmlvbGVuY2UKICAxLTQsIGxlYXN0IHRvIG1vc3QKCiogU0VWVklPID0gaW50ZW5zaXR5IG9mIHZpb2xlbmNlCiAgMS00LCBsZWFzdCB0byBtb3N0CgoqIE9VVENPTSA9IGNvbnRlbnQgb2YgY3Jpc2lzIG91dGNvbWUKICAxLTQsIHZpY3RvcnkgdG8gZGVmZWF0CgoqIE9VVEVTUiA9IGVzY2FsYXRpb24gb2YgcmVkdWN0aW9uIG9mIHRlbnNpb24KICAxIGVzY2FsYXRpb24sIDIgZGUtZXNjYWxhdGlvbgoKKiBUUkdURVJSQSA9IGVsYXBzZWQgdGltZSBiZXR3ZWVuIHBlcmNlcHRpb24gb2YgdHJpZ2dlciBhbmQgdGVybWluYXRpb24gKGNvdW50IGluIGRheXMpCgoqIEdFT0cgPSBnZW9ncmFwaGljIGxvY2F0aW9uIG9mIGNyaXNpcwogIC0gKDkpIENlbnRyYWwgQXNpYQogIC0gKDEwKSBXZXN0IEFzaWEgKFR1cmtleSwgQXJtZW5pYSwgQXplcmJhaWphbiwgR2VvcmdpYSBhbmQgQ3lwcnVzKQogIC0gKDExKSBFYXN0IEFzaWEKICAtICgxMikgU291dGgtRWFzdCBBc2lhCiAgLSAoMTMpIFNvdXRoIEFzaWEKICAtICgxNSkgTWlkZGxlIEVhc3QgKGNvdW50cmllcyBmcm9tIHRoZSBVTuKAmXMgV2VzdCBBc2lhIGNhdGVnb3J5IG5vdCBsaXN0ZWQgYWJvdmUpCiAgLSAoMjApIFdlc3QgQWZyaWNhCiAgLSAoMjEpIE5vcnRoIEFmcmljYQogIC0gKDIyKSBFYXN0IEFmcmljYQogIC0gKDIzKSBTb3V0aGVybiBBZnJpY2EKICAtICgyNCkgQ2VudHJhbCBBZnJpY2EKICAtICgzMCkgRXVyby1Bc2lhIChSdXNzaWEpCiAgLSAoMzEpIEVhc3QgRXVyb3BlCiAgLSAoMzIpIENlbnRyYWwgRXVyb3BlIChHZXJtYW55LCBFYXN0IEdlcm1hbnksIEF1c3RyaWEsIFN3aXR6ZXJsYW5kKQogIC0gKDMzKSBXZXN0IEV1cm9wZQogIC0gKDM0KSBOb3J0aCBFdXJvcGUKICAtICgzNSkgU291dGggRXVyb3BlCiAgLSAoNDEpIE5vcnRoIEFtZXJpY2EKICAtICg0MikgQ2VudHJhbCBBbWVyaWNhIChpbmNsdWRpbmcgQ2FyaWJiZWFuIGNvdW50cmllcykKICAtICg0MykgU291dGggQW1lcmljYQogIC0gKDUxKSBBdXN0cmFsYXNpYSAoaW5jbHVkaW5nIE9jZWFuaWEgY291bnRyaWVzKQoKKiBDUkFDVExPQyA9IGRpc3RhbmNlIG9mIGNyaXNpcyBhY3RvciBmcm9tIGxvY2F0aW9uIG9mIGNyaXNpcwogIDEtNCwgY2xvc2VzdCB0byBmYXJ0aGVzdAoKKiBOT0FDVFIgPSBudW1iZXIgb2YgYWN0b3JzIGludm9sdmVkIChjb3VudCkKCiogVklPTCA9IHZpb2xlbmNlIGFzc29jaWF0ZWQgd2l0aCBjcmlzaXMgYWN0b3IKICAxLTQsIGxlYXN0IHRvIG1vc3QKYGBge3J9CiMgS2VlcCBpZGVudGlmaWVyIHZhcmlhYmxlcwp2YXJzX2lkIDwtIGMoImNyaXNubyIsICJzeXN0cmd5ciIsICJjcmlzbmFtZSIpCnZhcnNfaW50ZXJlc3QgPC0gYygiY2VudmlvIiwgInNldnZpbyIsICJvdXRjb20iLCAib3V0ZXNyIiwgInRyZ3RlcnJhIiwgImdlb2ciLCAiY3JhY3Rsb2MiLCAibm9hY3RyIiwgInZpb2wiKQoKdmFyc19rZWVwIDwtIGModmFyc19pZCwgdmFyc19pbnRlcmVzdCkKCmljYl9hY3Rvcl9ydXMgPC0gaWNiX2FjdG9yX3J1c1sgLCB2YXJzX2tlZXBdCgojIFJlb3JkZXIgdGhlIHZhcmlhYmxlcwppY2JfYWN0b3JfcnVzIDwtIGljYl9hY3Rvcl9ydXNbICwgYygnY3Jpc25vJywgJ2NyaXNuYW1lJywgJ3N5c3RyZ3lyJywgJ2NlbnZpbycsICdzZXZ2aW8nLCAndmlvbCcsICdvdXRlc3InLCAnb3V0Y29tJywgJ3RyZ3RlcnJhJywgJ2dlb2cnLCAnY3JhY3Rsb2MnLCAnbm9hY3RyJyldCgojIFJlbmFtZSB2YXJpYWJsZXMgZm9yIHJlYWRhYmlsaXR5CmljYl9hY3Rvcl9ydXMgPC0gaWNiX2FjdG9yX3J1cyAlPiUgZHBseXI6OnJlbmFtZSgnQ3Jpc2lzIE5vJyA9IGNyaXNubywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdZZWFyJyA9IHN5c3RyZ3lyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0NyaXNpcyBOYW1lJyA9IGNyaXNuYW1lLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0NyaXNpcyBWaW9sZW5jZSBDZW50cmFsaXR5JyA9IGNlbnZpbywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdDcmlzaXMgVmlvbGVuY2UgU2V2ZXJpdHknID0gc2V2dmlvLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ091dGNvbWUnID0gb3V0Y29tLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0VzY2FsYXRpb24nID0gb3V0ZXNyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0R1cmF0aW9uIChkYXlzKScgPSB0cmd0ZXJyYSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdMb2NhdGlvbicgPSBnZW9nLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0Rpc3RhbmNlIGZyb20gQWN0b3InID0gY3JhY3Rsb2MsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnTm8uIG9mIEFjdG9ycycgPSBub2FjdHIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnQWN0b3IgVmlvbGVuY2UgU2V2ZXJpdHknID0gdmlvbCkKCiMgUmVjb2RlIHNvbWUgdmFyaWFibGVzIHRvIGJlIG1vcmUgaW50dWl0aXZlCmljYl9hY3Rvcl9ydXMkRXNjYWxhdGlvbiA8LSBjYXI6OnJlY29kZShpY2JfYWN0b3JfcnVzJEVzY2FsYXRpb24sICIyID0gMDsgMyA9IE5BIikKaWNiX2FjdG9yX3J1cyRMb2NhdGlvbiA8LSBjYXI6OnJlY29kZShpY2JfYWN0b3JfcnVzJExvY2F0aW9uLCAiMTAgPSAnV2VzdCBBc2lhJzsgMzEgPSAnRWFzdCBFdXJvcGUnIikKaWNiX2FjdG9yX3J1cyRPdXRjb21lIDwtIGNhcjo6cmVjb2RlKGljYl9hY3Rvcl9ydXMkT3V0Y29tZSwgIjEgPSAnVmljdG9yeSc7IDIgPSAnQ29tcHJvbWlzZSc7IDMgPSAnU3RhbGVtYXRlJzsgNCA9ICdEZWZlYXQnIikKaWNiX2FjdG9yX3J1cyRgRGlzdGFuY2UgZnJvbSBBY3RvcmAgPC0gY2FyOjpyZWNvZGUoaWNiX2FjdG9yX3J1cyRgRGlzdGFuY2UgZnJvbSBBY3RvcmAsICIxID0gJ0hvbWUgdGVycml0b3J5JzsgMiA9ICdTdWItcmVnaW9uJzsgMyA9ICdTYW1lIGNvbnRpbmVudCciKQpgYGAKCiMjIFN1bW1hcnkKTWFrZSBhIHRhYmxlIHN1bW1hcml6aW5nIHRoZSBkYXRhIG9uIFJ1c3NpYW4gY3Jpc2lzIHBhcnRpY2lwYXRpb24KYGBge3J9CmZvcm1hdHRhYmxlOjpmb3JtYXR0YWJsZShpY2JfYWN0b3JfcnVzLAogICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ24gPSBjKCJsIiwgImwiLCAiYyIsICJjIiwgImMiLCAiYyIsICJjIiwgImMiLCAiYyIsICJsIiwgImwiLCAiYyIpLAogICAgICAgICAgICAgICAgICAgICAgICAgbGlzdChmb3JtYXR0YWJsZTo6YXJlYShjb2wgPSBjKCdDcmlzaXMgVmlvbGVuY2UgQ2VudHJhbGl0eScsICdDcmlzaXMgVmlvbGVuY2UgU2V2ZXJpdHknLCAnQWN0b3IgVmlvbGVuY2UgU2V2ZXJpdHknKSkgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH4gZm9ybWF0dGFibGU6OmNvbG9yX3RpbGUoInJlZCIsICJyZWQ0IikpKQpgYGAKCgo=</div>
 
 
 </div>
