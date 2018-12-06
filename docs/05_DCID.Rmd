@@ -1,0 +1,146 @@
+---
+title: "05_DCID"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document will look at coverage of Russian cyber attacks (2001-2011) in the Dyadiv Cyber Incident and Dispute (DCID) data and identify variables of interest.
+
+The cyber data comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
+
+
+# Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+```
+
+## Load data
+We use version 1.1 of the data. Note that since we're loading from an excel file, the date formats are inconsistent. Some are formatted using excel date numbers while others are formatted using month/day/year.
+```{r}
+# Load system-level data
+dcid <- openxlsx::read.xlsx(paste0(here::here(), '/inst/extdata/DCID_V11.xlsx'))
+```
+
+## Subset
+We are only interests in cases where Russia was an initiator
+```{r}
+# Subset to cases involving Russia
+dcid_rus <- subset(dcid, initiator == 365)
+
+incident_count <- nrow(dcid_rus)
+```
+
+There are `r incident_count` DCID incidents in which Russia was an actor.
+
+# Summary statistics
+## Choose variables
+Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:
+
+* interaction type
+  - 1- Nuisance
+  - 2- Defensive operation
+  - 3- Offensive strike
+
+* method
+  - 1- Vandalism
+  - 2- Denial of Service (DDoS)
+  - 3- Intrusion
+  - 4- Infiltration
+  - 4.1 - Logic bomb
+  - 4.2 - Virus
+  - 4.3 - Worm
+  - 4.4 – Keystroke logging
+  - 5- Vandalism and Denial of Service (disputes only)
+  - 6- Intrusion and Infiltration (disputes only)
+
+* cyber_objective
+  - 1- Disruption
+  - 2- Short-Term Espionage
+  - 3- Long-Term Espionage
+  - 4- Degrade
+
+* severity
+  - 1- Probing without kinetic cyber
+  - 2- Harassment, propaganda, nuisance disruption
+  - 3- Stealing targeted critical information
+  - 4- Widespread government, economic, military or critical private sector theft of information
+  - 5- Single critical network and physical attempted destruction
+  - 6- Single critical network widespread destruction
+  - 7- Minimal death as a direct result of cyber incident
+  - 8- Critical national economic disruption as a result of cyber incident
+  - 9- Critical national infrastructure destruction as a result of cyber incident
+  - 10- Massive death as a direct result of cyber incident
+
+```{r}
+names(dcid_rus)
+
+# Keep relevant variables
+vars_id <- c("Cyberincidentnum", "Name", "interactionstartdate", "interactionenddate")
+vars_interest <- c("interactiontype", "method", "cyber_objective", "objective_achievement", "severity")
+
+vars_keep <- c(vars_id, vars_interest)
+
+dcid_rus <- dcid_rus[ , vars_keep]
+
+# Rename variables for readability
+dcid_rus <- dcid_rus %>% dplyr::rename('Incident No.' = Cyberincidentnum,
+                                       'Incident' = Name,
+                                       'Start date' = interactionstartdate,
+                                       'End date' = interactionenddate,
+                                       'Type' = interactiontype,
+                                       'Method' = method,
+                                       'Objective' = cyber_objective,
+                                       'Success' = objective_achievement,
+                                       'Incident severity' = severity)
+
+# Recode some variables to be more intuitive
+dcid_rus$Type <- car::recode(dcid_rus$Type, "1 = 'Nuisance'; 
+                             2 = 'Defensive'; 
+                             3 = 'Offensive'")
+dcid_rus$Method <- as.character(dcid_rus$Method)
+dcid_rus$Method <- plyr::revalue(dcid_rus$Method, c("1" = "Vandalism", 
+                                                    "2" = "DDoD", 
+                                                    "3" = "Intrusion", 
+                                                    "4.1" = "Infiltration: Logic bomb", 
+                                                    "4.2" = "Infiltration: Virus", 
+                                                    "4.3" = "Infiltration: Worm", 
+                                                    "4.4" = "Infiltration: Keystroke log"))
+dcid_rus$Objective <- car::recode(dcid_rus$Objective, "1 = 'Disruption'; 
+                                  2 = 'Short-term espionage'; 
+                                  3 = 'Long-term espionage'; 
+                                  4 = 'Degrade'")
+```
+
+## Summary
+Make a table summarizing the data on Russian crisis participation
+```{r}
+formattable::formattable(dcid_rus,
+                         align = c("l", "l", "l", "l", "l", "l", "l", "c", "c", "c"),
+                         list('Success' = formattable::color_tile("transparent", "lightblue"),
+                              'Incident severity' = formattable::color_tile("red", "red4")))
+```
+
+
