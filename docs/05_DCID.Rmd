@@ -55,6 +55,29 @@ incident_count <- nrow(dcid_rus)
 
 There are `r incident_count` DCID incidents in which Russia was an actor.
 
+## Fix dates
+The dates were imported using excel format, so they have to be converted.
+
+```{r}
+# Convert non-excel dates to date format
+dcid_rus_dategood <- dcid_rus[grep("8/", dcid_rus$interactionstartdate), ]
+
+dcid_rus_dategood$interactionstartdate <- as.Date(dcid_rus_dategood$interactionstartdate, "%m/%d/%Y")
+dcid_rus_dategood$interactionenddate <- as.Date(dcid_rus_dategood$interactionenddate, "%m/%d/%Y")
+
+# Convert excel dates to date format
+dcid_rus_datebad <- dcid_rus[-grep("8/", dcid_rus$interactionstartdate), ]
+
+dcid_rus_datebad$interactionstartdate <- as.numeric(dcid_rus_datebad$interactionstartdate)
+dcid_rus_datebad$interactionenddate <- as.numeric(dcid_rus_datebad$interactionenddate)
+
+dcid_rus_datebad$interactionstartdate <- janitor::excel_numeric_to_date(dcid_rus_datebad$interactionstartdate)
+dcid_rus_datebad$interactionenddate <- janitor::excel_numeric_to_date(dcid_rus_datebad$interactionenddate)
+
+# Merge
+dcid_rus <- rbind(dcid_rus_datebad, dcid_rus_dategood)
+```
+
 # Summary statistics
 ## Choose variables
 Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:
@@ -143,4 +166,14 @@ formattable::formattable(dcid_rus,
                               'Incident severity' = formattable::color_tile("red", "red4")))
 ```
 
+## Plots
+Given the number of cases, summarize them in plot format.
+```{r}
 
+ggplot2::ggplot(ipe_theta_plot, aes(x = theta_scaled, y = gdppc_WDI_log_scaled)) + 
+  ggrepel::geom_text_repel(data = ipe_theta_plot, aes(label = name), size = 3) + 
+  geom_abline(intercept = 0, slope = 1, linetype = 2) +
+  labs(title = "GDP per capita-MCTL Correlation (2001)", x = "MCTL Score", y = "GPD per capita (log)", caption = "Axes scaled around mean value")
+ggplot2::ggsave("correlation_gdppc.png", path = paste0(here::here(), '/paper/figures'))
+
+```
