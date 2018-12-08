@@ -25,7 +25,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document will look at coverage of Russian cyber attacks (2001-2011) in the Dyadiv Cyber Incident and Dispute (DCID) data and identify variables of interest.
+This document will look at coverage of Russian cyber attacks (2001-2011) in the Dyadic Cyber Incident and Dispute (DCID) data and identify variables of interest.
 
 The cyber data comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
 

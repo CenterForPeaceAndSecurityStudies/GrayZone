@@ -1,0 +1,113 @@
+---
+title: "06_REI"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document will look at coverage of Russian electoral inference (1991-2017) from Casey and Ahmad (2017) and identify variables of interest.
+
+The cyber data comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
+
+# Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+library(ggplot2)
+```
+
+## Load data
+```{r}
+# Load data
+load(paste0(here::here(), '/inst/extdata/russian_electoral_interventions_1991-2017.RData'))
+rei <- x
+
+incident_count <- nrow(rei)
+```
+
+There are `r incident_count` DCID incidents in which Russia was an actor.
+
+# Summary statistics
+## Choose variables
+Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:
+
+
+```{r}
+names(rei)
+
+# Rename variables for readability
+rei <- rei %>% dplyr::rename('Year' = year,
+                             'Target' = target_state,
+                             'Target COW code' = target_ccode,
+                             'Target Event' = target_event,
+                             'Start Date' = event_sdate,
+                             'End Date' = event_edate,
+                             'Pro-incumbent' = pro_incumbent,
+                             'Disinformation campaign' = disinfo,
+                             'Coup attempt' = coup,
+                             'Cyberattack' = cyberattack,
+                             'Material support' = mat_support,
+                             'Outcome' = outcome,
+                             'Favorable outcome' = outcome_favorable,
+                             'Evidence of impact' = rus_impact)
+
+# Recode some variables to be more intuitive
+rei$`Target Event` <- as.character(rei$`Target Event`)
+rei$`Target Event` <- plyr::revalue(rei$`Target Event`, c("1" = "National Election",
+                                                          "2" = "Referendum",
+                                                          "3" = "Political Party Operations"))
+
+rei$Outcome <- as.character(rei$Outcome)
+rei$Outcome <- plyr::revalue(rei$Outcome, c("1" = "Incumbent victory",
+                                            "2" = "Incumbent loss",
+                                            "3" = "Referendum failure",
+                                            "4" = "Referendum success"))
+```
+
+## Summary
+Make a table summarizing the data on Russian crisis participation
+```{r}
+formattable::formattable(rei,
+                         align = c("c", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "l", "c", "c"),
+                         list('Pro-incumbent' = formattable::color_tile("red", "red4"),
+                              'Disinformation campaign' = formattable::color_tile("transparent", "red"),
+                              'Coup attempt' = formattable::color_tile("transparent", "red"),
+                              'Cyberattack' = formattable::color_tile("transparent", "red"),
+                              'Material support' = formattable::color_tile("transparent", "red"),
+                              'Favorable outcome' = formattable::color_tile("transparent", "lightblue")))
+```
+
+## Plots
+Given the number of cases, summarize them in plot format.
+```{r}
+ggplot2::ggplot(rei, aes(Type, ..count..)) +
+  geom_bar() +
+  labs(x = "Cyberattack Type", y = "Count", title = "Russian Cyberattack Types (2008-2011)")
+ggplot2::ggsave("electioninterference_type.png", path = paste0(here::here(), '/paper/figures'))
+
+ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
+  geom_bar() +
+  labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2008-2011)")
+ggplot2::ggsave("cyberattacks_methods.png", path = paste0(here::here(), '/paper/figures'))
+```
