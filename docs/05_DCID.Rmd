@@ -35,6 +35,7 @@ The cyber data comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of
 Pipe operators have trouble loading for individual commands
 ```{r}
 library(magrittr)
+library(ggplot2)
 ```
 
 ## Load data
@@ -169,11 +170,13 @@ formattable::formattable(dcid_rus,
 ## Plots
 Given the number of cases, summarize them in plot format.
 ```{r}
+ggplot2::ggplot(dcid_rus, aes(Type, ..count..)) +
+  geom_bar() +
+  labs(x = "Cyberattack Type", y = "Count", title = "Russian Cyberattack Types (2008-2011)")
+ggplot2::ggsave("cyberattacks_type.png", path = paste0(here::here(), '/paper/figures'))
 
-ggplot2::ggplot(ipe_theta_plot, aes(x = theta_scaled, y = gdppc_WDI_log_scaled)) + 
-  ggrepel::geom_text_repel(data = ipe_theta_plot, aes(label = name), size = 3) + 
-  geom_abline(intercept = 0, slope = 1, linetype = 2) +
-  labs(title = "GDP per capita-MCTL Correlation (2001)", x = "MCTL Score", y = "GPD per capita (log)", caption = "Axes scaled around mean value")
-ggplot2::ggsave("correlation_gdppc.png", path = paste0(here::here(), '/paper/figures'))
-
+ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
+  geom_bar() +
+  labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2008-2011)")
+ggplot2::ggsave("cyberattacks_methods.png", path = paste0(here::here(), '/paper/figures'))
 ```

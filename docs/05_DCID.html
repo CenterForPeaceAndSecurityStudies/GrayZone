@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-05" />
+<meta name="date" content="2018-12-07" />
 
 <title>05_DCID</title>
 
@@ -1580,7 +1580,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">05_DCID</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-05</em></h4>
+<h4 class="date"><em>2018-12-07</em></h4>
 
 </div>
 
@@ -1590,10 +1590,12 @@ $(document).ready(function () {
 <li><a href="#load-packages">Load packages</a></li>
 <li><a href="#load-data">Load data</a></li>
 <li><a href="#subset">Subset</a></li>
+<li><a href="#fix-dates">Fix dates</a></li>
 </ul></li>
 <li><a href="#summary-statistics">Summary statistics</a><ul>
 <li><a href="#choose-variables">Choose variables</a></li>
 <li><a href="#summary">Summary</a></li>
+<li><a href="#plots">Plots</a></li>
 </ul></li>
 </ul>
 </div>
@@ -1605,13 +1607,15 @@ $(document).ready(function () {
 <div id="load-packages" class="section level2">
 <h2>Load packages</h2>
 <p>Pipe operators have trouble loading for individual commands</p>
-<pre class="r"><code>library(magrittr)</code></pre>
+<pre class="r"><code>library(magrittr)
+library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.1</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
 <p>We use version 1.1 of the data. Note that since we’re loading from an excel file, the date formats are inconsistent. Some are formatted using excel date numbers while others are formatted using month/day/year.</p>
 <pre class="r"><code># Load system-level data
-dcid &lt;- openxlsx::read.xlsx(paste0(here::here(), '/inst/extdata/DCID_V11.xlsx'))</code></pre>
+dcid &lt;- openxlsx::read.xlsx(paste0(here::here(), &#39;/inst/extdata/DCID_V11.xlsx&#39;))</code></pre>
 </div>
 <div id="subset" class="section level2">
 <h2>Subset</h2>
@@ -1621,6 +1625,27 @@ dcid_rus &lt;- subset(dcid, initiator == 365)
 
 incident_count &lt;- nrow(dcid_rus)</code></pre>
 <p>There are 45 DCID incidents in which Russia was an actor.</p>
+</div>
+<div id="fix-dates" class="section level2">
+<h2>Fix dates</h2>
+<p>The dates were imported using excel format, so they have to be converted.</p>
+<pre class="r"><code># Convert non-excel dates to date format
+dcid_rus_dategood &lt;- dcid_rus[grep(&quot;8/&quot;, dcid_rus$interactionstartdate), ]
+
+dcid_rus_dategood$interactionstartdate &lt;- as.Date(dcid_rus_dategood$interactionstartdate, &quot;%m/%d/%Y&quot;)
+dcid_rus_dategood$interactionenddate &lt;- as.Date(dcid_rus_dategood$interactionenddate, &quot;%m/%d/%Y&quot;)
+
+# Convert excel dates to date format
+dcid_rus_datebad &lt;- dcid_rus[-grep(&quot;8/&quot;, dcid_rus$interactionstartdate), ]
+
+dcid_rus_datebad$interactionstartdate &lt;- as.numeric(dcid_rus_datebad$interactionstartdate)
+dcid_rus_datebad$interactionenddate &lt;- as.numeric(dcid_rus_datebad$interactionenddate)
+
+dcid_rus_datebad$interactionstartdate &lt;- janitor::excel_numeric_to_date(dcid_rus_datebad$interactionstartdate)
+dcid_rus_datebad$interactionenddate &lt;- janitor::excel_numeric_to_date(dcid_rus_datebad$interactionenddate)
+
+# Merge
+dcid_rus &lt;- rbind(dcid_rus_datebad, dcid_rus_dategood)</code></pre>
 </div>
 </div>
 <div id="summary-statistics" class="section level1">
@@ -1690,20 +1715,20 @@ vars_keep &lt;- c(vars_id, vars_interest)
 dcid_rus &lt;- dcid_rus[ , vars_keep]
 
 # Rename variables for readability
-dcid_rus &lt;- dcid_rus %&gt;% dplyr::rename('Incident No.' = Cyberincidentnum,
-                                       'Incident' = Name,
-                                       'Start date' = interactionstartdate,
-                                       'End date' = interactionenddate,
-                                       'Type' = interactiontype,
-                                       'Method' = method,
-                                       'Objective' = cyber_objective,
-                                       'Success' = objective_achievement,
-                                       'Incident severity' = severity)
+dcid_rus &lt;- dcid_rus %&gt;% dplyr::rename(&#39;Incident No.&#39; = Cyberincidentnum,
+                                       &#39;Incident&#39; = Name,
+                                       &#39;Start date&#39; = interactionstartdate,
+                                       &#39;End date&#39; = interactionenddate,
+                                       &#39;Type&#39; = interactiontype,
+                                       &#39;Method&#39; = method,
+                                       &#39;Objective&#39; = cyber_objective,
+                                       &#39;Success&#39; = objective_achievement,
+                                       &#39;Incident severity&#39; = severity)
 
 # Recode some variables to be more intuitive
-dcid_rus$Type &lt;- car::recode(dcid_rus$Type, &quot;1 = 'Nuisance'; 
-                             2 = 'Defensive'; 
-                             3 = 'Offensive'&quot;)
+dcid_rus$Type &lt;- car::recode(dcid_rus$Type, &quot;1 = &#39;Nuisance&#39;; 
+                             2 = &#39;Defensive&#39;; 
+                             3 = &#39;Offensive&#39;&quot;)
 dcid_rus$Method &lt;- as.character(dcid_rus$Method)
 dcid_rus$Method &lt;- plyr::revalue(dcid_rus$Method, c(&quot;1&quot; = &quot;Vandalism&quot;, 
                                                     &quot;2&quot; = &quot;DDoD&quot;, 
@@ -1713,18 +1738,18 @@ dcid_rus$Method &lt;- plyr::revalue(dcid_rus$Method, c(&quot;1&quot; = &quot;Van
                                                     &quot;4.3&quot; = &quot;Infiltration: Worm&quot;, 
                                                     &quot;4.4&quot; = &quot;Infiltration: Keystroke log&quot;))</code></pre>
 <pre><code>## The following `from` values were not present in `x`: 4.1, 4.3, 4.4</code></pre>
-<pre class="r"><code>dcid_rus$Objective &lt;- car::recode(dcid_rus$Objective, &quot;1 = 'Disruption'; 
-                                  2 = 'Short-term espionage'; 
-                                  3 = 'Long-term espionage'; 
-                                  4 = 'Degrade'&quot;)</code></pre>
+<pre class="r"><code>dcid_rus$Objective &lt;- car::recode(dcid_rus$Objective, &quot;1 = &#39;Disruption&#39;; 
+                                  2 = &#39;Short-term espionage&#39;; 
+                                  3 = &#39;Long-term espionage&#39;; 
+                                  4 = &#39;Degrade&#39;&quot;)</code></pre>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
 <p>Make a table summarizing the data on Russian crisis participation</p>
 <pre class="r"><code>formattable::formattable(dcid_rus,
                          align = c(&quot;l&quot;, &quot;l&quot;, &quot;l&quot;, &quot;l&quot;, &quot;l&quot;, &quot;l&quot;, &quot;l&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;),
-                         list('Success' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
-                              'Incident severity' = formattable::color_tile(&quot;red&quot;, &quot;red4&quot;)))</code></pre>
+                         list(&#39;Success&#39; = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              &#39;Incident severity&#39; = formattable::color_tile(&quot;red&quot;, &quot;red4&quot;)))</code></pre>
 <table class="table table-condensed">
 <thead>
 <tr>
@@ -1771,10 +1796,10 @@ Incident severity
 Duke Series
 </td>
 <td style="text-align:left;">
-39546
+2008-04-08
 </td>
 <td style="text-align:left;">
-42264
+2015-09-17
 </td>
 <td style="text-align:left;">
 Offensive
@@ -1794,38 +1819,6 @@ Long-term espionage
 </tr>
 <tr>
 <td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-US govt employee in Georgia hacked
-</td>
-<td style="text-align:left;">
-8/6/2008
-</td>
-<td style="text-align:left;">
-8/12/2008
-</td>
-<td style="text-align:left;">
-Nuisance
-</td>
-<td style="text-align:left;">
-Infiltration: Virus
-</td>
-<td style="text-align:left;">
-Disruption
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #b10000">3</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 5
 </td>
 <td style="text-align:left;">
@@ -1835,10 +1828,10 @@ Disruption
 CENTCOM(linked to APT 28)
 </td>
 <td style="text-align:left;">
-39722
+2008-10-01
 </td>
 <td style="text-align:left;">
-39736
+2008-10-15
 </td>
 <td style="text-align:left;">
 Offensive
@@ -1867,10 +1860,10 @@ Long-term espionage
 Sandworm
 </td>
 <td style="text-align:left;">
-39814
+2009-01-01
 </td>
 <td style="text-align:left;">
-41926
+2014-10-14
 </td>
 <td style="text-align:left;">
 Offensive
@@ -1890,38 +1883,6 @@ Long-term espionage
 </tr>
 <tr>
 <td style="text-align:left;">
-8
-</td>
-<td style="text-align:left;">
-8
-</td>
-<td style="text-align:left;">
-Power grid hacked, traced to Russia
-</td>
-<td style="text-align:left;">
-8/24/2009
-</td>
-<td style="text-align:left;">
-8/24/2009
-</td>
-<td style="text-align:left;">
-Nuisance
-</td>
-<td style="text-align:left;">
-Infiltration: Virus
-</td>
-<td style="text-align:left;">
-Degrade
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 9
 </td>
 <td style="text-align:left;">
@@ -1931,10 +1892,10 @@ Degrade
 Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-40544
+2011-01-01
 </td>
 <td style="text-align:left;">
-41821
+2014-07-01
 </td>
 <td style="text-align:left;">
 Offensive
@@ -1963,10 +1924,10 @@ Short-term espionage
 Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-41547
+2013-09-30
 </td>
 <td style="text-align:left;">
-41934
+2014-10-22
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -1995,10 +1956,10 @@ Short-term espionage
 CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-41713
+2014-03-15
 </td>
 <td style="text-align:left;">
-41724
+2014-03-26
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2027,10 +1988,10 @@ Disruption
 Operation Pawn Storm: military networks (fake OWA)
 </td>
 <td style="text-align:left;">
-41792
+2014-06-02
 </td>
 <td style="text-align:left;">
-42036
+2015-02-01
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2059,10 +2020,10 @@ Short-term espionage
 Operation Pawn Storm: Nuclear power plants, newspapers
 </td>
 <td style="text-align:left;">
-41793
+2014-06-03
 </td>
 <td style="text-align:left;">
-41974
+2014-12-01
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2091,10 +2052,10 @@ Short-term espionage
 US Banks hacked
 </td>
 <td style="text-align:left;">
-41794
+2014-06-04
 </td>
 <td style="text-align:left;">
-41828
+2014-07-08
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2123,10 +2084,10 @@ Disruption
 White House hack
 </td>
 <td style="text-align:left;">
-41938
+2014-10-26
 </td>
 <td style="text-align:left;">
-41940
+2014-10-28
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2155,10 +2116,10 @@ Short-term espionage
 State Dept hack
 </td>
 <td style="text-align:left;">
-41958
+2014-11-15
 </td>
 <td style="text-align:left;">
-41960
+2014-11-17
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2187,10 +2148,10 @@ Short-term espionage
 Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-40544
+2011-01-01
 </td>
 <td style="text-align:left;">
-41821
+2014-07-01
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2219,10 +2180,10 @@ Short-term espionage
 CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-41713
+2014-03-15
 </td>
 <td style="text-align:left;">
-41725
+2014-03-27
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2251,10 +2212,10 @@ Disruption
 Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-40544
+2011-01-01
 </td>
 <td style="text-align:left;">
-41821
+2014-07-01
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2283,10 +2244,10 @@ Short-term espionage
 CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-41713
+2014-03-15
 </td>
 <td style="text-align:left;">
-41723
+2014-03-25
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2315,10 +2276,10 @@ Disruption
 Sandworm
 </td>
 <td style="text-align:left;">
-39814
+2009-01-01
 </td>
 <td style="text-align:left;">
-41926
+2014-10-14
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2347,10 +2308,10 @@ Long-term espionage
 Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-41791
+2014-06-01
 </td>
 <td style="text-align:left;">
-41820
+2014-06-30
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2379,10 +2340,10 @@ Short-term espionage
 CyberBerkut Polish Stock Exchange
 </td>
 <td style="text-align:left;">
-41935
+2014-10-23
 </td>
 <td style="text-align:left;">
-41936
+2014-10-24
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2411,10 +2372,10 @@ Disruption
 Defacement of govt websites
 </td>
 <td style="text-align:left;">
-39199
+2007-04-27
 </td>
 <td style="text-align:left;">
-39212
+2007-05-10
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2443,10 +2404,10 @@ Disruption
 Defacement of private websites
 </td>
 <td style="text-align:left;">
-39199
+2007-04-27
 </td>
 <td style="text-align:left;">
-39212
+2007-05-10
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2475,10 +2436,10 @@ Disruption
 DDoS of govt websites
 </td>
 <td style="text-align:left;">
-39199
+2007-04-27
 </td>
 <td style="text-align:left;">
-39212
+2007-05-10
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2507,10 +2468,10 @@ Degrade
 DDoS of private websites
 </td>
 <td style="text-align:left;">
-39199
+2007-04-27
 </td>
 <td style="text-align:left;">
-39212
+2007-05-10
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2539,10 +2500,10 @@ Degrade
 Snake
 </td>
 <td style="text-align:left;">
-38353
+2005-01-01
 </td>
 <td style="text-align:left;">
-41767
+2014-05-08
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2571,10 +2532,10 @@ Short-term espionage
 Lithuanian Parliament
 </td>
 <td style="text-align:left;">
-39627
+2008-06-28
 </td>
 <td style="text-align:left;">
-39631
+2008-07-02
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2603,10 +2564,10 @@ Disruption
 Lithuanian Parliament
 </td>
 <td style="text-align:left;">
-39627
+2008-06-28
 </td>
 <td style="text-align:left;">
-39631
+2008-07-02
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2635,10 +2596,10 @@ Disruption
 Snake
 </td>
 <td style="text-align:left;">
-38353
+2005-01-01
 </td>
 <td style="text-align:left;">
-41767
+2014-05-08
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2667,10 +2628,10 @@ Short-term espionage
 Sandworm
 </td>
 <td style="text-align:left;">
-39814
+2009-01-01
 </td>
 <td style="text-align:left;">
-41926
+2014-10-14
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2699,10 +2660,10 @@ Long-term espionage
 Duke Series
 </td>
 <td style="text-align:left;">
-41306
+2013-02-01
 </td>
 <td style="text-align:left;">
-42264
+2015-09-17
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2731,10 +2692,10 @@ Long-term espionage
 CyberBerkut UKR Gov Site Hack
 </td>
 <td style="text-align:left;">
-41640
+2014-01-01
 </td>
 <td style="text-align:left;">
-42004
+2014-12-31
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2763,10 +2724,10 @@ Disruption
 CyberBerkut Telecom disruption
 </td>
 <td style="text-align:left;">
-41699
+2014-03-01
 </td>
 <td style="text-align:left;">
-41713
+2014-03-15
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2795,10 +2756,10 @@ Degrade
 CyberBerkut Ukraine Election Intrusion
 </td>
 <td style="text-align:left;">
-41781
+2014-05-22
 </td>
 <td style="text-align:left;">
-41785
+2014-05-26
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2827,10 +2788,10 @@ Disruption
 Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-41791
+2014-06-01
 </td>
 <td style="text-align:left;">
-42036
+2015-02-01
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2859,10 +2820,10 @@ Short-term espionage
 CyberBerkut UKR MOD DDoS
 </td>
 <td style="text-align:left;">
-41913
+2014-10-01
 </td>
 <td style="text-align:left;">
-41942
+2014-10-30
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2891,10 +2852,10 @@ Disruption
 Fancy Bear (also APT 28 linked)
 </td>
 <td style="text-align:left;">
-41918
+2014-10-06
 </td>
 <td style="text-align:left;">
-42566
+2016-07-15
 </td>
 <td style="text-align:left;">
 Offensive
@@ -2923,10 +2884,10 @@ Degrade
 CyberBerkut Billboard Hack
 </td>
 <td style="text-align:left;">
-41963
+2014-11-20
 </td>
 <td style="text-align:left;">
-41964
+2014-11-21
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2955,10 +2916,10 @@ Disruption
 APT28/Sofacy Group/Sednit Group/Tsar Team/Fancy Bear
 </td>
 <td style="text-align:left;">
-39083
+2007-01-01
 </td>
 <td style="text-align:left;">
-42566
+2016-07-15
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -2987,10 +2948,10 @@ Long-term espionage
 Duke Series
 </td>
 <td style="text-align:left;">
-39546
+2008-04-08
 </td>
 <td style="text-align:left;">
-42264
+2015-09-17
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -3019,10 +2980,10 @@ Long-term espionage
 Before the gunfire
 </td>
 <td style="text-align:left;">
-39558
+2008-04-20
 </td>
 <td style="text-align:left;">
-39666
+2008-08-06
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -3042,6 +3003,166 @@ Disruption
 </tr>
 <tr>
 <td style="text-align:left;">
+110
+</td>
+<td style="text-align:left;">
+110
+</td>
+<td style="text-align:left;">
+Russo-Georgia Cyber Actions
+</td>
+<td style="text-align:left;">
+2008-08-05
+</td>
+<td style="text-align:left;">
+2016-08-05
+</td>
+<td style="text-align:left;">
+Offensive
+</td>
+<td style="text-align:left;">
+DDoD
+</td>
+<td style="text-align:left;">
+Disruption
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+111
+</td>
+<td style="text-align:left;">
+111
+</td>
+<td style="text-align:left;">
+Russo-Georgia Cyber Actions
+</td>
+<td style="text-align:left;">
+2008-08-05
+</td>
+<td style="text-align:left;">
+2016-08-05
+</td>
+<td style="text-align:left;">
+Offensive
+</td>
+<td style="text-align:left;">
+DDoD
+</td>
+<td style="text-align:left;">
+Disruption
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+112
+</td>
+<td style="text-align:left;">
+112
+</td>
+<td style="text-align:left;">
+Russo-Georgia Cyber Actions
+</td>
+<td style="text-align:left;">
+2008-08-05
+</td>
+<td style="text-align:left;">
+2016-08-05
+</td>
+<td style="text-align:left;">
+Nuisance
+</td>
+<td style="text-align:left;">
+Vandalism
+</td>
+<td style="text-align:left;">
+Disruption
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+US govt employee in Georgia hacked
+</td>
+<td style="text-align:left;">
+2008-08-06
+</td>
+<td style="text-align:left;">
+2008-08-12
+</td>
+<td style="text-align:left;">
+Nuisance
+</td>
+<td style="text-align:left;">
+Infiltration: Virus
+</td>
+<td style="text-align:left;">
+Disruption
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #b10000">3</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Power grid hacked, traced to Russia
+</td>
+<td style="text-align:left;">
+2009-08-24
+</td>
+<td style="text-align:left;">
+2009-08-24
+</td>
+<td style="text-align:left;">
+Nuisance
+</td>
+<td style="text-align:left;">
+Infiltration: Virus
+</td>
+<td style="text-align:left;">
+Degrade
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 109
 </td>
 <td style="text-align:left;">
@@ -3051,10 +3172,10 @@ Disruption
 VoiP
 </td>
 <td style="text-align:left;">
-8/4/2008
+2008-08-04
 </td>
 <td style="text-align:left;">
-8/8/2008
+2008-08-08
 </td>
 <td style="text-align:left;">
 Offensive
@@ -3074,102 +3195,6 @@ Degrade
 </tr>
 <tr>
 <td style="text-align:left;">
-110
-</td>
-<td style="text-align:left;">
-110
-</td>
-<td style="text-align:left;">
-Russo-Georgia Cyber Actions
-</td>
-<td style="text-align:left;">
-39665
-</td>
-<td style="text-align:left;">
-42587
-</td>
-<td style="text-align:left;">
-Offensive
-</td>
-<td style="text-align:left;">
-DDoD
-</td>
-<td style="text-align:left;">
-Disruption
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-111
-</td>
-<td style="text-align:left;">
-111
-</td>
-<td style="text-align:left;">
-Russo-Georgia Cyber Actions
-</td>
-<td style="text-align:left;">
-39665
-</td>
-<td style="text-align:left;">
-42587
-</td>
-<td style="text-align:left;">
-Offensive
-</td>
-<td style="text-align:left;">
-DDoD
-</td>
-<td style="text-align:left;">
-Disruption
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-112
-</td>
-<td style="text-align:left;">
-112
-</td>
-<td style="text-align:left;">
-Russo-Georgia Cyber Actions
-</td>
-<td style="text-align:left;">
-39665
-</td>
-<td style="text-align:left;">
-42587
-</td>
-<td style="text-align:left;">
-Nuisance
-</td>
-<td style="text-align:left;">
-Vandalism
-</td>
-<td style="text-align:left;">
-Disruption
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 113
 </td>
 <td style="text-align:left;">
@@ -3179,10 +3204,10 @@ Disruption
 US-Georgia Government defacements
 </td>
 <td style="text-align:left;">
-8/7/2008
+2008-08-07
 </td>
 <td style="text-align:left;">
-8/16/2008
+2008-08-16
 </td>
 <td style="text-align:left;">
 Nuisance
@@ -3202,6 +3227,22 @@ Disruption
 </tr>
 </tbody>
 </table>
+</div>
+<div id="plots" class="section level2">
+<h2>Plots</h2>
+<p>Given the number of cases, summarize them in plot format.</p>
+<pre class="r"><code>ggplot2::ggplot(dcid_rus, aes(Type, ..count..)) +
+  geom_bar() +
+  labs(x = &quot;Cyberattack Type&quot;, y = &quot;Count&quot;, title = &quot;Russian Cyberattack Types (2008-2011)&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<pre class="r"><code>ggplot2::ggsave(&quot;cyberattacks_type.png&quot;, path = paste0(here::here(), &#39;/paper/figures&#39;))</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
+  geom_bar() +
+  labs(x = &quot;Cyberattack Method&quot;, y = &quot;Count&quot;, title = &quot;Russian Cyberattacks Methods (2008-2011)&quot;)</code></pre>
+<p><img src="data:image/png;base64,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jUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDBVoaHONvRqCjUfPMA70JPII1slQgYY219irIdh49AzjQE8ij2CdDFeBnvzotz/Z/ubet37jk8mPUoHWN9fYqyHYePQM40BPIo9gnQxXgX7xwlf+evo3KtB5zTX2agg2Hj3DONCTyCNYJ6O8QO9dUYGem7nGXg3BxqNnGAd6EnkE62TkCvSLFw52PKGH8OdlrrFXQ7Dx6BnGgZ5EHsE6GbkCXR7vFuiNPfpTBbqXucZeDcHGo2cYB3oSeQTrZGQL9OS/vfTSt65c+tpLnZd/vk9/qkD3MtfYqyHYePQM40BPIo9gnYxsgTb2fN5IBXpmc429GoKNR88wDvQk8gjWyXAV6OhlTCrQczTX2Ksh2Hj0DONATyKPYJ0MV4HWUHIo9KLFMdfYqyHYePQM40BPIo9gnYyCAv2Hzscq0PMy19irIdh49AzjQE8ij2CdDGeBfvbDwbPweh3ouZlr7NUQbDx6hnGgJ5FHsE6Gr0DHrwZVgZ6bucZeDcHGo2cYB3oSeQTrZPgK9Ojg4PGXf9b5S72Q/rzMNfZqCDYePcM40JPII1gnw1WgJ28cXN6jM1WgZzbX2Ksh2Hj0DONATyKPYJ0MV4F+8cKlt1SgCHONvRqCjUfPMA70JPII1slwFqheSI8x19irIdh49AzjQE8ij2CdDFeBnryhe6AYc429GoKNR88wDvQk8gjWyXAV6PLo4JoKFGGusVdDsPHoGcaBnkQewToZvgJd3QX9jgoU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4SnQlY/+4kcvvfyzvdtTBbqnucZeDcHGo2cYB3oSeQTrZDgL9OxKDoVetDjmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq0NDmGns1BBuPnmEc6EnkEayToQINba6xV0Ow8egZxoGeRB7BOhkq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" width="672" /></p>
+<pre class="r"><code>ggplot2::ggsave(&quot;cyberattacks_methods.png&quot;, path = paste0(here::here(), &#39;/paper/figures&#39;))</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
 </div>
 </div>
 
