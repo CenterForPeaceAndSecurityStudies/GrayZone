@@ -101,13 +101,5 @@ formattable::formattable(rei,
 ## Plots
 Given the number of cases, summarize them in plot format.
 ```{r}
-ggplot2::ggplot(rei, aes(Type, ..count..)) +
-  geom_bar() +
-  labs(x = "Cyberattack Type", y = "Count", title = "Russian Cyberattack Types (2008-2011)")
-ggplot2::ggsave("electioninterference_type.png", path = paste0(here::here(), '/paper/figures'))
-
-ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
-  geom_bar() +
-  labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2008-2011)")
-ggplot2::ggsave("cyberattacks_methods.png", path = paste0(here::here(), '/paper/figures'))
+DataExplorer::plot_bar(rei)
 ```
