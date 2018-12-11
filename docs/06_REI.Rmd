@@ -89,13 +89,14 @@ rei$Outcome <- plyr::revalue(rei$Outcome, c("1" = "Incumbent victory",
 Make a table summarizing the data on Russian crisis participation
 ```{r}
 formattable::formattable(rei,
-                         align = c("c", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "l", "c", "c"),
-                         list('Pro-incumbent' = formattable::color_tile("red", "red4"),
+                         align = c("c", "l", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
+                         list('Pro-incumbent' = formattable::color_tile("transparent", "red"),
                               'Disinformation campaign' = formattable::color_tile("transparent", "red"),
                               'Coup attempt' = formattable::color_tile("transparent", "red"),
                               'Cyberattack' = formattable::color_tile("transparent", "red"),
                               'Material support' = formattable::color_tile("transparent", "red"),
-                              'Favorable outcome' = formattable::color_tile("transparent", "lightblue")))
+                              'Favorable outcome' = formattable::color_tile("transparent", "lightblue"),
+                              'Evidence of impact' = formattable::color_tile("transparent", "lightblue")))
 ```
 
 ## Plots
