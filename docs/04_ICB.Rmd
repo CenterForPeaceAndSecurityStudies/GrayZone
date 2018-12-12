@@ -44,7 +44,6 @@ icb_sys <- read.csv(file = paste0(here::here(), '/inst/extdata/icb1v12.csv'))
 
 # Load actor-level data
 icb_actor <- read.csv(file = paste0(here::here(), '/inst/extdata/icb2v12.csv'))
-
 ```
 
 ## Subset
@@ -152,4 +151,7 @@ formattable::formattable(icb_actor_rus,
                               ~ formattable::color_tile("red", "red4")))
 ```
 
-
+# Save final dataframe
+```{r}
+saveRDS(icb_actor_rus, paste0(here::here(), "/data/","grayzone_icb.rds"))
+```

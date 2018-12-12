@@ -1,5 +1,5 @@
 ---
-title: "06_REI"
+title: "07_FullData"
 author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
   Studies (cPASS)
 date: "`r Sys.Date()`"
@@ -28,9 +28,15 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document will look at coverage of Russian electoral inference (1991-2017) from Casey and Ahmad (2017) and identify variables of interest.
+This document compares case and variable coverage across all the Russia cyber data investigated.
 
-The cyber data comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
+The data comes from the following sources:
+
+ICB comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
+
+DCID comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
+
+REI comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
 
 # Preparation
 ## Load packages
@@ -41,25 +47,29 @@ library(ggplot2)
 ```
 
 ## Load data
+Load the cleaned and subset versions of each dataset
 ```{r}
 # Load data
-load(paste0(here::here(), '/inst/extdata/russian_electoral_interventions_1991-2017.RData'))
-rei <- x
-
-incident_count <- nrow(rei)
+cpass <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+icb <- readRDS(paste0(here::here(), '/data/grayzone_icb.rds'))
+dcid <- readRDS(paste0(here::here(), '/data/grayzone_dcid.rds'))
+rei <- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))
 ```
 
-There are `r incident_count` DCID incidents in which Russia was an actor.
-
-# Summary statistics
-## Choose variables
-Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:
-
-
+# Compare coverage
+Before merging the data, compare the different cases covered by each one
 ```{r}
-names(rei)
+# Create identifier variables for each dataset
+cpass$cpass <- 1
+icb$icb <- 1
+dcid$dcid <- 1
+rei$rei <- 1
 
-# Rename variables for readability
+# Ensure proper unit of analysis
+summary(cpass)
+summary(icb)
+
+# Rename variables so they are the same across the datasets
 rei <- rei %>% dplyr::rename('Year' = year,
                              'Target' = target_state,
                              'Target COW code' = target_ccode,
@@ -75,17 +85,15 @@ rei <- rei %>% dplyr::rename('Year' = year,
                              'Favorable outcome' = outcome_favorable,
                              'Evidence of impact' = rus_impact)
 
-# Recode some variables to be more intuitive
-rei$`Target Event` <- as.character(rei$`Target Event`)
-rei$`Target Event` <- plyr::revalue(rei$`Target Event`, c("1" = "National Election",
-                                                          "2" = "Referendum",
-                                                          "3" = "Political Party Operations"))
+```
 
-rei$Outcome <- as.character(rei$Outcome)
-rei$Outcome <- plyr::revalue(rei$Outcome, c("1" = "Incumbent victory",
-                                            "2" = "Incumbent loss",
-                                            "3" = "Referendum failure",
-                                            "4" = "Referendum success"))
+# Merge data
+First we identify the variables in each dataset and which are duplicates
+
+# Summary statistics
+```{r}
+names(rei)
+
 ```
 
 ## Summary

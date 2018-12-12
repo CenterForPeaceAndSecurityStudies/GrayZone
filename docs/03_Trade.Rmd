@@ -24,7 +24,7 @@ Research assistance for this rmd provided by Cole Reynolds
 
 ```{r}
 # Read in data
-trade <- read.csv("C:/Users/coles/Dropbox/Gray Zone/COW_Trade_4.0/Dyadic_COW_4.0.csv")
+trade <- read.csv(file = paste0(here::here(), '/inst/extdata/Dyadic_COW_4.0.csv'))
 
 # Create dataframe to be filled in
 russia <- data.frame(Chenchya = 1:2,  Kosovo = 1:2, Estonia = 1:2,  Georgia= 1:2, Ukraine = 1:2, Syria = 1:2, 'United States' = 1:2)

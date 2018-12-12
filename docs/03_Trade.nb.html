@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-04" />
+<meta name="date" content="2018-12-12" />
 
 <title>03_Trade</title>
 
@@ -94,7 +94,7 @@ display: none;
 padding: 0 4px 0 4px;
 }
 .pagedtable .even {
-background-color: #fcfcfc;
+background-color: rgba(140, 140, 140, 0.1);
 }
 .pagedtable-padding-col {
 display: none;
@@ -2717,6 +2717,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 <style type="text/css">
@@ -2748,9 +2751,70 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -2764,7 +2828,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
 
 
 
@@ -2881,7 +2944,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">03_Trade</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-04</em></h4>
+<h4 class="date"><em>2018-12-12</em></h4>
 
 </div>
 
@@ -2892,41 +2955,19 @@ div.tocify {
 <p>Research assistance for this rmd provided by Cole Reynolds</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZWFkIGluIGRhdGFcbnRyYWRlIDwtIHJlYWQuY3N2KFwiQzovVXNlcnMvY29sZXMvRHJvcGJveC9HcmF5IFpvbmUvQ09XX1RyYWRlXzQuMC9EeWFkaWNfQ09XXzQuMC5jc3ZcIilcblxuIyBDcmVhdGUgZGF0YWZyYW1lIHRvIGJlIGZpbGxlZCBpblxucnVzc2lhIDwtIGRhdGEuZnJhbWUoQ2hlbmNoeWEgPSAxOjIsICBLb3Nvdm8gPSAxOjIsIEVzdG9uaWEgPSAxOjIsICBHZW9yZ2lhPSAxOjIsIFVrcmFpbmUgPSAxOjIsIFN5cmlhID0gMToyLCAnVW5pdGVkIFN0YXRlcycgPSAxOjIpXG5jb2xuYW1lcyhydXNzaWEpID0gYyhcIkNoZWNobnlhIDE5OTRcIiwgXCJLb3Nvdm8gMTk5OVwiLCBcIkVzdG9uaWEgMjAwN1wiLCBcIkdlb3JnaWEgMjAwOFwiLCBcIlVrcmFpbmUgMjAxNFwiLCBcIlN5cmlhIDIwMTVcIiwgXCJVbml0ZWQgU3RhdGVzIDIwMTZcIilcbnJvd25hbWVzKHJ1c3NpYSkgPC0gYyhcIlRyYWRlXCIsIFwiTmF0dXJhbCBHYXMgRXhwb3J0c1wiKVxucnVzc2lhWyFpcy5uYShydXNzaWEpXSA8LSBOQVxuXG4jIFRyYWRlXG4jIyBLb3Nvdm8gMTk5OVxucnVzc2lhW1wiVHJhZGVcIixcIktvc292byAxOTk5XCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIktvc292b1wiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiUnVzc2lhXCIgJiB0cmFkZSR5ZWFyID09IDE5OTksIFwiZmxvdzFcIl0gKyB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gXCJLb3Nvdm9cIiAmIHRyYWRlJGltcG9ydGVyMiA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkeWVhciA9PSAxOTk5LCBcImZsb3cyXCJdICMgY29tcGxldGVseSBtaXNzaW5nXG5cbiMjIEVzdG9uaWEgMjAwN1xucnVzc2lhW1wiVHJhZGVcIixcIkVzdG9uaWEgMjAwN1wiXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gXCJSdXNzaWFcIiAmIHRyYWRlJGltcG9ydGVyMiA9PSBcIkVzdG9uaWFcIiAmIHRyYWRlJHllYXIgPT0gMjAwNywgXCJmbG93MVwiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiRXN0b25pYVwiICYgdHJhZGUkeWVhciA9PSAyMDA3LCBcImZsb3cyXCJdIFxuXG4jIyBHZW9yZ2lhIDIwMDhcbnJ1c3NpYVtcIlRyYWRlXCIsXCJHZW9yZ2lhIDIwMDhcIl0gPC0gdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09IFwiUnVzc2lhXCIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gXCJHZW9yZ2lhXCIgJiB0cmFkZSR5ZWFyID09IDIwMDgsIFwiZmxvdzFcIl0gKyB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gXCJSdXNzaWFcIiAmIHRyYWRlJGltcG9ydGVyMiA9PSBcIkdlb3JnaWFcIiAmIHRyYWRlJHllYXIgPT0gMjAwOCwgXCJmbG93MlwiXSBcblxuIyMgVWtyYWluZSAyMDE0XG5ydXNzaWFbXCJUcmFkZVwiLFwiVWtyYWluZSAyMDE0XCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiVWtyYWluZVwiICYgdHJhZGUkeWVhciA9PSAyMDE0LCBcImZsb3cxXCJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09IFwiUnVzc2lhXCIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gXCJVa3JhaW5lXCIgJiB0cmFkZSR5ZWFyID09IDIwMTQsIFwiZmxvdzJcIl0gXG5cbiMjIFN5cmlhIDIwMTVcbnJ1c3NpYVtcIlRyYWRlXCIsXCJTeXJpYSAyMDE1XCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiU3lyaWFcIiAmIHRyYWRlJHllYXIgPT0gMjAxNCwgXCJmbG93MVwiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiU3lyaWFcIiAmIHRyYWRlJHllYXIgPT0gMjAxNCwgXCJmbG93MlwiXSAjIGxhc3QgYXZhaWxhYmxlIHllYXJcblxuIyMgVW5pdGVkIFN0YXRlcyAyMDE2XG5ydXNzaWFbXCJUcmFkZVwiLFwiVW5pdGVkIFN0YXRlcyAyMDE2XCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIlVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYVwiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiUnVzc2lhXCIgJiB0cmFkZSR5ZWFyID09IDIwMTQsIFwiZmxvdzFcIl0gKyB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gXCJVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2FcIiAmIHRyYWRlJGltcG9ydGVyMiA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkeWVhciA9PSAyMDE0LCBcImZsb3cyXCJdIyBsYXN0IGF2YWlsYWJsZSB5ZWFyXG5cbiMgU2F2ZSB0aGUgY3N2XG5zYXZlUkRTKHJ1c3NpYSwgcGFzdGUwKGhlcmU6OmhlcmUoKSwgXCIvZGF0YS9cIixcInJ1c3NpYV90cmFkZS5yZHNcIikpXG5gYGAifQ== -->
-<pre class="r"><code># Read in data
-trade &lt;- read.csv(&quot;C:/Users/coles/Dropbox/Gray Zone/COW_Trade_4.0/Dyadic_COW_4.0.csv&quot;)
-
-# Create dataframe to be filled in
-russia &lt;- data.frame(Chenchya = 1:2,  Kosovo = 1:2, Estonia = 1:2,  Georgia= 1:2, Ukraine = 1:2, Syria = 1:2, 'United States' = 1:2)
-colnames(russia) = c(&quot;Chechnya 1994&quot;, &quot;Kosovo 1999&quot;, &quot;Estonia 2007&quot;, &quot;Georgia 2008&quot;, &quot;Ukraine 2014&quot;, &quot;Syria 2015&quot;, &quot;United States 2016&quot;)
-rownames(russia) &lt;- c(&quot;Trade&quot;, &quot;Natural Gas Exports&quot;)
-russia[!is.na(russia)] &lt;- NA
-
-# Trade
-## Kosovo 1999
-russia[&quot;Trade&quot;,&quot;Kosovo 1999&quot;] &lt;- trade[trade$importer1 == &quot;Kosovo&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 1999, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Kosovo&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 1999, &quot;flow2&quot;] # completely missing
-
-## Estonia 2007
-russia[&quot;Trade&quot;,&quot;Estonia 2007&quot;] &lt;- trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Estonia&quot; &amp; trade$year == 2007, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Estonia&quot; &amp; trade$year == 2007, &quot;flow2&quot;] 
-
-## Georgia 2008
-russia[&quot;Trade&quot;,&quot;Georgia 2008&quot;] &lt;- trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Georgia&quot; &amp; trade$year == 2008, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Georgia&quot; &amp; trade$year == 2008, &quot;flow2&quot;] 
-
-## Ukraine 2014
-russia[&quot;Trade&quot;,&quot;Ukraine 2014&quot;] &lt;- trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Ukraine&quot; &amp; trade$year == 2014, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Ukraine&quot; &amp; trade$year == 2014, &quot;flow2&quot;] 
-
-## Syria 2015
-russia[&quot;Trade&quot;,&quot;Syria 2015&quot;] &lt;- trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Syria&quot; &amp; trade$year == 2014, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Russia&quot; &amp; trade$importer2 == &quot;Syria&quot; &amp; trade$year == 2014, &quot;flow2&quot;] # last available year
-
-## United States 2016
-russia[&quot;Trade&quot;,&quot;United States 2016&quot;] &lt;- trade[trade$importer1 == &quot;United States of America&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 2014, &quot;flow1&quot;] + trade[trade$importer1 == &quot;United States of America&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 2014, &quot;flow2&quot;]# last available year
-
-# Save the csv
-saveRDS(russia, paste0(here::here(), &quot;/data/&quot;,&quot;russia_trade.rds&quot;))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnVzc2lhW1wiVHJhZGVcIixcIktvc292byAxOTk5XCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSBcIktvc292b1wiICYgdHJhZGUkaW1wb3J0ZXIyID09IFwiUnVzc2lhXCIgJiB0cmFkZSR5ZWFyID09IDE5OTksIFwiZmxvdzFcIl0gKyB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gXCJLb3Nvdm9cIiAmIHRyYWRlJGltcG9ydGVyMiA9PSBcIlJ1c3NpYVwiICYgdHJhZGUkeWVhciA9PSAxOTk5LCBcImZsb3cyXCJdICMgY29tcGxldGVseSBtaXNzaW5nXG5cbmBgYCJ9 -->
+<pre class="r"><code>russia[&quot;Trade&quot;,&quot;Kosovo 1999&quot;] &lt;- trade[trade$importer1 == &quot;Kosovo&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 1999, &quot;flow1&quot;] + trade[trade$importer1 == &quot;Kosovo&quot; &amp; trade$importer2 == &quot;Russia&quot; &amp; trade$year == 1999, &quot;flow2&quot;] # completely missing
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4geFtbampdXVtpc2VxXSA8LSB2amogOiByZXBsYWNlbWVudCBoYXMgbGVuZ3RoIHplcm9cbiJ9 -->
+<pre><code>Error in x[[jj]][iseq] &lt;- vjj : replacement has length zero</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
+<pre class="r"><code>NA</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDNfVHJhZGUiCmF1dGhvcjogSiBBbmRyZXMgR2Fubm9uLCBFcmlrIEdhcnR6a2UsIGFuZCBKb24gTGluZHNheSwgQ2VudGVyIGZvciBQZWFjZSBhbmQgU2VjdXJpdHkgU3R1ZGllcyAoY1BBU1MpCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6CiAgICBmaWdfaGVpZ2h0OiA4CiAgICBmaWdfd2lkdGg6IDEyCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgdGhlbWU6IGZsYXRseQogICAgdG9jOiB5ZXMKICAgIHRvY19kZXB0aDogNQogICAgdG9jX2Zsb2F0OgogICAgICBjb2xsYXBzZWQ6IHllcwplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgpSZXNlYXJjaCBhc3Npc3RhbmNlIGZvciB0aGlzIHJtZCBwcm92aWRlZCBieSBDb2xlIFJleW5vbGRzCgpgYGB7cn0KIyBSZWFkIGluIGRhdGEKdHJhZGUgPC0gcmVhZC5jc3YoIkM6L1VzZXJzL2NvbGVzL0Ryb3Bib3gvR3JheSBab25lL0NPV19UcmFkZV80LjAvRHlhZGljX0NPV180LjAuY3N2IikKCiMgQ3JlYXRlIGRhdGFmcmFtZSB0byBiZSBmaWxsZWQgaW4KcnVzc2lhIDwtIGRhdGEuZnJhbWUoQ2hlbmNoeWEgPSAxOjIsICBLb3Nvdm8gPSAxOjIsIEVzdG9uaWEgPSAxOjIsICBHZW9yZ2lhPSAxOjIsIFVrcmFpbmUgPSAxOjIsIFN5cmlhID0gMToyLCAnVW5pdGVkIFN0YXRlcycgPSAxOjIpCmNvbG5hbWVzKHJ1c3NpYSkgPSBjKCJDaGVjaG55YSAxOTk0IiwgIktvc292byAxOTk5IiwgIkVzdG9uaWEgMjAwNyIsICJHZW9yZ2lhIDIwMDgiLCAiVWtyYWluZSAyMDE0IiwgIlN5cmlhIDIwMTUiLCAiVW5pdGVkIFN0YXRlcyAyMDE2IikKcm93bmFtZXMocnVzc2lhKSA8LSBjKCJUcmFkZSIsICJOYXR1cmFsIEdhcyBFeHBvcnRzIikKcnVzc2lhWyFpcy5uYShydXNzaWEpXSA8LSBOQQoKIyBUcmFkZQojIyBLb3Nvdm8gMTk5OQpydXNzaWFbIlRyYWRlIiwiS29zb3ZvIDE5OTkiXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIktvc292byIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIlJ1c3NpYSIgJiB0cmFkZSR5ZWFyID09IDE5OTksICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJLb3Nvdm8iICYgdHJhZGUkaW1wb3J0ZXIyID09ICJSdXNzaWEiICYgdHJhZGUkeWVhciA9PSAxOTk5LCAiZmxvdzIiXSAjIGNvbXBsZXRlbHkgbWlzc2luZwoKIyMgRXN0b25pYSAyMDA3CnJ1c3NpYVsiVHJhZGUiLCJFc3RvbmlhIDIwMDciXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIlJ1c3NpYSIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIkVzdG9uaWEiICYgdHJhZGUkeWVhciA9PSAyMDA3LCAiZmxvdzEiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiRXN0b25pYSIgJiB0cmFkZSR5ZWFyID09IDIwMDcsICJmbG93MiJdIAoKIyMgR2VvcmdpYSAyMDA4CnJ1c3NpYVsiVHJhZGUiLCJHZW9yZ2lhIDIwMDgiXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIlJ1c3NpYSIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIkdlb3JnaWEiICYgdHJhZGUkeWVhciA9PSAyMDA4LCAiZmxvdzEiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiR2VvcmdpYSIgJiB0cmFkZSR5ZWFyID09IDIwMDgsICJmbG93MiJdIAoKIyMgVWtyYWluZSAyMDE0CnJ1c3NpYVsiVHJhZGUiLCJVa3JhaW5lIDIwMTQiXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIlJ1c3NpYSIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIlVrcmFpbmUiICYgdHJhZGUkeWVhciA9PSAyMDE0LCAiZmxvdzEiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiVWtyYWluZSIgJiB0cmFkZSR5ZWFyID09IDIwMTQsICJmbG93MiJdIAoKIyMgU3lyaWEgMjAxNQpydXNzaWFbIlRyYWRlIiwiU3lyaWEgMjAxNSJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiU3lyaWEiICYgdHJhZGUkeWVhciA9PSAyMDE0LCAiZmxvdzEiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiU3lyaWEiICYgdHJhZGUkeWVhciA9PSAyMDE0LCAiZmxvdzIiXSAjIGxhc3QgYXZhaWxhYmxlIHllYXIKCiMjIFVuaXRlZCBTdGF0ZXMgMjAxNgpydXNzaWFbIlRyYWRlIiwiVW5pdGVkIFN0YXRlcyAyMDE2Il0gPC0gdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJSdXNzaWEiICYgdHJhZGUkeWVhciA9PSAyMDE0LCAiZmxvdzEiXSArIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiVW5pdGVkIFN0YXRlcyBvZiBBbWVyaWNhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiUnVzc2lhIiAmIHRyYWRlJHllYXIgPT0gMjAxNCwgImZsb3cyIl0jIGxhc3QgYXZhaWxhYmxlIHllYXIKCiMgU2F2ZSB0aGUgY3N2CnNhdmVSRFMocnVzc2lhLCBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAiL2RhdGEvIiwicnVzc2lhX3RyYWRlLnJkcyIpKQpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDNfVHJhZGUiCmF1dGhvcjogSiBBbmRyZXMgR2Fubm9uLCBFcmlrIEdhcnR6a2UsIGFuZCBKb24gTGluZHNheSwgQ2VudGVyIGZvciBQZWFjZSBhbmQgU2VjdXJpdHkgU3R1ZGllcyAoY1BBU1MpCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6CiAgICBmaWdfaGVpZ2h0OiA4CiAgICBmaWdfd2lkdGg6IDEyCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgdGhlbWU6IGZsYXRseQogICAgdG9jOiB5ZXMKICAgIHRvY19kZXB0aDogNQogICAgdG9jX2Zsb2F0OgogICAgICBjb2xsYXBzZWQ6IHllcwplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgpSZXNlYXJjaCBhc3Npc3RhbmNlIGZvciB0aGlzIHJtZCBwcm92aWRlZCBieSBDb2xlIFJleW5vbGRzCgpgYGB7cn0KIyBSZWFkIGluIGRhdGEKdHJhZGUgPC0gcmVhZC5jc3YoZmlsZSA9IHBhc3RlMChoZXJlOjpoZXJlKCksICcvaW5zdC9leHRkYXRhL0R5YWRpY19DT1dfNC4wLmNzdicpKQoKIyBDcmVhdGUgZGF0YWZyYW1lIHRvIGJlIGZpbGxlZCBpbgpydXNzaWEgPC0gZGF0YS5mcmFtZShDaGVuY2h5YSA9IDE6MiwgIEtvc292byA9IDE6MiwgRXN0b25pYSA9IDE6MiwgIEdlb3JnaWE9IDE6MiwgVWtyYWluZSA9IDE6MiwgU3lyaWEgPSAxOjIsICdVbml0ZWQgU3RhdGVzJyA9IDE6MikKY29sbmFtZXMocnVzc2lhKSA9IGMoIkNoZWNobnlhIDE5OTQiLCAiS29zb3ZvIDE5OTkiLCAiRXN0b25pYSAyMDA3IiwgIkdlb3JnaWEgMjAwOCIsICJVa3JhaW5lIDIwMTQiLCAiU3lyaWEgMjAxNSIsICJVbml0ZWQgU3RhdGVzIDIwMTYiKQpyb3duYW1lcyhydXNzaWEpIDwtIGMoIlRyYWRlIiwgIk5hdHVyYWwgR2FzIEV4cG9ydHMiKQpydXNzaWFbIWlzLm5hKHJ1c3NpYSldIDwtIE5BCgojIFRyYWRlCiMjIEtvc292byAxOTk5CnJ1c3NpYVsiVHJhZGUiLCJLb3Nvdm8gMTk5OSJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiS29zb3ZvIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiUnVzc2lhIiAmIHRyYWRlJHllYXIgPT0gMTk5OSwgImZsb3cxIl0gKyB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIktvc292byIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIlJ1c3NpYSIgJiB0cmFkZSR5ZWFyID09IDE5OTksICJmbG93MiJdICMgY29tcGxldGVseSBtaXNzaW5nCgojIyBFc3RvbmlhIDIwMDcKcnVzc2lhWyJUcmFkZSIsIkVzdG9uaWEgMjAwNyJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiRXN0b25pYSIgJiB0cmFkZSR5ZWFyID09IDIwMDcsICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJSdXNzaWEiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJFc3RvbmlhIiAmIHRyYWRlJHllYXIgPT0gMjAwNywgImZsb3cyIl0gCgojIyBHZW9yZ2lhIDIwMDgKcnVzc2lhWyJUcmFkZSIsIkdlb3JnaWEgMjAwOCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiR2VvcmdpYSIgJiB0cmFkZSR5ZWFyID09IDIwMDgsICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJSdXNzaWEiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJHZW9yZ2lhIiAmIHRyYWRlJHllYXIgPT0gMjAwOCwgImZsb3cyIl0gCgojIyBVa3JhaW5lIDIwMTQKcnVzc2lhWyJUcmFkZSIsIlVrcmFpbmUgMjAxNCJdIDwtIHRyYWRlW3RyYWRlJGltcG9ydGVyMSA9PSAiUnVzc2lhIiAmIHRyYWRlJGltcG9ydGVyMiA9PSAiVWtyYWluZSIgJiB0cmFkZSR5ZWFyID09IDIwMTQsICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJSdXNzaWEiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJVa3JhaW5lIiAmIHRyYWRlJHllYXIgPT0gMjAxNCwgImZsb3cyIl0gCgojIyBTeXJpYSAyMDE1CnJ1c3NpYVsiVHJhZGUiLCJTeXJpYSAyMDE1Il0gPC0gdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJSdXNzaWEiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJTeXJpYSIgJiB0cmFkZSR5ZWFyID09IDIwMTQsICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJSdXNzaWEiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJTeXJpYSIgJiB0cmFkZSR5ZWFyID09IDIwMTQsICJmbG93MiJdICMgbGFzdCBhdmFpbGFibGUgeWVhcgoKIyMgVW5pdGVkIFN0YXRlcyAyMDE2CnJ1c3NpYVsiVHJhZGUiLCJVbml0ZWQgU3RhdGVzIDIwMTYiXSA8LSB0cmFkZVt0cmFkZSRpbXBvcnRlcjEgPT0gIlVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYSIgJiB0cmFkZSRpbXBvcnRlcjIgPT0gIlJ1c3NpYSIgJiB0cmFkZSR5ZWFyID09IDIwMTQsICJmbG93MSJdICsgdHJhZGVbdHJhZGUkaW1wb3J0ZXIxID09ICJVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiICYgdHJhZGUkaW1wb3J0ZXIyID09ICJSdXNzaWEiICYgdHJhZGUkeWVhciA9PSAyMDE0LCAiZmxvdzIiXSMgbGFzdCBhdmFpbGFibGUgeWVhcgoKIyBTYXZlIHRoZSBjc3YKc2F2ZVJEUyhydXNzaWEsIHBhc3RlMChoZXJlOjpoZXJlKCksICIvZGF0YS8iLCJydXNzaWFfdHJhZGUucmRzIikpCmBgYAo=</div>
 
 
 </div>

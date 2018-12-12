@@ -180,3 +180,8 @@ ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
   labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2008-2011)")
 ggplot2::ggsave("cyberattacks_methods.png", path = paste0(here::here(), '/paper/figures'))
 ```
+
+# Save final dataframe
+```{r}
+saveRDS(dcid_rus, paste0(here::here(), "/data/","grayzone_dcid.rds"))
+```

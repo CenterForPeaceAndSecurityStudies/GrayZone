@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-04" />
+<meta name="date" content="2018-12-12" />
 
 <title>01 Cleaning</title>
 
@@ -94,7 +94,7 @@ display: none;
 padding: 0 4px 0 4px;
 }
 .pagedtable .even {
-background-color: #fcfcfc;
+background-color: rgba(140, 140, 140, 0.1);
 }
 .pagedtable-padding-col {
 display: none;
@@ -2717,6 +2717,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 <style type="text/css">
@@ -2748,9 +2751,70 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -2764,7 +2828,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
 
 
 
@@ -2881,7 +2944,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">01 Cleaning</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-04</em></h4>
+<h4 class="date"><em>2018-12-12</em></h4>
 
 </div>
 
@@ -2892,19 +2955,56 @@ div.tocify {
         max-width: 100%;
     }
 </style>
-<p>This is the entry point for the paper “An Empirical Approach to Defining Domains”</p>
+<p>This is the entry point for the paper “After Deterrence: Explaining Conflict Short of War”</p>
+<div id="load-packages" class="section level1">
+<h1><span class="header-section-number">1</span> Load packages</h1>
+<p>Pipe operators don’t play nice and must be manually loaded up front</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="load-data" class="section level1">
+<h1><span class="header-section-number">2</span> Load data</h1>
+<p>We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance and trade data represented here was calculated using the code in 02_Distance.Rmd and 03_Trade.Rmd and then inputed into the google spreadsheet.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JheXpvbmUgPC0gZ3JheXpvbmUgJT4lIGdvb2dsZXNoZWV0czo6Z3NfcmVhZChcInJfcHVsbFwiKVxuXG5gYGAifQ== -->
+<pre class="r"><code>grayzone &lt;- grayzone %&gt;% googlesheets::gs_read(&quot;r_pull&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiQWNjZXNzaW5nIHdvcmtzaGVldCB0aXRsZWQgJ3JfcHVsbCcuXG4ifQ== -->
+<pre><code>Accessing worksheet titled 'r_pull'.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5Eb3dubG9hZGluZzogNDkwIEIgICAgIFxuRG93bmxvYWRpbmc6IDQ5MCBCICAgICBcbkRvd25sb2FkaW5nOiA1MDAgQiAgICAgXG5Eb3dubG9hZGluZzogNTAwIEIgICAgIFxuRG93bmxvYWRpbmc6IDUwMCBCICAgICBcbkRvd25sb2FkaW5nOiA1MDAgQiAgICAgXG4ifQ== -->
+<pre><code>
+Downloading: 490 B     
+Downloading: 490 B     
+Downloading: 500 B     
+Downloading: 500 B     
+Downloading: 500 B     
+Downloading: 500 B     </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9kb3VibGUoKSxcbiAgQ2FzZSA9IGNvbF9jaGFyYWN0ZXIoKVxuKVxuU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
+<pre><code>Parsed with column specification:
+cols(
+  .default = col_double(),
+  Case = col_character()
+)
+See spec(...) for full column specifications.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
 <div id="save-file" class="section level1">
-<h1><span class="header-section-number">1</span> Save file</h1>
+<h1><span class="header-section-number">3</span> Save file</h1>
 <p>The following rds file should now be identical to mctl_combined_reshape.csv except that Serbia is now included in this one (it was previously dropped during a ccode merge).</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2F2ZVJEUyhtY3RsLCBwYXN0ZTAoaGVyZTo6aGVyZSgpLCBcIi9kYXRhL1wiLFwibmFtZS5yZHNcIikpXG5gYGAifQ== -->
-<pre class="r"><code>saveRDS(mctl, paste0(here::here(), &quot;/data/&quot;,&quot;name.rds&quot;))</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDEgQ2xlYW5pbmciCmF1dGhvcjogIkogQW5kcmVzIEdhbm5vbiwgRXJpayBHYXJ0emtlLCBhbmQgSm9uIExpbmRzYXksIENlbnRlciBmb3IgUGVhY2UgYW5kIFNlY3VyaXR5IFN0dWRpZXMgKGNQQVNTKSIKZGF0ZTogImByIFN5cy5EYXRlKClgIgpvdXRwdXQ6CiAgaHRtbF9ub3RlYm9vazoKICAgIGZpZ19oZWlnaHQ6IDgKICAgIGZpZ193aWR0aDogMTIKICAgIG51bWJlcl9zZWN0aW9uczogeWVzCiAgICB0aGVtZTogZmxhdGx5CiAgICB0b2M6IHllcwogICAgdG9jX2RlcHRoOiA1CiAgICB0b2NfZmxvYXQ6CiAgICAgIGNvbGxhcHNlZDogeWVzCmVkaXRvcl9vcHRpb25zOgogIGNodW5rX291dHB1dF90eXBlOiBpbmxpbmUKLS0tCjxzdHlsZT4KICAgIGJvZHkgLm1haW4tY29udGFpbmVyIHsKICAgICAgICBtYXgtd2lkdGg6IDEwMCU7CiAgICB9Cjwvc3R5bGU+CgpUaGlzIGlzIHRoZSBlbnRyeSBwb2ludCBmb3IgdGhlIHBhcGVyICJBbiBFbXBpcmljYWwgQXBwcm9hY2ggdG8gRGVmaW5pbmcgRG9tYWlucyIgCgojIFNhdmUgZmlsZQpUaGUgZm9sbG93aW5nIHJkcyBmaWxlIHNob3VsZCBub3cgYmUgaWRlbnRpY2FsIHRvIG1jdGxfY29tYmluZWRfcmVzaGFwZS5jc3YgZXhjZXB0IHRoYXQgU2VyYmlhIGlzIG5vdyBpbmNsdWRlZCBpbiB0aGlzIG9uZSAoaXQgd2FzIHByZXZpb3VzbHkgZHJvcHBlZCBkdXJpbmcgYSBjY29kZSBtZXJnZSkuCmBgYHtyfQpzYXZlUkRTKG1jdGwsIHBhc3RlMChoZXJlOjpoZXJlKCksICIvZGF0YS8iLCJuYW1lLnJkcyIpKQpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDEgQ2xlYW5pbmciCmF1dGhvcjogSiBBbmRyZXMgR2Fubm9uLCBFcmlrIEdhcnR6a2UsIGFuZCBKb24gTGluZHNheSwgQ2VudGVyIGZvciBQZWFjZSBhbmQgU2VjdXJpdHkgU3R1ZGllcyAoY1BBU1MpCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6CiAgICBmaWdfaGVpZ2h0OiA4CiAgICBmaWdfd2lkdGg6IDEyCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgdGhlbWU6IGZsYXRseQogICAgdG9jOiB5ZXMKICAgIHRvY19kZXB0aDogNQogICAgdG9jX2Zsb2F0OgogICAgICBjb2xsYXBzZWQ6IHllcwplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lCi0tLQo8c3R5bGU+CiAgICBib2R5IC5tYWluLWNvbnRhaW5lciB7CiAgICAgICAgbWF4LXdpZHRoOiAxMDAlOwogICAgfQo8L3N0eWxlPgoKVGhpcyBpcyB0aGUgZW50cnkgcG9pbnQgZm9yIHRoZSBwYXBlciAiQWZ0ZXIgRGV0ZXJyZW5jZTogRXhwbGFpbmluZyBDb25mbGljdCBTaG9ydCBvZiBXYXIiIAoKIyBMb2FkIHBhY2thZ2VzClBpcGUgb3BlcmF0b3JzIGRvbid0IHBsYXkgbmljZSBhbmQgbXVzdCBiZSBtYW51YWxseSBsb2FkZWQgdXAgZnJvbnQKYGBge3J9CmxpYnJhcnkobWFncml0dHIpCmBgYAoKIyBMb2FkIGRhdGEKV2UgbG9hZCB0aGUgZGF0YSBmcm9tIHRoZSBnb29nbGUgc3ByZWFkc2hlZXQgdGFiIHRoYXQgaGFzIGFnZ3JlZ2F0ZWQgdGhlIGluZm8gZnJvbSBwcmV2aW91cyB2ZXJzaW9ucy4gRWFjaCByb3cgaXMgbm93IGEgZ3JheSB6b25lIGNhc2UgYW5kIHRoZSBjb2x1bW5zIGFyZSBjb2RlZCBjb3ZhcmlhdGVzLiBUaGUgZGlzdGFuY2UgYW5kIHRyYWRlIGRhdGEgcmVwcmVzZW50ZWQgaGVyZSB3YXMgY2FsY3VsYXRlZCB1c2luZyB0aGUgY29kZSBpbiAwMl9EaXN0YW5jZS5SbWQgYW5kIDAzX1RyYWRlLlJtZCBhbmQgdGhlbiBpbnB1dGVkIGludG8gdGhlIGdvb2dsZSBzcHJlYWRzaGVldC4KYGBge3J9CmdyYXl6b25lIDwtIGdvb2dsZXNoZWV0czo6Z3NfdGl0bGUoIlJ1c3NpYW4gd2FycyIpCmdyYXl6b25lIDwtIGdyYXl6b25lICU+JSBnb29nbGVzaGVldHM6OmdzX3JlYWQoInJfcHVsbCIpCmBgYAoKIyBTYXZlIGZpbGUKVGhlIGZvbGxvd2luZyByZHMgZmlsZSBzaG91bGQgbm93IGJlIGlkZW50aWNhbCB0byBtY3RsX2NvbWJpbmVkX3Jlc2hhcGUuY3N2IGV4Y2VwdCB0aGF0IFNlcmJpYSBpcyBub3cgaW5jbHVkZWQgaW4gdGhpcyBvbmUgKGl0IHdhcyBwcmV2aW91c2x5IGRyb3BwZWQgZHVyaW5nIGEgY2NvZGUgbWVyZ2UpLgpgYGB7cn0Kc2F2ZVJEUyhncmF5em9uZSwgcGFzdGUwKGhlcmU6OmhlcmUoKSwgIi9kYXRhLyIsImdyYXl6b25lX2NwYXNzLnJkcyIpKQpgYGAK</div>
 
 
 </div>
