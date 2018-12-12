@@ -66,29 +66,63 @@ dcid$dcid <- 1
 rei$rei <- 1
 
 # Ensure proper unit of analysis
-summary(cpass)
-summary(icb)
+dplyr::glimpse(cpass)
+dplyr::glimpse(icb)
+dplyr::glimpse(dcid)
+dplyr::glimpse(rei)
 
-# Rename variables so they are the same across the datasets
-rei <- rei %>% dplyr::rename('Year' = year,
-                             'Target' = target_state,
-                             'Target COW code' = target_ccode,
-                             'Target Event' = target_event,
-                             'Start Date' = event_sdate,
-                             'End Date' = event_edate,
-                             'Pro-incumbent' = pro_incumbent,
-                             'Disinformation campaign' = disinfo,
-                             'Coup attempt' = coup,
-                             'Cyberattack' = cyberattack,
-                             'Material support' = mat_support,
-                             'Outcome' = outcome,
-                             'Favorable outcome' = outcome_favorable,
-                             'Evidence of impact' = rus_impact)
+# Fix dcid dates to have a year column
+dcid <- tidyr::separate(dcid, 'Start date', c("Start Year", "Start Month", "Start Day"), sep = "-")
+dcid <- tidyr::separate(dcid, 'End date', c("End Year", "End Month", "End Day"), sep = "-")
 
+# Rename merging variables to make things easier
+cpass <- cpass %>% dplyr::rename('Target' = target,
+                                 'Year' = year_start)
+
+icb <- icb %>% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+dcid <- dcid %>% dplyr::rename('Target' = Target,
+                               'Year' = 'Start Year')
+
+rei <- rei %>% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+# Fix date types
+cpass$Year <- as.numeric(cpass$Year)
+icb$Year <- as.numeric(icb$Year)
+dcid$Year <- as.numeric(dcid$Year)
+rei$Year <- as.numeric(rei$Year)
+
+# Create dataframe versions of just variables to merge for the match
+cpass_join <- cpass[ , c('Target', 'Year', 'cpass')]
+icb_join <- icb[ , c('Target', 'Year', 'icb')]
+dcid_join <- dcid[ , c('Target', 'Year', 'dcid')]
+rei_join <- rei[ , c('Target', 'Year', 'rei')]
+
+coverage <- plyr::join_all(list(cpass_join, icb_join, dcid_join, rei_join), by = c('Target', 'Year'), type = 'left')
+
+coverage <- dplyr::full_join(cpass_join, icb_join) %>% dplyr::full_join(., dcid_join) %>% dplyr::full_join(., rei_join)
+
+coverage <- unique(coverage)
+
+coverage[is.na(coverage)] <- 0
+
+coverage <- coverage[order(coverage$Year, decreasing = FALSE), ]
+
+formattable::formattable(coverage,
+                         align = c("c", "c", "c", "c", "c", "c"),
+                         list('cpass' = formattable::color_tile("transparent", "lightblue"),
+                              'icb' = formattable::color_tile("transparent", "lightblue"),
+                              'dcid' = formattable::color_tile("transparent", "lightblue"),
+                              'rei' = formattable::color_tile("transparent", "lightblue")))
 ```
 
 # Merge data
 First we identify the variables in each dataset and which are duplicates
+```{r}
+
+```
 
 # Summary statistics
 ```{r}
@@ -99,24 +133,15 @@ names(rei)
 ## Summary
 Make a table summarizing the data on Russian crisis participation
 ```{r}
-formattable::formattable(rei,
-                         align = c("c", "l", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
-                         list('Pro-incumbent' = formattable::color_tile("transparent", "red"),
-                              'Disinformation campaign' = formattable::color_tile("transparent", "red"),
-                              'Coup attempt' = formattable::color_tile("transparent", "red"),
-                              'Cyberattack' = formattable::color_tile("transparent", "red"),
-                              'Material support' = formattable::color_tile("transparent", "red"),
-                              'Favorable outcome' = formattable::color_tile("transparent", "lightblue"),
-                              'Evidence of impact' = formattable::color_tile("transparent", "lightblue")))
+
 ```
 
 ## Plots
 Given the number of cases, summarize them in plot format.
 ```{r}
-DataExplorer::plot_bar(rei)
 ```
 
 # Save final dataframe
 ```{r}
-saveRDS(rei, paste0(here::here(), "/data/","grayzone_rei.rds"))
+# saveRDS(rei, paste0(here::here(), "/data/","grayzone_rei.rds"))
 ```

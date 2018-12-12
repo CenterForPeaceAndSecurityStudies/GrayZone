@@ -79,6 +79,17 @@ dcid_rus_datebad$interactionenddate <- janitor::excel_numeric_to_date(dcid_rus_d
 dcid_rus <- rbind(dcid_rus_datebad, dcid_rus_dategood)
 ```
 
+# Add variables
+## Target state
+Add a column for the name of the target state since target state-year will be used to merge all the datasets. Since we have already subset to cases where Russia was the initiator, we only have to code the target as the non-Russia state in the dyad using the StateA and StateB columns
+```{r}
+# Create new column for target based on stateA
+dcid_rus$target <- dcid_rus$StateA
+
+# If new column value is Russia, replace with column value from stateB
+dcid_rus <- dplyr::mutate(dcid_rus, target = ifelse(target == 'Russia', StateB, target))
+```
+
 # Summary statistics
 ## Choose variables
 Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:
@@ -122,7 +133,7 @@ Identify variables of interest regarding the means employed, intensity of crises
 names(dcid_rus)
 
 # Keep relevant variables
-vars_id <- c("Cyberincidentnum", "Name", "interactionstartdate", "interactionenddate")
+vars_id <- c("Cyberincidentnum", "Name", "target", "interactionstartdate", "interactionenddate")
 vars_interest <- c("interactiontype", "method", "cyber_objective", "objective_achievement", "severity")
 
 vars_keep <- c(vars_id, vars_interest)
@@ -132,6 +143,7 @@ dcid_rus <- dcid_rus[ , vars_keep]
 # Rename variables for readability
 dcid_rus <- dcid_rus %>% dplyr::rename('Incident No.' = Cyberincidentnum,
                                        'Incident' = Name,
+                                       'Target' = target,
                                        'Start date' = interactionstartdate,
                                        'End date' = interactionenddate,
                                        'Type' = interactiontype,

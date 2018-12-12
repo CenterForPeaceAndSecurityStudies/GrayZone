@@ -61,6 +61,21 @@ crisis_list <- icb_actor_rus$crisname
 
 There are `r crisis_count` ICB crises post-1991 in which Russia was a crisis actor. This includes `r crisis_list`.
 
+# Add variables
+## Target state
+Add a column for the name of the target state since target state-year will be used to merge all the datasets
+```{r}
+icb_actor_rus$crisname
+
+icb_actor_rus$target <- NA
+
+icb_actor_rus$target[icb_actor_rus$crisname == 'PANKISI GORGE'] <- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'S. OSSETIA/ABKHAZIA'] <- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'RUSSO-GEORGIAN WAR'] <- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'CRIMEA-DONBASS'] <- 'Ukraine'
+icb_actor_rus$target[icb_actor_rus$crisname == 'TURKEY-RUSSIA JET INCIDENT'] <- 'Syria'
+```
+
 # Summary statistics
 ## Choose variables
 Identify variables of interest regarding the means employed, intensity of crises, casualties, etc. From looking over the codebook that includes the following:
@@ -111,7 +126,7 @@ Identify variables of interest regarding the means employed, intensity of crises
   1-4, least to most
 ```{r}
 # Keep identifier variables
-vars_id <- c("crisno", "systrgyr", "crisname")
+vars_id <- c("crisno", "systrgyr", "crisname", "target")
 vars_interest <- c("cenvio", "sevvio", "outcom", "outesr", "trgterra", "geog", "cractloc", "noactr", "viol")
 
 vars_keep <- c(vars_id, vars_interest)
@@ -119,12 +134,13 @@ vars_keep <- c(vars_id, vars_interest)
 icb_actor_rus <- icb_actor_rus[ , vars_keep]
 
 # Reorder the variables
-icb_actor_rus <- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
+icb_actor_rus <- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'target', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
 
 # Rename variables for readability
 icb_actor_rus <- icb_actor_rus %>% dplyr::rename('Crisis No' = crisno,
                                                  'Year' = systrgyr,
                                                  'Crisis Name' = crisname,
+                                                 'Target' = target,
                                                  'Crisis Violence Centrality' = cenvio,
                                                  'Crisis Violence Severity' = sevvio,
                                                  'Outcome' = outcom,
@@ -146,7 +162,7 @@ icb_actor_rus$`Distance from Actor` <- car::recode(icb_actor_rus$`Distance from 
 Make a table summarizing the data on Russian crisis participation
 ```{r}
 formattable::formattable(icb_actor_rus,
-                         align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "l", "l", "c"),
+                         align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c", "l", "l", "c"),
                          list(formattable::area(col = c('Crisis Violence Centrality', 'Crisis Violence Severity', 'Actor Violence Severity')) 
                               ~ formattable::color_tile("red", "red4")))
 ```
