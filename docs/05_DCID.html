@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-11" />
+<meta name="date" content="2018-12-12" />
 
 <title>05_DCID</title>
 
@@ -237,7 +237,7 @@ display: none;
 padding: 0 4px 0 4px;
 }
 .pagedtable .even {
-background-color: #fcfcfc;
+background-color: rgba(140, 140, 140, 0.1);
 }
 .pagedtable-padding-col {
 display: none;
@@ -1554,6 +1554,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -1561,14 +1564,74 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -1580,7 +1643,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">05_DCID</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-11</em></h4>
+<h4 class="date"><em>2018-12-12</em></h4>
 
 </div>
 
@@ -1592,11 +1655,15 @@ $(document).ready(function () {
 <li><a href="#subset">Subset</a></li>
 <li><a href="#fix-dates">Fix dates</a></li>
 </ul></li>
+<li><a href="#add-variables">Add variables</a><ul>
+<li><a href="#target-state">Target state</a></li>
+</ul></li>
 <li><a href="#summary-statistics">Summary statistics</a><ul>
 <li><a href="#choose-variables">Choose variables</a></li>
 <li><a href="#summary">Summary</a></li>
 <li><a href="#plots">Plots</a></li>
 </ul></li>
+<li><a href="#save-final-dataframe">Save final dataframe</a></li>
 </ul>
 </div>
 
@@ -1645,6 +1712,18 @@ dcid_rus_datebad$interactionenddate &lt;- janitor::excel_numeric_to_date(dcid_ru
 
 # Merge
 dcid_rus &lt;- rbind(dcid_rus_datebad, dcid_rus_dategood)</code></pre>
+</div>
+</div>
+<div id="add-variables" class="section level1">
+<h1>Add variables</h1>
+<div id="target-state" class="section level2">
+<h2>Target state</h2>
+<p>Add a column for the name of the target state since target state-year will be used to merge all the datasets. Since we have already subset to cases where Russia was the initiator, we only have to code the target as the non-Russia state in the dyad using the StateA and StateB columns</p>
+<pre class="r"><code># Create new column for target based on stateA
+dcid_rus$target &lt;- dcid_rus$StateA
+
+# If new column value is Russia, replace with column value from stateB
+dcid_rus &lt;- dplyr::mutate(dcid_rus, target = ifelse(target == 'Russia', StateB, target))</code></pre>
 </div>
 </div>
 <div id="summary-statistics" class="section level1">
@@ -1704,9 +1783,10 @@ dcid_rus &lt;- rbind(dcid_rus_datebad, dcid_rus_dategood)</code></pre>
 ## [15] &quot;Concession&quot;            &quot;3rdpartyinitator&quot;     
 ## [17] &quot;3rdparty.target&quot;       &quot;govtstatement&quot;        
 ## [19] &quot;severity&quot;              &quot;damage.type&quot;          
-## [21] &quot;Political.Objective&quot;   &quot;X22&quot;</code></pre>
+## [21] &quot;Political.Objective&quot;   &quot;X22&quot;                  
+## [23] &quot;target&quot;</code></pre>
 <pre class="r"><code># Keep relevant variables
-vars_id &lt;- c(&quot;Cyberincidentnum&quot;, &quot;Name&quot;, &quot;interactionstartdate&quot;, &quot;interactionenddate&quot;)
+vars_id &lt;- c(&quot;Cyberincidentnum&quot;, &quot;Name&quot;, &quot;target&quot;, &quot;interactionstartdate&quot;, &quot;interactionenddate&quot;)
 vars_interest &lt;- c(&quot;interactiontype&quot;, &quot;method&quot;, &quot;cyber_objective&quot;, &quot;objective_achievement&quot;, &quot;severity&quot;)
 
 vars_keep &lt;- c(vars_id, vars_interest)
@@ -1716,6 +1796,7 @@ dcid_rus &lt;- dcid_rus[ , vars_keep]
 # Rename variables for readability
 dcid_rus &lt;- dcid_rus %&gt;% dplyr::rename('Incident No.' = Cyberincidentnum,
                                        'Incident' = Name,
+                                       'Target' = target,
                                        'Start date' = interactionstartdate,
                                        'End date' = interactionenddate,
                                        'Type' = interactiontype,
@@ -1753,12 +1834,13 @@ dcid_rus$Method &lt;- plyr::revalue(dcid_rus$Method, c(&quot;1&quot; = &quot;Van
 <thead>
 <tr>
 <th style="text-align:left;">
-</th>
-<th style="text-align:left;">
 Incident No.
 </th>
 <th style="text-align:left;">
 Incident
+</th>
+<th style="text-align:left;">
+Target
 </th>
 <th style="text-align:left;">
 Start date
@@ -1772,7 +1854,7 @@ Type
 <th style="text-align:left;">
 Method
 </th>
-<th style="text-align:left;">
+<th style="text-align:center;">
 Objective
 </th>
 <th style="text-align:center;">
@@ -1789,10 +1871,10 @@ Incident severity
 3
 </td>
 <td style="text-align:left;">
-3
+Duke Series
 </td>
 <td style="text-align:left;">
-Duke Series
+US
 </td>
 <td style="text-align:left;">
 2008-04-08
@@ -1806,7 +1888,7 @@ Offensive
 <td style="text-align:left;">
 Infiltration: Virus
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -1821,10 +1903,10 @@ Long-term espionage
 5
 </td>
 <td style="text-align:left;">
-5
+CENTCOM(linked to APT 28)
 </td>
 <td style="text-align:left;">
-CENTCOM(linked to APT 28)
+US
 </td>
 <td style="text-align:left;">
 2008-10-01
@@ -1838,7 +1920,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -1853,10 +1935,10 @@ Long-term espionage
 7
 </td>
 <td style="text-align:left;">
-7
+Sandworm
 </td>
 <td style="text-align:left;">
-Sandworm
+US
 </td>
 <td style="text-align:left;">
 2009-01-01
@@ -1870,7 +1952,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -1885,10 +1967,10 @@ Long-term espionage
 9
 </td>
 <td style="text-align:left;">
-9
+Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-Energetic Bear/Dragonfly/Crouching Yeti
+US
 </td>
 <td style="text-align:left;">
 2011-01-01
@@ -1902,7 +1984,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -1917,10 +1999,10 @@ Short-term espionage
 10
 </td>
 <td style="text-align:left;">
-10
+Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-Operation Pawn Storm
+US
 </td>
 <td style="text-align:left;">
 2013-09-30
@@ -1934,7 +2016,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -1949,10 +2031,10 @@ Short-term espionage
 11
 </td>
 <td style="text-align:left;">
-11
+CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-CyberBerkut NATO Websites
+US
 </td>
 <td style="text-align:left;">
 2014-03-15
@@ -1966,7 +2048,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -1981,10 +2063,10 @@ Disruption
 12
 </td>
 <td style="text-align:left;">
-12
+Operation Pawn Storm: military networks (fake OWA)
 </td>
 <td style="text-align:left;">
-Operation Pawn Storm: military networks (fake OWA)
+US
 </td>
 <td style="text-align:left;">
 2014-06-02
@@ -1998,7 +2080,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2013,10 +2095,10 @@ Short-term espionage
 13
 </td>
 <td style="text-align:left;">
-13
+Operation Pawn Storm: Nuclear power plants, newspapers
 </td>
 <td style="text-align:left;">
-Operation Pawn Storm: Nuclear power plants, newspapers
+US
 </td>
 <td style="text-align:left;">
 2014-06-03
@@ -2030,7 +2112,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2045,10 +2127,10 @@ Short-term espionage
 14
 </td>
 <td style="text-align:left;">
-14
+US Banks hacked
 </td>
 <td style="text-align:left;">
-US Banks hacked
+US
 </td>
 <td style="text-align:left;">
 2014-06-04
@@ -2062,7 +2144,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2077,10 +2159,10 @@ Disruption
 15
 </td>
 <td style="text-align:left;">
-15
+White House hack
 </td>
 <td style="text-align:left;">
-White House hack
+US
 </td>
 <td style="text-align:left;">
 2014-10-26
@@ -2094,7 +2176,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2109,10 +2191,10 @@ Short-term espionage
 16
 </td>
 <td style="text-align:left;">
-16
+State Dept hack
 </td>
 <td style="text-align:left;">
-State Dept hack
+US
 </td>
 <td style="text-align:left;">
 2014-11-15
@@ -2126,7 +2208,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2141,10 +2223,10 @@ Short-term espionage
 81
 </td>
 <td style="text-align:left;">
-81
+Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-Energetic Bear/Dragonfly/Crouching Yeti
+Canada
 </td>
 <td style="text-align:left;">
 2011-01-01
@@ -2158,7 +2240,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2173,10 +2255,10 @@ Short-term espionage
 82
 </td>
 <td style="text-align:left;">
-82
+CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-CyberBerkut NATO Websites
+Canada
 </td>
 <td style="text-align:left;">
 2014-03-15
@@ -2190,7 +2272,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2205,10 +2287,10 @@ Disruption
 83
 </td>
 <td style="text-align:left;">
-83
+Energetic Bear/Dragonfly/Crouching Yeti
 </td>
 <td style="text-align:left;">
-Energetic Bear/Dragonfly/Crouching Yeti
+UK
 </td>
 <td style="text-align:left;">
 2011-01-01
@@ -2222,7 +2304,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2237,10 +2319,10 @@ Short-term espionage
 84
 </td>
 <td style="text-align:left;">
-84
+CyberBerkut NATO Websites
 </td>
 <td style="text-align:left;">
-CyberBerkut NATO Websites
+UK
 </td>
 <td style="text-align:left;">
 2014-03-15
@@ -2254,7 +2336,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2269,10 +2351,10 @@ Disruption
 85
 </td>
 <td style="text-align:left;">
-85
+Sandworm
 </td>
 <td style="text-align:left;">
-Sandworm
+Poland
 </td>
 <td style="text-align:left;">
 2009-01-01
@@ -2286,7 +2368,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -2301,10 +2383,10 @@ Long-term espionage
 86
 </td>
 <td style="text-align:left;">
-86
+Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-Operation Pawn Storm
+Poland
 </td>
 <td style="text-align:left;">
 2014-06-01
@@ -2318,7 +2400,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2333,10 +2415,10 @@ Short-term espionage
 87
 </td>
 <td style="text-align:left;">
-87
+CyberBerkut Polish Stock Exchange
 </td>
 <td style="text-align:left;">
-CyberBerkut Polish Stock Exchange
+Poland
 </td>
 <td style="text-align:left;">
 2014-10-23
@@ -2350,7 +2432,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2361,9 +2443,6 @@ Disruption
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-88
-</td>
 <td style="text-align:left;">
 88
 </td>
@@ -2371,6 +2450,9 @@ Disruption
 Defacement of govt websites
 </td>
 <td style="text-align:left;">
+Estonia
+</td>
+<td style="text-align:left;">
 2007-04-27
 </td>
 <td style="text-align:left;">
@@ -2382,7 +2464,7 @@ Offensive
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2393,9 +2475,6 @@ Disruption
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-89
-</td>
 <td style="text-align:left;">
 89
 </td>
@@ -2403,6 +2482,9 @@ Disruption
 Defacement of private websites
 </td>
 <td style="text-align:left;">
+Estonia
+</td>
+<td style="text-align:left;">
 2007-04-27
 </td>
 <td style="text-align:left;">
@@ -2414,7 +2496,7 @@ Offensive
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2425,9 +2507,6 @@ Disruption
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-90
-</td>
 <td style="text-align:left;">
 90
 </td>
@@ -2435,6 +2514,9 @@ Disruption
 DDoS of govt websites
 </td>
 <td style="text-align:left;">
+Estonia
+</td>
+<td style="text-align:left;">
 2007-04-27
 </td>
 <td style="text-align:left;">
@@ -2446,7 +2528,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -2457,9 +2539,6 @@ Degrade
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-91
-</td>
 <td style="text-align:left;">
 91
 </td>
@@ -2467,6 +2546,9 @@ Degrade
 DDoS of private websites
 </td>
 <td style="text-align:left;">
+Estonia
+</td>
+<td style="text-align:left;">
 2007-04-27
 </td>
 <td style="text-align:left;">
@@ -2478,7 +2560,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -2493,10 +2575,10 @@ Degrade
 92
 </td>
 <td style="text-align:left;">
-92
+Snake
 </td>
 <td style="text-align:left;">
-Snake
+Lithuania
 </td>
 <td style="text-align:left;">
 2005-01-01
@@ -2510,7 +2592,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2525,10 +2607,10 @@ Short-term espionage
 93
 </td>
 <td style="text-align:left;">
-93
+Lithuanian Parliament
 </td>
 <td style="text-align:left;">
-Lithuanian Parliament
+Lithuania
 </td>
 <td style="text-align:left;">
 2008-06-28
@@ -2542,7 +2624,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2557,10 +2639,10 @@ Disruption
 94
 </td>
 <td style="text-align:left;">
-94
+Lithuanian Parliament
 </td>
 <td style="text-align:left;">
-Lithuanian Parliament
+Lithuania
 </td>
 <td style="text-align:left;">
 2008-06-28
@@ -2574,7 +2656,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2585,14 +2667,14 @@ Disruption
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-95
-</td>
 <td style="text-align:left;">
 95
 </td>
 <td style="text-align:left;">
 Snake
+</td>
+<td style="text-align:left;">
+Ukraine
 </td>
 <td style="text-align:left;">
 2005-01-01
@@ -2606,7 +2688,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2617,14 +2699,14 @@ Short-term espionage
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-96
-</td>
 <td style="text-align:left;">
 96
 </td>
 <td style="text-align:left;">
 Sandworm
+</td>
+<td style="text-align:left;">
+Ukraine
 </td>
 <td style="text-align:left;">
 2009-01-01
@@ -2638,7 +2720,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -2653,10 +2735,10 @@ Long-term espionage
 97
 </td>
 <td style="text-align:left;">
-97
+Duke Series
 </td>
 <td style="text-align:left;">
-Duke Series
+Ukraine
 </td>
 <td style="text-align:left;">
 2013-02-01
@@ -2670,7 +2752,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -2685,10 +2767,10 @@ Long-term espionage
 98
 </td>
 <td style="text-align:left;">
-98
+CyberBerkut UKR Gov Site Hack
 </td>
 <td style="text-align:left;">
-CyberBerkut UKR Gov Site Hack
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-01-01
@@ -2702,7 +2784,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2717,10 +2799,10 @@ Disruption
 99
 </td>
 <td style="text-align:left;">
-99
+CyberBerkut Telecom disruption
 </td>
 <td style="text-align:left;">
-CyberBerkut Telecom disruption
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-03-01
@@ -2734,7 +2816,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -2749,10 +2831,10 @@ Degrade
 100
 </td>
 <td style="text-align:left;">
-100
+CyberBerkut Ukraine Election Intrusion
 </td>
 <td style="text-align:left;">
-CyberBerkut Ukraine Election Intrusion
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-05-22
@@ -2766,7 +2848,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2781,10 +2863,10 @@ Disruption
 101
 </td>
 <td style="text-align:left;">
-101
+Operation Pawn Storm
 </td>
 <td style="text-align:left;">
-Operation Pawn Storm
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-06-01
@@ -2798,7 +2880,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Short-term espionage
 </td>
 <td style="text-align:center;">
@@ -2813,10 +2895,10 @@ Short-term espionage
 102
 </td>
 <td style="text-align:left;">
-102
+CyberBerkut UKR MOD DDoS
 </td>
 <td style="text-align:left;">
-CyberBerkut UKR MOD DDoS
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-10-01
@@ -2830,7 +2912,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2845,10 +2927,10 @@ Disruption
 103
 </td>
 <td style="text-align:left;">
-103
+Fancy Bear (also APT 28 linked)
 </td>
 <td style="text-align:left;">
-Fancy Bear (also APT 28 linked)
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-10-06
@@ -2862,7 +2944,7 @@ Offensive
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -2877,10 +2959,10 @@ Degrade
 104
 </td>
 <td style="text-align:left;">
-104
+CyberBerkut Billboard Hack
 </td>
 <td style="text-align:left;">
-CyberBerkut Billboard Hack
+Ukraine
 </td>
 <td style="text-align:left;">
 2014-11-20
@@ -2894,7 +2976,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -2909,10 +2991,10 @@ Disruption
 105
 </td>
 <td style="text-align:left;">
-105
+APT28/Sofacy Group/Sednit Group/Tsar Team/Fancy Bear
 </td>
 <td style="text-align:left;">
-APT28/Sofacy Group/Sednit Group/Tsar Team/Fancy Bear
+Georgia
 </td>
 <td style="text-align:left;">
 2007-01-01
@@ -2926,7 +3008,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -2941,10 +3023,10 @@ Long-term espionage
 106
 </td>
 <td style="text-align:left;">
-106
+Duke Series
 </td>
 <td style="text-align:left;">
-Duke Series
+Georgia
 </td>
 <td style="text-align:left;">
 2008-04-08
@@ -2958,7 +3040,7 @@ Nuisance
 <td style="text-align:left;">
 Intrusion
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Long-term espionage
 </td>
 <td style="text-align:center;">
@@ -2973,10 +3055,10 @@ Long-term espionage
 107
 </td>
 <td style="text-align:left;">
-107
+Before the gunfire
 </td>
 <td style="text-align:left;">
-Before the gunfire
+Georgia
 </td>
 <td style="text-align:left;">
 2008-04-20
@@ -2990,7 +3072,7 @@ Nuisance
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3005,10 +3087,10 @@ Disruption
 110
 </td>
 <td style="text-align:left;">
-110
+Russo-Georgia Cyber Actions
 </td>
 <td style="text-align:left;">
-Russo-Georgia Cyber Actions
+Georgia
 </td>
 <td style="text-align:left;">
 2008-08-05
@@ -3022,7 +3104,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3037,10 +3119,10 @@ Disruption
 111
 </td>
 <td style="text-align:left;">
-111
+Russo-Georgia Cyber Actions
 </td>
 <td style="text-align:left;">
-Russo-Georgia Cyber Actions
+Georgia
 </td>
 <td style="text-align:left;">
 2008-08-05
@@ -3054,7 +3136,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3069,10 +3151,10 @@ Disruption
 112
 </td>
 <td style="text-align:left;">
-112
+Russo-Georgia Cyber Actions
 </td>
 <td style="text-align:left;">
-Russo-Georgia Cyber Actions
+Georgia
 </td>
 <td style="text-align:left;">
 2008-08-05
@@ -3086,7 +3168,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3101,10 +3183,10 @@ Disruption
 4
 </td>
 <td style="text-align:left;">
-4
+US govt employee in Georgia hacked
 </td>
 <td style="text-align:left;">
-US govt employee in Georgia hacked
+US
 </td>
 <td style="text-align:left;">
 2008-08-06
@@ -3118,7 +3200,7 @@ Nuisance
 <td style="text-align:left;">
 Infiltration: Virus
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3133,10 +3215,10 @@ Disruption
 8
 </td>
 <td style="text-align:left;">
-8
+Power grid hacked, traced to Russia
 </td>
 <td style="text-align:left;">
-Power grid hacked, traced to Russia
+US
 </td>
 <td style="text-align:left;">
 2009-08-24
@@ -3150,7 +3232,7 @@ Nuisance
 <td style="text-align:left;">
 Infiltration: Virus
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -3165,10 +3247,10 @@ Degrade
 109
 </td>
 <td style="text-align:left;">
-109
+VoiP
 </td>
 <td style="text-align:left;">
-VoiP
+Georgia
 </td>
 <td style="text-align:left;">
 2008-08-04
@@ -3182,7 +3264,7 @@ Offensive
 <td style="text-align:left;">
 DDoD
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Degrade
 </td>
 <td style="text-align:center;">
@@ -3197,10 +3279,10 @@ Degrade
 113
 </td>
 <td style="text-align:left;">
-113
+US-Georgia Government defacements
 </td>
 <td style="text-align:left;">
-US-Georgia Government defacements
+Georgia
 </td>
 <td style="text-align:left;">
 2008-08-07
@@ -3214,7 +3296,7 @@ Nuisance
 <td style="text-align:left;">
 Vandalism
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 Disruption
 </td>
 <td style="text-align:center;">
@@ -3243,6 +3325,10 @@ Disruption
 <pre class="r"><code>ggplot2::ggsave(&quot;cyberattacks_methods.png&quot;, path = paste0(here::here(), '/paper/figures'))</code></pre>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 </div>
+</div>
+<div id="save-final-dataframe" class="section level1">
+<h1>Save final dataframe</h1>
+<pre class="r"><code>saveRDS(dcid_rus, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_dcid.rds&quot;))</code></pre>
 </div>
 
 

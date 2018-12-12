@@ -13,7 +13,7 @@
 
 <meta name="date" content="2018-12-12" />
 
-<title>06_REI</title>
+<title>07_FullData</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -1641,7 +1641,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">06_REI</h1>
+<h1 class="title toc-ignore">07_FullData</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
 <h4 class="date"><em>2018-12-12</em></h4>
 
@@ -1653,8 +1653,12 @@ $(document).ready(function () {
 <li><a href="#load-packages">Load packages</a></li>
 <li><a href="#load-data">Load data</a></li>
 </ul></li>
+<li><a href="#compare-coverage">Compare coverage</a><ul>
+<li><a href="#prep-for-coverage-comparison">Prep for coverage comparison</a></li>
+<li><a href="#compare-case-coverage-across-datasets">Compare case coverage across datasets</a></li>
+</ul></li>
+<li><a href="#merge-data">Merge data</a></li>
 <li><a href="#summary-statistics">Summary statistics</a><ul>
-<li><a href="#choose-variables">Choose variables</a></li>
 <li><a href="#summary">Summary</a></li>
 <li><a href="#plots">Plots</a></li>
 </ul></li>
@@ -1662,8 +1666,11 @@ $(document).ready(function () {
 </ul>
 </div>
 
-<p>This document will look at coverage of Russian electoral inference (1991-2017) from Casey and Ahmad (2017) and identify variables of interest.</p>
-<p>The cyber data comes from Casey, Adam; Way, Lucan Ahmad, 2017, “Russian Electoral Interventions, 1991-2017”, <a href="https://doi.org/10.5683/SP/BYRQQS" class="uri">https://doi.org/10.5683/SP/BYRQQS</a>, Scholars Portal Dataverse</p>
+<p>This document compares case and variable coverage across all the Russia cyber data investigated.</p>
+<p>The data comes from the following sources:</p>
+<p>ICB comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.</p>
+<p>DCID comes from Valeriano, B., &amp; Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. <a href="https://doi.org/10.1177/0022343313518940" class="uri">https://doi.org/10.1177/0022343313518940</a></p>
+<p>REI comes from Casey, Adam; Way, Lucan Ahmad, 2017, “Russian Electoral Interventions, 1991-2017”, <a href="https://doi.org/10.5683/SP/BYRQQS" class="uri">https://doi.org/10.5683/SP/BYRQQS</a>, Scholars Portal Dataverse</p>
 <div id="preparation" class="section level1">
 <h1>Preparation</h1>
 <div id="load-packages" class="section level2">
@@ -1674,281 +1681,192 @@ library(ggplot2)</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
+<p>Load the cleaned and subset versions of each dataset</p>
 <pre class="r"><code># Load data
-load(paste0(here::here(), '/inst/extdata/russian_electoral_interventions_1991-2017.RData'))
-rei &lt;- x
-
-incident_count &lt;- nrow(rei)</code></pre>
-<p>There are 27 DCID incidents in which Russia was an actor.</p>
+cpass &lt;- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+icb &lt;- readRDS(paste0(here::here(), '/data/grayzone_icb.rds'))
+dcid &lt;- readRDS(paste0(here::here(), '/data/grayzone_dcid.rds'))
+rei &lt;- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))</code></pre>
 </div>
 </div>
-<div id="summary-statistics" class="section level1">
-<h1>Summary statistics</h1>
-<div id="choose-variables" class="section level2">
-<h2>Choose variables</h2>
-<p>Identify variables of interest regarding the means employed, intensity of crises, etc. These variables are all recoded, but their raw values for those that are not obvious are as follows:</p>
-<pre class="r"><code>names(rei)</code></pre>
-<pre><code>##  [1] &quot;year&quot;              &quot;target_state&quot;      &quot;target_ccode&quot;     
-##  [4] &quot;target_event&quot;      &quot;event_sdate&quot;       &quot;event_edate&quot;      
-##  [7] &quot;pro_incumbent&quot;     &quot;disinfo&quot;           &quot;coup&quot;             
-## [10] &quot;cyberattack&quot;       &quot;mat_support&quot;       &quot;outcome&quot;          
-## [13] &quot;outcome_favorable&quot; &quot;rus_impact&quot;</code></pre>
-<pre class="r"><code># Rename variables for readability
-rei &lt;- rei %&gt;% dplyr::rename('Year' = year,
-                             'Target' = target_state,
-                             'Target COW code' = target_ccode,
-                             'Target Event' = target_event,
-                             'Start Date' = event_sdate,
-                             'End Date' = event_edate,
-                             'Pro-incumbent' = pro_incumbent,
-                             'Disinformation campaign' = disinfo,
-                             'Coup attempt' = coup,
-                             'Cyberattack' = cyberattack,
-                             'Material support' = mat_support,
-                             'Outcome' = outcome,
-                             'Favorable outcome' = outcome_favorable,
-                             'Evidence of impact' = rus_impact)
+<div id="compare-coverage" class="section level1">
+<h1>Compare coverage</h1>
+<p>Before merging the data, compare the different cases covered by each one</p>
+<div id="prep-for-coverage-comparison" class="section level2">
+<h2>Prep for coverage comparison</h2>
+<pre class="r"><code># Create identifier variables for each dataset
+cpass$cpass &lt;- 1
+icb$icb &lt;- 1
+dcid$dcid &lt;- 1
+rei$rei &lt;- 1
 
-# Recode some variables to be more intuitive
-rei$`Target Event` &lt;- as.character(rei$`Target Event`)
-rei$`Target Event` &lt;- plyr::revalue(rei$`Target Event`, c(&quot;1&quot; = &quot;National Election&quot;,
-                                                          &quot;2&quot; = &quot;Referendum&quot;,
-                                                          &quot;3&quot; = &quot;Political Party Operations&quot;))
+# Ensure proper unit of analysis
+dplyr::glimpse(cpass)</code></pre>
+<pre><code>## Observations: 7
+## Variables: 25
+## $ target                 &lt;chr&gt; &quot;Chechnya&quot;, &quot;Kosovo&quot;, &quot;Estonia&quot;, &quot;Georg...
+## $ year_start             &lt;dbl&gt; 1994, 1999, 2007, 2008, 2014, 2015, 2016
+## $ year_end               &lt;dbl&gt; 1996, 1999, 2007, 2008, NA, NA, NA
+## $ fsu                    &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 0
+## $ det_dist_us_cap        &lt;dbl&gt; 5737, 4839, 4337, 5789, 4880, 5875, 0
+## $ det_dist_us_cent       &lt;dbl&gt; 6154, 5650, 4967, 6341, 5629, 6635, 0
+## $ det_dist_us_min        &lt;dbl&gt; 4936, 4083, 3397, 4466, 3860, 4887, 0
+## $ det_dist_rus_cap       &lt;dbl&gt; 932, 1165, 541, 1022, 471, 1538, 4872
+## $ det_dist_rus_cent      &lt;dbl&gt; 2408, 3335, 2399, 2618, 2667, 3174, 5388
+## $ det_dist_rus_min       &lt;dbl&gt; 0, 760, 0, 0, 0, 376, 2014
+## $ det_alliance           &lt;dbl&gt; 0, 2, 3, 1, 1, 1, 3
+## $ det_rusmiladv          &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 0
+## $ det_rustrade           &lt;dbl&gt; NA, NA, 1938.77, 477.04, 23404.43, 652....
+## $ det_rusenergyexport    &lt;dbl&gt; NA, NA, 1.460, 0.000, 13.900, 0.187, 12...
+## $ det_eu                 &lt;dbl&gt; 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 0.0
+## $ det_rus_vitalinterest  &lt;dbl&gt; 1.0, 0.0, 0.5, 1.0, 1.0, 0.0, 0.0
+## $ resp_convmil           &lt;dbl&gt; 3, 2, 0, 3, 2, 3, 0
+## $ resp_convmil_gro       &lt;dbl&gt; 1.0, 0.5, 0.0, 1.0, 0.5, 0.5, 0.0
+## $ resp_convmil_airsea    &lt;dbl&gt; 1, 0, 0, 1, 1, 1, 0
+## $ resp_paramil           &lt;dbl&gt; 3, 2, 2, 3, 3, 3, 0
+## $ resp_cyberdisrip       &lt;dbl&gt; 2, 3, 3, 3, 3, 2, 1
+## $ resp_infoops           &lt;dbl&gt; 3, 3, 3, 3, 3, 3, 3
+## $ outcome_deaths         &lt;dbl&gt; 3, 0, 0, 2, 2, 1, 0
+## $ outcome_intensity_rank &lt;dbl&gt; 7, 2, 3, 6, 5, 4, 1
+## $ cpass                  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1</code></pre>
+<pre class="r"><code>dplyr::glimpse(icb)</code></pre>
+<pre><code>## Observations: 5
+## Variables: 14
+## $ `Crisis No`                  &lt;int&gt; 439, 445, 458, 471, 476
+## $ `Crisis Name`                &lt;fct&gt; PANKISI GORGE, S. OSSETIA/ABKHAZI...
+## $ Year                         &lt;int&gt; 2002, 2004, 2008, 2014, 2015
+## $ Target                       &lt;chr&gt; &quot;Georgia&quot;, &quot;Georgia&quot;, &quot;Georgia&quot;, ...
+## $ `Crisis Violence Centrality` &lt;int&gt; 2, 1, 3, 4, 1
+## $ `Crisis Violence Severity`   &lt;int&gt; 2, 1, 3, 3, 1
+## $ `Actor Violence Severity`    &lt;int&gt; 2, 1, 3, 3, 2
+## $ Escalation                   &lt;dbl&gt; 1, 1, 0, NA, NA
+## $ Outcome                      &lt;chr&gt; &quot;Compromise&quot;, &quot;Compromise&quot;, &quot;Vict...
+## $ `Duration (days)`            &lt;int&gt; 72, 94, 9, 362, 2
+## $ Location                     &lt;chr&gt; &quot;West Asia&quot;, &quot;West Asia&quot;, &quot;West A...
+## $ `Distance from Actor`        &lt;chr&gt; &quot;Home territory&quot;, &quot;Home territory...
+## $ `No. of Actors`              &lt;int&gt; 3, 3, 2, 5, 7
+## $ icb                          &lt;dbl&gt; 1, 1, 1, 1, 1</code></pre>
+<pre class="r"><code>dplyr::glimpse(dcid)</code></pre>
+<pre><code>## Observations: 45
+## Variables: 11
+## $ `Incident No.`      &lt;dbl&gt; 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 81...
+## $ Incident            &lt;chr&gt; &quot;Duke Series&quot;, &quot;CENTCOM\\DOD (linked to AP...
+## $ Target              &lt;chr&gt; &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, ...
+## $ `Start date`        &lt;date&gt; 2008-04-08, 2008-10-01, 2009-01-01, 2011-...
+## $ `End date`          &lt;date&gt; 2015-09-17, 2008-10-15, 2014-10-14, 2014-...
+## $ Type                &lt;chr&gt; &quot;Offensive&quot;, &quot;Offensive&quot;, &quot;Offensive&quot;, &quot;Of...
+## $ Method              &lt;chr&gt; &quot;Infiltration: Virus&quot;, &quot;Intrusion&quot;, &quot;Intru...
+## $ Objective           &lt;chr&gt; &quot;Long-term espionage&quot;, &quot;Long-term espionag...
+## $ Success             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, ...
+## $ `Incident severity` &lt;dbl&gt; 4, 4, 4, 3, 4, 2, 4, 4, 3, 3, 3, 3, 2, 4, ...
+## $ dcid                &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</code></pre>
+<pre class="r"><code>dplyr::glimpse(rei)</code></pre>
+<pre><code>## Observations: 27
+## Variables: 15
+## $ Year                      &lt;int&gt; 2017, 2017, 2017, 2017, 2017, 2017, ...
+## $ Target                    &lt;I(chr)&gt; Czech Republic, France, Germany, ...
+## $ `Target COW code`         &lt;int&gt; 316, 220, 255, 338, 210, 230, 305, 3...
+## $ `Target Event`            &lt;chr&gt; &quot;National Election&quot;, &quot;National Elect...
+## $ `Start Date`              &lt;I(chr)&gt; 10/20/2017, 4/23/2017, 11/24/2017...
+## $ `End Date`                &lt;I(chr)&gt; 10/21/2017, 5/7/2017, 11/24/2017,...
+## $ `Pro-incumbent`           &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ `Disinformation campaign` &lt;int&gt; 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, ...
+## $ `Coup attempt`            &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, ...
+## $ Cyberattack               &lt;int&gt; 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, ...
+## $ `Material support`        &lt;int&gt; 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, ...
+## $ Outcome                   &lt;chr&gt; &quot;Incumbent loss&quot;, &quot;Incumbent victory...
+## $ `Favorable outcome`       &lt;int&gt; 2, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, ...
+## $ `Evidence of impact`      &lt;int&gt; 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, ...
+## $ rei                       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</code></pre>
+<pre class="r"><code># Fix dcid dates to have a year column
+dcid &lt;- tidyr::separate(dcid, 'Start date', c(&quot;Start Year&quot;, &quot;Start Month&quot;, &quot;Start Day&quot;), sep = &quot;-&quot;)
+dcid &lt;- tidyr::separate(dcid, 'End date', c(&quot;End Year&quot;, &quot;End Month&quot;, &quot;End Day&quot;), sep = &quot;-&quot;)
 
-rei$Outcome &lt;- as.character(rei$Outcome)
-rei$Outcome &lt;- plyr::revalue(rei$Outcome, c(&quot;1&quot; = &quot;Incumbent victory&quot;,
-                                            &quot;2&quot; = &quot;Incumbent loss&quot;,
-                                            &quot;3&quot; = &quot;Referendum failure&quot;,
-                                            &quot;4&quot; = &quot;Referendum success&quot;))</code></pre>
+# Rename merging variables to make things easier
+cpass &lt;- cpass %&gt;% dplyr::rename('Target' = target,
+                                 'Year' = year_start)
+
+icb &lt;- icb %&gt;% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+dcid &lt;- dcid %&gt;% dplyr::rename('Target' = Target,
+                               'Year' = 'Start Year')
+
+rei &lt;- rei %&gt;% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+# Fix date types
+cpass$Year &lt;- as.numeric(cpass$Year)
+icb$Year &lt;- as.numeric(icb$Year)
+dcid$Year &lt;- as.numeric(dcid$Year)
+rei$Year &lt;- as.numeric(rei$Year)</code></pre>
 </div>
-<div id="summary" class="section level2">
-<h2>Summary</h2>
-<p>Make a table summarizing the data on Russian crisis participation</p>
-<pre class="r"><code>formattable::formattable(rei,
-                         align = c(&quot;c&quot;, &quot;l&quot;, &quot;l&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;),
-                         list('Pro-incumbent' = formattable::color_tile(&quot;transparent&quot;, &quot;red&quot;),
-                              'Disinformation campaign' = formattable::color_tile(&quot;transparent&quot;, &quot;red&quot;),
-                              'Coup attempt' = formattable::color_tile(&quot;transparent&quot;, &quot;red&quot;),
-                              'Cyberattack' = formattable::color_tile(&quot;transparent&quot;, &quot;red&quot;),
-                              'Material support' = formattable::color_tile(&quot;transparent&quot;, &quot;red&quot;),
-                              'Favorable outcome' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
-                              'Evidence of impact' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;)))</code></pre>
+<div id="compare-case-coverage-across-datasets" class="section level2">
+<h2>Compare case coverage across datasets</h2>
+<pre class="r"><code># Create dataframe versions of just variables to merge for the match
+cpass_join &lt;- cpass[ , c('Target', 'Year', 'cpass')]
+icb_join &lt;- icb[ , c('Target', 'Year', 'icb')]
+dcid_join &lt;- dcid[ , c('Target', 'Year', 'dcid')]
+rei_join &lt;- rei[ , c('Target', 'Year', 'rei')]
+
+# Merge datasets with just ID vars
+coverage &lt;- dplyr::full_join(cpass_join, icb_join) %&gt;% dplyr::full_join(., dcid_join) %&gt;% dplyr::full_join(., rei_join)</code></pre>
+<pre><code>## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)
+## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)
+## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)</code></pre>
+<pre><code>## Warning: Column `Target` has different attributes on LHS and RHS of join</code></pre>
+<pre class="r"><code># Delete duplicates
+coverage &lt;- unique(coverage)
+
+# Convert NAs to 0 to make table easier to read
+coverage[is.na(coverage)] &lt;- 0
+
+# Sort chronologically
+coverage &lt;- coverage[order(coverage$Year, decreasing = FALSE), ]
+
+# Make html table
+formattable::formattable(coverage,
+                         align = c(&quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;),
+                         list('cpass' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              'icb' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              'dcid' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              'rei' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;)))</code></pre>
 <table class="table table-condensed">
 <thead>
 <tr>
 <th style="text-align:center;">
-Year
-</th>
-<th style="text-align:left;">
 Target
 </th>
-<th style="text-align:left;">
-Target COW code
+<th style="text-align:center;">
+Year
 </th>
 <th style="text-align:center;">
-Target Event
+cpass
 </th>
 <th style="text-align:center;">
-Start Date
+icb
 </th>
 <th style="text-align:center;">
-End Date
+dcid
 </th>
 <th style="text-align:center;">
-Pro-incumbent
-</th>
-<th style="text-align:center;">
-Disinformation campaign
-</th>
-<th style="text-align:center;">
-Coup attempt
-</th>
-<th style="text-align:center;">
-Cyberattack
-</th>
-<th style="text-align:center;">
-Material support
-</th>
-<th style="text-align:center;">
-Outcome
-</th>
-<th style="text-align:center;">
-Favorable outcome
-</th>
-<th style="text-align:center;">
-Evidence of impact
+rei
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-Czech Republic
-</td>
-<td style="text-align:left;">
-316
+Chechnya
 </td>
 <td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-10/20/2017
-</td>
-<td style="text-align:center;">
-10/21/2017
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-France
-</td>
-<td style="text-align:left;">
-220
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-4/23/2017
-</td>
-<td style="text-align:center;">
-5/7/2017
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
+1994
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-Germany
-</td>
-<td style="text-align:left;">
-255
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-11/24/2017
-</td>
-<td style="text-align:center;">
-11/24/2017
-</td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-Malta
-</td>
-<td style="text-align:left;">
-338
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-6/3/2017
-</td>
-<td style="text-align:center;">
-6/3/2017
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
@@ -1959,729 +1877,10 @@ Incumbent victory
 </tr>
 <tr>
 <td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-Netherlands
-</td>
-<td style="text-align:left;">
-210
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-3/15/2017
-</td>
-<td style="text-align:center;">
-3/15/2017
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2017
-</td>
-<td style="text-align:left;">
-Spain
-</td>
-<td style="text-align:left;">
-230
-</td>
-<td style="text-align:center;">
-Referendum
-</td>
-<td style="text-align:center;">
-10/1/2017
-</td>
-<td style="text-align:center;">
-10/1/2017
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Referendum success
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Austria
-</td>
-<td style="text-align:left;">
-305
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-4/24/2016
-</td>
-<td style="text-align:center;">
-4/24/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Bulgaria
-</td>
-<td style="text-align:left;">
-355
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-11/6/2016
-</td>
-<td style="text-align:center;">
-11/6/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Italy
-</td>
-<td style="text-align:left;">
-325
-</td>
-<td style="text-align:center;">
-Referendum
-</td>
-<td style="text-align:center;">
-12/4/2016
-</td>
-<td style="text-align:center;">
-12/4/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Referendum failure
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Montenegro
-</td>
-<td style="text-align:left;">
-341
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-10/16/2016
-</td>
-<td style="text-align:center;">
-10/16/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Norway
-</td>
-<td style="text-align:left;">
-385
-</td>
-<td style="text-align:center;">
-Political Party Operations
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-Netherlands
-</td>
-<td style="text-align:left;">
-210
-</td>
-<td style="text-align:center;">
-Referendum
-</td>
-<td style="text-align:center;">
-4/6/2016
-</td>
-<td style="text-align:center;">
-4/6/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Referendum failure
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-United Kingdom
-</td>
-<td style="text-align:left;">
-200
-</td>
-<td style="text-align:center;">
-Referendum
-</td>
-<td style="text-align:center;">
-6/26/2016
-</td>
-<td style="text-align:center;">
-6/26/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Referendum success
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2016
-</td>
-<td style="text-align:left;">
-United States
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-11/8/2016
-</td>
-<td style="text-align:center;">
-11/8/2016
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d6ebf2">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2015
-</td>
-<td style="text-align:left;">
-Germany
-</td>
-<td style="text-align:left;">
-255
-</td>
-<td style="text-align:center;">
-Political Party Operations
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2015
-</td>
-<td style="text-align:left;">
-United Kingdom
-</td>
-<td style="text-align:left;">
-200
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-5/7/2015
-</td>
-<td style="text-align:center;">
-5/7/2015
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2014
-</td>
-<td style="text-align:left;">
-Moldova
-</td>
-<td style="text-align:left;">
-359
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-11/30/2014
-</td>
-<td style="text-align:center;">
-11/30/2014
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2014
-</td>
-<td style="text-align:left;">
-Ukraine
-</td>
-<td style="text-align:left;">
-369
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-5/24/2014
-</td>
-<td style="text-align:center;">
-5/24/2014
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2010
-</td>
-<td style="text-align:left;">
-Ukraine
-</td>
-<td style="text-align:left;">
-369
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-1/17/2010
-</td>
-<td style="text-align:center;">
-2/14/2010
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2009
-</td>
-<td style="text-align:left;">
-Moldova
-</td>
-<td style="text-align:left;">
-359
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-4/5/2009
-</td>
-<td style="text-align:center;">
-4/5/2009
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2006
-</td>
-<td style="text-align:left;">
 Belarus
 </td>
-<td style="text-align:left;">
-370
-</td>
 <td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-5/19/2006
-</td>
-<td style="text-align:center;">
-5/19/2006
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
+1994
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
@@ -2693,169 +1892,36 @@ National Election
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-2005
+Ukraine
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
+1994
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 Moldova
 </td>
-<td style="text-align:left;">
-359
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-3/6/2005
-</td>
-<td style="text-align:center;">
-3/6/2005
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent victory
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2004
-</td>
-<td style="text-align:left;">
-Ukraine
-</td>
-<td style="text-align:left;">
-369
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-10/31/2004
-</td>
-<td style="text-align:center;">
-12/26/2004
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-2002
-</td>
-<td style="text-align:left;">
-Ukraine
-</td>
-<td style="text-align:left;">
-369
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-3/31/2002
-</td>
-<td style="text-align:center;">
-3/31/2002
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-</tr>
-<tr>
 <td style="text-align:center;">
 1996
 </td>
-<td style="text-align:left;">
-Moldova
-</td>
-<td style="text-align:left;">
-359
-</td>
-<td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-11/17/1996
-</td>
-<td style="text-align:center;">
-11/17/1996
-</td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
@@ -2866,57 +1932,21 @@ National Election
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-1994
-</td>
-<td style="text-align:left;">
-Belarus
-</td>
-<td style="text-align:left;">
-370
+Kosovo
 </td>
 <td style="text-align:center;">
-National Election
+1999
 </td>
 <td style="text-align:center;">
-6/23/1994
-</td>
-<td style="text-align:center;">
-6/23/1994
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
-</td>
-<td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
-</td>
-<td style="text-align:center;">
-Incumbent loss
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
@@ -2927,22 +1957,30 @@ Incumbent loss
 </tr>
 <tr>
 <td style="text-align:center;">
-1994
+Georgia
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
+2002
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 Ukraine
 </td>
-<td style="text-align:left;">
-369
-</td>
 <td style="text-align:center;">
-National Election
-</td>
-<td style="text-align:center;">
-6/26/1994
-</td>
-<td style="text-align:center;">
-6/26/1994
+2002
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
@@ -2954,16 +1992,884 @@ National Election
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Georgia
+</td>
+<td style="text-align:center;">
+2004
+</td>
+<td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
 <td style="text-align:center;">
-Incumbent loss
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">2</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2004
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Lithuania
+</td>
+<td style="text-align:center;">
+2005
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2005
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Moldova
+</td>
+<td style="text-align:center;">
+2005
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Belarus
+</td>
+<td style="text-align:center;">
+2006
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Estonia
+</td>
+<td style="text-align:center;">
+2007
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Georgia
+</td>
+<td style="text-align:center;">
+2007
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Georgia
+</td>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+US
+</td>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Lithuania
+</td>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+US
+</td>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Poland
+</td>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Moldova
+</td>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2010
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+US
+</td>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Canada
+</td>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+UK
+</td>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+US
+</td>
+<td style="text-align:center;">
+2013
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2013
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+US
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Canada
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+UK
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Poland
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Moldova
+</td>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Syria
+</td>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Germany
+</td>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United Kingdom
+</td>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United States
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Austria
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Bulgaria
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Italy
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Montenegro
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Norway
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Netherlands
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United Kingdom
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Czech Republic
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+France
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Germany
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Malta
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Netherlands
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Spain
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
@@ -2972,16 +2878,25 @@ Incumbent loss
 </tbody>
 </table>
 </div>
+</div>
+<div id="merge-data" class="section level1">
+<h1>Merge data</h1>
+<p>First we identify the variables in each dataset and which are duplicates</p>
+</div>
+<div id="summary-statistics" class="section level1">
+<h1>Summary statistics</h1>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>Make a table summarizing the data on Russian crisis participation</p>
+</div>
 <div id="plots" class="section level2">
 <h2>Plots</h2>
 <p>Given the number of cases, summarize them in plot format.</p>
-<pre class="r"><code>DataExplorer::plot_bar(rei)</code></pre>
-<p><img src="data:image/png;base64,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" width="672" /></p>
 </div>
 </div>
 <div id="save-final-dataframe" class="section level1">
 <h1>Save final dataframe</h1>
-<pre class="r"><code>saveRDS(rei, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_rei.rds&quot;))</code></pre>
+<pre class="r"><code># saveRDS(rei, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_rei.rds&quot;))</code></pre>
 </div>
 
 

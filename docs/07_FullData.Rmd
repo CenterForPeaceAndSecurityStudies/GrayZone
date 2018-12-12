@@ -4,7 +4,8 @@ author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Sec
   Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
+    df_print: paged
     toc: yes
     toc_depth: '5'
   html_notebook:
@@ -16,10 +17,6 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  html_document:
-    df_print: paged
-    toc: yes
-    toc_depth: '5'
 editor_options:
   chunk_output_type: inline
 ---
@@ -58,6 +55,8 @@ rei <- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))
 
 # Compare coverage
 Before merging the data, compare the different cases covered by each one
+
+## Prep for coverage comparison
 ```{r}
 # Create identifier variables for each dataset
 cpass$cpass <- 1
@@ -93,23 +92,29 @@ cpass$Year <- as.numeric(cpass$Year)
 icb$Year <- as.numeric(icb$Year)
 dcid$Year <- as.numeric(dcid$Year)
 rei$Year <- as.numeric(rei$Year)
+```
 
+## Compare case coverage across datasets
+```{r}
 # Create dataframe versions of just variables to merge for the match
 cpass_join <- cpass[ , c('Target', 'Year', 'cpass')]
 icb_join <- icb[ , c('Target', 'Year', 'icb')]
 dcid_join <- dcid[ , c('Target', 'Year', 'dcid')]
 rei_join <- rei[ , c('Target', 'Year', 'rei')]
 
-coverage <- plyr::join_all(list(cpass_join, icb_join, dcid_join, rei_join), by = c('Target', 'Year'), type = 'left')
-
+# Merge datasets with just ID vars
 coverage <- dplyr::full_join(cpass_join, icb_join) %>% dplyr::full_join(., dcid_join) %>% dplyr::full_join(., rei_join)
 
+# Delete duplicates
 coverage <- unique(coverage)
 
+# Convert NAs to 0 to make table easier to read
 coverage[is.na(coverage)] <- 0
 
+# Sort chronologically
 coverage <- coverage[order(coverage$Year, decreasing = FALSE), ]
 
+# Make html table
 formattable::formattable(coverage,
                          align = c("c", "c", "c", "c", "c", "c"),
                          list('cpass' = formattable::color_tile("transparent", "lightblue"),
@@ -126,7 +131,6 @@ First we identify the variables in each dataset and which are duplicates
 
 # Summary statistics
 ```{r}
-names(rei)
 
 ```
 

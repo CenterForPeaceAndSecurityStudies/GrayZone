@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-05" />
+<meta name="date" content="2018-12-12" />
 
 <title>04_ICB</title>
 
@@ -237,7 +237,7 @@ display: none;
 padding: 0 4px 0 4px;
 }
 .pagedtable .even {
-background-color: #fcfcfc;
+background-color: rgba(140, 140, 140, 0.1);
 }
 .pagedtable-padding-col {
 display: none;
@@ -1554,6 +1554,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -1561,14 +1564,74 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -1580,7 +1643,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">04_ICB</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-05</em></h4>
+<h4 class="date"><em>2018-12-12</em></h4>
 
 </div>
 
@@ -1591,10 +1654,14 @@ $(document).ready(function () {
 <li><a href="#load-data">Load data</a></li>
 <li><a href="#subset">Subset</a></li>
 </ul></li>
+<li><a href="#add-variables">Add variables</a><ul>
+<li><a href="#target-state">Target state</a></li>
+</ul></li>
 <li><a href="#summary-statistics">Summary statistics</a><ul>
 <li><a href="#choose-variables">Choose variables</a></li>
 <li><a href="#summary">Summary</a></li>
 </ul></li>
+<li><a href="#save-final-dataframe">Save final dataframe</a></li>
 </ul>
 </div>
 
@@ -1628,6 +1695,25 @@ icb_actor_rus &lt;- subset(icb_actor_rus, actor == &quot;RUS&quot;)
 crisis_count &lt;- nrow(icb_actor_rus)
 crisis_list &lt;- icb_actor_rus$crisname</code></pre>
 <p>There are 5 ICB crises post-1991 in which Russia was a crisis actor. This includes PANKISI GORGE, S. OSSETIA/ABKHAZIA, RUSSO-GEORGIAN WAR, CRIMEA-DONBASS, TURKEY-RUSSIA JET INCIDENT.</p>
+</div>
+</div>
+<div id="add-variables" class="section level1">
+<h1>Add variables</h1>
+<div id="target-state" class="section level2">
+<h2>Target state</h2>
+<p>Add a column for the name of the target state since target state-year will be used to merge all the datasets</p>
+<pre class="r"><code>icb_actor_rus$crisname</code></pre>
+<pre><code>## [1] PANKISI GORGE              S. OSSETIA/ABKHAZIA       
+## [3] RUSSO-GEORGIAN WAR         CRIMEA-DONBASS            
+## [5] TURKEY-RUSSIA JET INCIDENT
+## 475 Levels: AALAND ISLANDS ABLE ARCHER 83 ... ZAMBIA RAID</code></pre>
+<pre class="r"><code>icb_actor_rus$target &lt;- NA
+
+icb_actor_rus$target[icb_actor_rus$crisname == 'PANKISI GORGE'] &lt;- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'S. OSSETIA/ABKHAZIA'] &lt;- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'RUSSO-GEORGIAN WAR'] &lt;- 'Georgia'
+icb_actor_rus$target[icb_actor_rus$crisname == 'CRIMEA-DONBASS'] &lt;- 'Ukraine'
+icb_actor_rus$target[icb_actor_rus$crisname == 'TURKEY-RUSSIA JET INCIDENT'] &lt;- 'Syria'</code></pre>
 </div>
 </div>
 <div id="summary-statistics" class="section level1">
@@ -1712,7 +1798,7 @@ crisis_list &lt;- icb_actor_rus$crisname</code></pre>
 <li><p>VIOL = violence associated with crisis actor 1-4, least to most</p></li>
 </ul>
 <pre class="r"><code># Keep identifier variables
-vars_id &lt;- c(&quot;crisno&quot;, &quot;systrgyr&quot;, &quot;crisname&quot;)
+vars_id &lt;- c(&quot;crisno&quot;, &quot;systrgyr&quot;, &quot;crisname&quot;, &quot;target&quot;)
 vars_interest &lt;- c(&quot;cenvio&quot;, &quot;sevvio&quot;, &quot;outcom&quot;, &quot;outesr&quot;, &quot;trgterra&quot;, &quot;geog&quot;, &quot;cractloc&quot;, &quot;noactr&quot;, &quot;viol&quot;)
 
 vars_keep &lt;- c(vars_id, vars_interest)
@@ -1720,12 +1806,13 @@ vars_keep &lt;- c(vars_id, vars_interest)
 icb_actor_rus &lt;- icb_actor_rus[ , vars_keep]
 
 # Reorder the variables
-icb_actor_rus &lt;- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
+icb_actor_rus &lt;- icb_actor_rus[ , c('crisno', 'crisname', 'systrgyr', 'target', 'cenvio', 'sevvio', 'viol', 'outesr', 'outcom', 'trgterra', 'geog', 'cractloc', 'noactr')]
 
 # Rename variables for readability
 icb_actor_rus &lt;- icb_actor_rus %&gt;% dplyr::rename('Crisis No' = crisno,
                                                  'Year' = systrgyr,
                                                  'Crisis Name' = crisname,
+                                                 'Target' = target,
                                                  'Crisis Violence Centrality' = cenvio,
                                                  'Crisis Violence Severity' = sevvio,
                                                  'Outcome' = outcom,
@@ -1746,7 +1833,7 @@ icb_actor_rus$`Distance from Actor` &lt;- car::recode(icb_actor_rus$`Distance fr
 <h2>Summary</h2>
 <p>Make a table summarizing the data on Russian crisis participation</p>
 <pre class="r"><code>formattable::formattable(icb_actor_rus,
-                         align = c(&quot;l&quot;, &quot;l&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;l&quot;, &quot;l&quot;, &quot;c&quot;),
+                         align = c(&quot;l&quot;, &quot;l&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;l&quot;, &quot;l&quot;, &quot;c&quot;),
                          list(formattable::area(col = c('Crisis Violence Centrality', 'Crisis Violence Severity', 'Actor Violence Severity')) 
                               ~ formattable::color_tile(&quot;red&quot;, &quot;red4&quot;)))</code></pre>
 <table class="table table-condensed">
@@ -1762,6 +1849,9 @@ Crisis Name
 </th>
 <th style="text-align:center;">
 Year
+</th>
+<th style="text-align:center;">
+Target
 </th>
 <th style="text-align:center;">
 Crisis Violence Centrality
@@ -1807,6 +1897,9 @@ PANKISI GORGE
 2002
 </td>
 <td style="text-align:center;">
+Georgia
+</td>
+<td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d80000">2</span>
 </td>
 <td style="text-align:center;">
@@ -1846,6 +1939,9 @@ S. OSSETIA/ABKHAZIA
 </td>
 <td style="text-align:center;">
 2004
+</td>
+<td style="text-align:center;">
+Georgia
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
@@ -1889,6 +1985,9 @@ RUSSO-GEORGIAN WAR
 2008
 </td>
 <td style="text-align:center;">
+Georgia
+</td>
+<td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #b10000">3</span>
 </td>
 <td style="text-align:center;">
@@ -1928,6 +2027,9 @@ CRIMEA-DONBASS
 </td>
 <td style="text-align:center;">
 2014
+</td>
+<td style="text-align:center;">
+Ukraine
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #8b0000">4</span>
@@ -1971,6 +2073,9 @@ TURKEY-RUSSIA JET INCIDENT
 2015
 </td>
 <td style="text-align:center;">
+Syria
+</td>
+<td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ff0000">1</span>
 </td>
 <td style="text-align:center;">
@@ -2001,6 +2106,10 @@ Same continent
 </tbody>
 </table>
 </div>
+</div>
+<div id="save-final-dataframe" class="section level1">
+<h1>Save final dataframe</h1>
+<pre class="r"><code>saveRDS(icb_actor_rus, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_icb.rds&quot;))</code></pre>
 </div>
 
 

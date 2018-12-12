@@ -4,7 +4,8 @@ author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Sec
   Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
+    df_print: paged
     toc: yes
     toc_depth: '5'
   html_notebook:
@@ -16,10 +17,6 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  html_document:
-    df_print: paged
-    toc: yes
-    toc_depth: '5'
 editor_options:
   chunk_output_type: inline
 ---
