@@ -57,46 +57,55 @@ Identify variables of interest regarding the means employed, intensity of crises
 names(rei)
 
 # Rename variables for readability
-rei <- rei %>% dplyr::rename('Year' = year,
-                             'Target' = target_state,
-                             'Target COW code' = target_ccode,
-                             'Target Event' = target_event,
-                             'Start Date' = event_sdate,
-                             'End Date' = event_edate,
-                             'Pro-incumbent' = pro_incumbent,
-                             'Disinformation campaign' = disinfo,
-                             'Coup attempt' = coup,
-                             'Cyberattack' = cyberattack,
-                             'Material support' = mat_support,
-                             'Outcome' = outcome,
-                             'Favorable outcome' = outcome_favorable,
-                             'Evidence of impact' = rus_impact)
+rei <- rei %>% dplyr::rename(
+  "Year" = year,
+  "Target" = target_state,
+  "Target COW code" = target_ccode,
+  "Target Event" = target_event,
+  "Start Date" = event_sdate,
+  "End Date" = event_edate,
+  "Pro-incumbent" = pro_incumbent,
+  "Disinformation campaign" = disinfo,
+  "Coup attempt" = coup,
+  "Cyberattack" = cyberattack,
+  "Material support" = mat_support,
+  "Outcome" = outcome,
+  "Favorable outcome" = outcome_favorable,
+  "Evidence of impact" = rus_impact
+)
 
 # Recode some variables to be more intuitive
 rei$`Target Event` <- as.character(rei$`Target Event`)
-rei$`Target Event` <- plyr::revalue(rei$`Target Event`, c("1" = "National Election",
-                                                          "2" = "Referendum",
-                                                          "3" = "Political Party Operations"))
+rei$`Target Event` <- plyr::revalue(rei$`Target Event`, c(
+  "1" = "National Election",
+  "2" = "Referendum",
+  "3" = "Political Party Operations"
+))
 
 rei$Outcome <- as.character(rei$Outcome)
-rei$Outcome <- plyr::revalue(rei$Outcome, c("1" = "Incumbent victory",
-                                            "2" = "Incumbent loss",
-                                            "3" = "Referendum failure",
-                                            "4" = "Referendum success"))
+rei$Outcome <- plyr::revalue(rei$Outcome, c(
+  "1" = "Incumbent victory",
+  "2" = "Incumbent loss",
+  "3" = "Referendum failure",
+  "4" = "Referendum success"
+))
 ```
 
 ## Summary
 Make a table summarizing the data on Russian crisis participation
 ```{r}
 formattable::formattable(rei,
-                         align = c("c", "l", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
-                         list('Pro-incumbent' = formattable::color_tile("transparent", "red"),
-                              'Disinformation campaign' = formattable::color_tile("transparent", "red"),
-                              'Coup attempt' = formattable::color_tile("transparent", "red"),
-                              'Cyberattack' = formattable::color_tile("transparent", "red"),
-                              'Material support' = formattable::color_tile("transparent", "red"),
-                              'Favorable outcome' = formattable::color_tile("transparent", "lightblue"),
-                              'Evidence of impact' = formattable::color_tile("transparent", "lightblue")))
+  align = c("c", "l", "l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
+  list(
+    "Pro-incumbent" = formattable::color_tile("transparent", "red"),
+    "Disinformation campaign" = formattable::color_tile("transparent", "red"),
+    "Coup attempt" = formattable::color_tile("transparent", "red"),
+    "Cyberattack" = formattable::color_tile("transparent", "red"),
+    "Material support" = formattable::color_tile("transparent", "red"),
+    "Favorable outcome" = formattable::color_tile("transparent", "lightblue"),
+    "Evidence of impact" = formattable::color_tile("transparent", "lightblue")
+  )
+)
 ```
 
 ## Plots
