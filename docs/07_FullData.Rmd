@@ -97,13 +97,13 @@ rei$Year <- as.numeric(rei$Year)
 ## Compare case coverage across datasets
 ```{r}
 # Create dataframe versions of just variables to merge for the match
-cpass_join <- cpass[ , c('Target', 'Year', 'cpass')]
-icb_join <- icb[ , c('Target', 'Year', 'icb')]
-dcid_join <- dcid[ , c('Target', 'Year', 'dcid')]
-rei_join <- rei[ , c('Target', 'Year', 'rei')]
+cpass_coverage <- cpass[ , c('Target', 'Year', 'cpass')]
+icb_coverage <- icb[ , c('Target', 'Year', 'icb')]
+dcid_coverage <- dcid[ , c('Target', 'Year', 'dcid')]
+rei_coverage <- rei[ , c('Target', 'Year', 'rei')]
 
 # Merge datasets with just ID vars
-coverage <- dplyr::full_join(cpass_join, icb_join) %>% dplyr::full_join(., dcid_join) %>% dplyr::full_join(., rei_join)
+coverage <- dplyr::full_join(cpass_coverage, icb_coverage) %>% dplyr::full_join(., dcid_coverage) %>% dplyr::full_join(., rei_coverage)
 
 # Delete duplicates
 coverage <- unique(coverage)
@@ -124,28 +124,42 @@ formattable::formattable(coverage,
 ```
 
 # Merge data
-First we identify the variables in each dataset and which are duplicates
-```{r}
 
+## Duplicates
+First we identify the variables of interest in each dataset and those which are duplicates. We exclude the ICB cases here since our universe of cases is restricted to instances of known Russian cyberattacks
+```{r}
+# Create dataframe versions of just variables to merge for the match
+cpass_join <- cpass[ , c('Target', 'Year', 'cpass', 'det_alliance', 'resp_convmil', 'resp_convmil_gro', 'resp_convmil_airsea', 'resp_paramil', 'resp_cyberdisrup', 'resp_infoops', 'outcome_deaths')]
+
+# Rename the dcid severity variable so we know the source
+dcid <- dcid %>% dplyr::rename("dcid_severity" = "Incident severity")
+dcid_join <- dcid[ , c('Target', 'Year', 'dcid', 'Incident', 'dcid_severity')]
+
+# Rename the rei variables so we know the source
+rei <- rei %>% dplyr::rename(
+  "rei_infoops" = "Disinformation campaign",
+  "rei_cyberdisrup" = "Cyberattack",
+  "rei_matsupp" = "Material support")
+
+rei_join <- rei[ , c('Target', 'Year', 'rei', 'rei_infoops', 'rei_cyberdisrup', 'rei_matsupp')]
 ```
 
-# Summary statistics
+## Merge
 ```{r}
+# Merge datasets with just ID vars
+cases_all <- dplyr::full_join(cpass_join, dcid_join) %>% dplyr::full_join(., rei_join)
 
-```
+# Delete duplicates
+cases_all <- unique(cases_all)
 
-## Summary
-Make a table summarizing the data on Russian crisis participation
-```{r}
+# Sort chronologically
+cases_all <- cases_all[order(cases_all$Year, decreasing = FALSE), ]
 
-```
-
-## Plots
-Given the number of cases, summarize them in plot format.
-```{r}
 ```
 
 # Save final dataframe
 ```{r}
-# saveRDS(rei, paste0(here::here(), "/data/","grayzone_rei.rds"))
+saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.rds"))
+
+write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.csv"))
 ```
