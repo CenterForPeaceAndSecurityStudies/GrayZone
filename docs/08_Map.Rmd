@@ -1,0 +1,43 @@
+---
+title: "07_FullData"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document visualizes the geographic relationship between deterrence and the severity of Russian cyber operations.
+
+# Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+library(ggplot2)
+```
+
+## Load data
+Load the cleaned and subset versions of each dataset
+```{r}
+# Load data
+cpass <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+```
