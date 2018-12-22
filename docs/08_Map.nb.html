@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-18" />
+<meta name="date" content="2018-12-22" />
 
 <title>07_FullData</title>
 
@@ -2881,7 +2881,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">07_FullData</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-18</em></h4>
+<h4 class="date"><em>2018-12-22</em></h4>
 
 </div>
 
@@ -2909,15 +2909,51 @@ library(ggplot2)</code></pre>
 <p>Load the cleaned and subset versions of each dataset</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIGRhdGFcbmNwYXNzIDwtIHJlYWRSRFMocGFzdGUwKGhlcmU6OmhlcmUoKSwgJy9kYXRhL2dyYXl6b25lX2NwYXNzLnJkcycpKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIGRhdGFcbnJ1c3NpYV9jeWJlciA8LSByZWFkUkRTKHBhc3RlMChoZXJlOjpoZXJlKCksICcvZGF0YS9ncmF5em9uZV9hZ2dyZWdhdGUucmRzJykpXG5cbmBgYCJ9 -->
 <pre class="r"><code># Load data
-cpass &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_cpass.rds&#39;))</code></pre>
+russia_cyber &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_aggregate.rds&#39;))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gcmVhZFJEUyhwYXN0ZTAoaGVyZTo6aGVyZSgpLCBcIi9kYXRhL2dyYXl6b25lX2FnZ3JlZ2F0ZS5yZHNcIikpIDogXG4gIHVua25vd24gaW5wdXQgZm9ybWF0XG4ifQ== -->
+<pre><code>Error in readRDS(paste0(here::here(), &quot;/data/grayzone_aggregate.rds&quot;)) : 
+  unknown input format</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="check-data" class="section level2">
+<h2><span class="header-section-number">1.3</span> Check data</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShydXNzaWFfY3liZXIpXG5gYGAifQ== -->
+<pre class="r"><code>summary(russia_cyber)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 </div>
+</div>
+<div id="prior-data-maps" class="section level1">
+<h1><span class="header-section-number">2</span> Prior data maps</h1>
+<p>Map the data using prior variable codings from other datasets</p>
+<div id="dcid" class="section level2">
+<h2><span class="header-section-number">2.1</span> DCID</h2>
+<p>Map of the DCID cases showing variation in severity</p>
+</div>
+<div id="rei" class="section level2">
+<h2><span class="header-section-number">2.2</span> REI</h2>
+<p>Map of the REI cases showing variation in severity. Info ops are coded as least severe, cyber disruption as moderate, and material support as most severe. Code each case by whatever is the most severe level that is present.</p>
+</div>
+<div id="combined" class="section level2">
+<h2><span class="header-section-number">2.3</span> Combined</h2>
+<p>There should only be one case that is coded in both DCID and REI. For all the rest, scale their scores so we get a single score for each case in either dataset and we can compare across datasets. We know this is a rough coding since one is coding severity of the cyber attack and the other is coding the type of attack, but we’ll start here.</p>
+</div>
+</div>
+<div id="current-data-maps" class="section level1">
+<h1><span class="header-section-number">3</span> Current data maps</h1>
+<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIjA3X0Z1bGxEYXRhIg0KYXV0aG9yOiBKIEFuZHJlcyBHYW5ub24sIEVyaWsgR2FydHprZSwgYW5kIEpvbiBMaW5kc2F5LCBDZW50ZXIgZm9yIFBlYWNlIGFuZCBTZWN1cml0eQ0KICBTdHVkaWVzIChjUEFTUykNCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgICB0b2M6IHllcw0KICAgIHRvY19kZXB0aDogJzUnDQogIGh0bWxfbm90ZWJvb2s6DQogICAgZmlnX2hlaWdodDogOA0KICAgIGZpZ193aWR0aDogMTINCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcw0KICAgIHRoZW1lOiBmbGF0bHkNCiAgICB0b2M6IHllcw0KICAgIHRvY19kZXB0aDogNQ0KICAgIHRvY19mbG9hdDoNCiAgICAgIGNvbGxhcHNlZDogeWVzDQplZGl0b3Jfb3B0aW9uczoNCiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQ0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQ0KYGBgDQoNClRoaXMgZG9jdW1lbnQgdmlzdWFsaXplcyB0aGUgZ2VvZ3JhcGhpYyByZWxhdGlvbnNoaXAgYmV0d2VlbiBkZXRlcnJlbmNlIGFuZCB0aGUgc2V2ZXJpdHkgb2YgUnVzc2lhbiBjeWJlciBvcGVyYXRpb25zLg0KDQojIFByZXBhcmF0aW9uDQojIyBMb2FkIHBhY2thZ2VzDQpQaXBlIG9wZXJhdG9ycyBoYXZlIHRyb3VibGUgbG9hZGluZyBmb3IgaW5kaXZpZHVhbCBjb21tYW5kcw0KYGBge3J9DQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KYGBgDQoNCiMjIExvYWQgZGF0YQ0KTG9hZCB0aGUgY2xlYW5lZCBhbmQgc3Vic2V0IHZlcnNpb25zIG9mIGVhY2ggZGF0YXNldA0KYGBge3J9DQojIExvYWQgZGF0YQ0KY3Bhc3MgPC0gcmVhZFJEUyhwYXN0ZTAoaGVyZTo6aGVyZSgpLCAnL2RhdGEvZ3JheXpvbmVfY3Bhc3MucmRzJykpDQpgYGANCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIjA3X0Z1bGxEYXRhIg0KYXV0aG9yOiBKIEFuZHJlcyBHYW5ub24sIEVyaWsgR2FydHprZSwgYW5kIEpvbiBMaW5kc2F5LCBDZW50ZXIgZm9yIFBlYWNlIGFuZCBTZWN1cml0eQ0KICBTdHVkaWVzIChjUEFTUykNCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgICB0b2M6IHllcw0KICAgIHRvY19kZXB0aDogJzUnDQogIGh0bWxfbm90ZWJvb2s6DQogICAgZmlnX2hlaWdodDogOA0KICAgIGZpZ193aWR0aDogMTINCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcw0KICAgIHRoZW1lOiBmbGF0bHkNCiAgICB0b2M6IHllcw0KICAgIHRvY19kZXB0aDogNQ0KICAgIHRvY19mbG9hdDoNCiAgICAgIGNvbGxhcHNlZDogeWVzDQplZGl0b3Jfb3B0aW9uczoNCiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQ0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQ0KYGBgDQoNClRoaXMgZG9jdW1lbnQgdmlzdWFsaXplcyB0aGUgZ2VvZ3JhcGhpYyByZWxhdGlvbnNoaXAgYmV0d2VlbiBkZXRlcnJlbmNlIGFuZCB0aGUgc2V2ZXJpdHkgb2YgUnVzc2lhbiBjeWJlciBvcGVyYXRpb25zLg0KDQojIFByZXBhcmF0aW9uDQojIyBMb2FkIHBhY2thZ2VzDQpQaXBlIG9wZXJhdG9ycyBoYXZlIHRyb3VibGUgbG9hZGluZyBmb3IgaW5kaXZpZHVhbCBjb21tYW5kcw0KYGBge3J9DQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KYGBgDQoNCiMjIExvYWQgZGF0YQ0KTG9hZCB0aGUgY2xlYW5lZCBhbmQgc3Vic2V0IHZlcnNpb25zIG9mIGVhY2ggZGF0YXNldA0KYGBge3J9DQojIExvYWQgZGF0YQ0KcnVzc2lhX2N5YmVyIDwtIHJlYWRSRFMocGFzdGUwKGhlcmU6OmhlcmUoKSwgJy9kYXRhL2dyYXl6b25lX2FnZ3JlZ2F0ZS5yZHMnKSkNCmBgYA0KDQojIyBDaGVjayBkYXRhDQpgYGB7cn0NCnN1bW1hcnkocnVzc2lhX2N5YmVyKQ0KYGBgDQoNCiMgUHJpb3IgZGF0YSBtYXBzDQpNYXAgdGhlIGRhdGEgdXNpbmcgcHJpb3IgdmFyaWFibGUgY29kaW5ncyBmcm9tIG90aGVyIGRhdGFzZXRzDQoNCiMjIERDSUQNCk1hcCBvZiB0aGUgRENJRCBjYXNlcyBzaG93aW5nIHZhcmlhdGlvbiBpbiBzZXZlcml0eQ0KDQojIyBSRUkNCk1hcCBvZiB0aGUgUkVJIGNhc2VzIHNob3dpbmcgdmFyaWF0aW9uIGluIHNldmVyaXR5LiBJbmZvIG9wcyBhcmUgY29kZWQgYXMgbGVhc3Qgc2V2ZXJlLCBjeWJlciBkaXNydXB0aW9uIGFzIG1vZGVyYXRlLCBhbmQgbWF0ZXJpYWwgc3VwcG9ydCBhcyBtb3N0IHNldmVyZS4gQ29kZSBlYWNoIGNhc2UgYnkgd2hhdGV2ZXIgaXMgdGhlIG1vc3Qgc2V2ZXJlIGxldmVsIHRoYXQgaXMgcHJlc2VudC4NCg0KIyMgQ29tYmluZWQNClRoZXJlIHNob3VsZCBvbmx5IGJlIG9uZSBjYXNlIHRoYXQgaXMgY29kZWQgaW4gYm90aCBEQ0lEIGFuZCBSRUkuIEZvciBhbGwgdGhlIHJlc3QsIHNjYWxlIHRoZWlyIHNjb3JlcyBzbyB3ZSBnZXQgYSBzaW5nbGUgc2NvcmUgZm9yIGVhY2ggY2FzZSBpbiBlaXRoZXIgZGF0YXNldCBhbmQgd2UgY2FuIGNvbXBhcmUgYWNyb3NzIGRhdGFzZXRzLiBXZSBrbm93IHRoaXMgaXMgYSByb3VnaCBjb2Rpbmcgc2luY2Ugb25lIGlzIGNvZGluZyBzZXZlcml0eSBvZiB0aGUgY3liZXIgYXR0YWNrIGFuZCB0aGUgb3RoZXIgaXMgY29kaW5nIHRoZSB0eXBlIG9mIGF0dGFjaywgYnV0IHdlJ2xsIHN0YXJ0IGhlcmUuDQoNCg0KIyBDdXJyZW50IGRhdGEgbWFwcw0K</div>
 
 
 </div>

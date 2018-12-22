@@ -39,5 +39,25 @@ library(ggplot2)
 Load the cleaned and subset versions of each dataset
 ```{r}
 # Load data
-cpass <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+russia_cyber <- readRDS(paste0(here::here(), '/data/grayzone_aggregate.rds'))
 ```
+
+## Check data
+```{r}
+summary(russia_cyber)
+```
+
+# Prior data maps
+Map the data using prior variable codings from other datasets
+
+## DCID
+Map of the DCID cases showing variation in severity
+
+## REI
+Map of the REI cases showing variation in severity. Info ops are coded as least severe, cyber disruption as moderate, and material support as most severe. Code each case by whatever is the most severe level that is present.
+
+## Combined
+There should only be one case that is coded in both DCID and REI. For all the rest, scale their scores so we get a single score for each case in either dataset and we can compare across datasets. We know this is a rough coding since one is coding severity of the cyber attack and the other is coding the type of attack, but we'll start here.
+
+
+# Current data maps
