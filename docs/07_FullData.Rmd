@@ -160,6 +160,12 @@ cases_all <- cases_all[order(cases_all$Year, decreasing = FALSE), ]
 # Save final dataframe
 ```{r}
 saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.rds"))
-
 write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.csv"))
+```
+
+# Reload dataframe with new variables coded
+The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now to analyze the complete version of the dataset
+
+```{r}
+
 ```

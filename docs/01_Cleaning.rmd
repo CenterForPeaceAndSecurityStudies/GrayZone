@@ -36,7 +36,6 @@ grayzone <- googlesheets::gs_title("Russian wars")
 grayzone <- grayzone %>% googlesheets::gs_read("r_pull")
 ```
 # Save file
-The following rds file should now be identical to mctl_combined_reshape.csv except that Serbia is now included in this one (it was previously dropped during a ccode merge).
 ```{r}
 saveRDS(grayzone, paste0(here::here(), "/data/","grayzone_cpass.rds"))
 ```
