@@ -167,5 +167,9 @@ write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.csv"))
 The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now to analyze the complete version of the dataset
 
 ```{r}
-
+df_complete <- googlesheets::gs_title("Russian wars")
+df_complete <- df_complete %>% googlesheets::gs_read("grayzone_aggregate")
 ```
+
+saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
+
