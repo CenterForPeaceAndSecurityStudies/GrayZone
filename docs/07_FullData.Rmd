@@ -121,6 +121,13 @@ formattable::formattable(coverage,
                               'icb' = formattable::color_tile("transparent", "lightblue"),
                               'dcid' = formattable::color_tile("transparent", "lightblue"),
                               'rei' = formattable::color_tile("transparent", "lightblue")))
+
+# Make Venn diagram
+coverage_venn <- coverage[ , c('cpass', 'icb', 'dcid', 'rei')]
+plot(venneuler::venneuler(coverage_venn))
+
+#VennDiagram::venn.diagram(coverage_venn, category.names = c("cPASS" , "ICB" , "DCID", "REI"), filename = )
+
 ```
 
 # Merge data
@@ -169,7 +176,7 @@ The new variables for intensity have been coded by hand into the previous spread
 ```{r}
 df_complete <- googlesheets::gs_title("Russian wars")
 df_complete <- df_complete %>% googlesheets::gs_read("grayzone_aggregate")
+saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
 ```
 
-saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
 
