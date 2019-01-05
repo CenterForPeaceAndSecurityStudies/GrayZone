@@ -95,7 +95,7 @@ rei$Year <- as.numeric(rei$Year)
 ```
 
 ## Compare case coverage across datasets
-```{r}
+```{r fig.path = '../paper/figures/', dev = c('png')}
 # Create dataframe versions of just variables to merge for the match
 cpass_coverage <- cpass[ , c('Target', 'Year', 'cpass')]
 icb_coverage <- icb[ , c('Target', 'Year', 'icb')]
@@ -124,9 +124,7 @@ formattable::formattable(coverage,
 
 # Make Venn diagram
 coverage_venn <- coverage[ , c('cpass', 'icb', 'dcid', 'rei')]
-plot(venneuler::venneuler(coverage_venn))
-
-#VennDiagram::venn.diagram(coverage_venn, category.names = c("cPASS" , "ICB" , "DCID", "REI"), filename = )
+gplots::venn(coverage_venn)
 
 ```
 
@@ -136,7 +134,10 @@ plot(venneuler::venneuler(coverage_venn))
 First we identify the variables of interest in each dataset and those which are duplicates. We exclude the ICB cases here since our universe of cases is restricted to instances of known Russian cyberattacks
 ```{r}
 # Create dataframe versions of just variables to merge for the match
-cpass_join <- cpass[ , c('Target', 'Year', 'cpass', 'det_alliance', 'resp_convmil', 'resp_convmil_gro', 'resp_convmil_airsea', 'resp_paramil', 'resp_cyberdisrup', 'resp_infoops', 'outcome_deaths')]
+cpass_join <- cpass[ , c('Target', 'Year', 'cpass', 'det_alliance', 'resp_convmil', 'resp_convmil_gro', 'resp_convmil_airsea', 'resp_paramil', 'resp_cyberdisrup', 'resp_infoops')]
+
+# Add ICB merge
+icb_join <- icb
 
 # Rename the dcid severity variable so we know the source
 dcid <- dcid %>% dplyr::rename("dcid_severity" = "Incident severity")
@@ -152,31 +153,42 @@ rei_join <- rei[ , c('Target', 'Year', 'rei', 'rei_infoops', 'rei_cyberdisrup', 
 ```
 
 ## Merge
+Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded
 ```{r}
 # Merge datasets with just ID vars
-cases_all <- dplyr::full_join(cpass_join, dcid_join) %>% dplyr::full_join(., rei_join)
+cases_old <- dplyr::full_join(icb_join, dcid_join) %>% dplyr::full_join(., rei_join)
 
 # Delete duplicates
-cases_all <- unique(cases_all)
+cases_old <- unique(cases_old)
 
 # Sort chronologically
-cases_all <- cases_all[order(cases_all$Year, decreasing = FALSE), ]
+cases_old <- cases_old[order(cases_old$Year, decreasing = FALSE), ]
 
 ```
 
 # Save final dataframe
 ```{r}
-saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.rds"))
-write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate.csv"))
+saveRDS(cases_old, paste0(here::here(), "/data/","grayzone_old.rds"))
+write.csv(cases_old, paste0(here::here(), "/data/","grayzone_old.csv"))
 ```
 
+
 # Reload dataframe with new variables coded
-The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now to analyze the complete version of the dataset
+The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now abd nerged with the new cases that were similarly coded to analyze the complete version of the dataset
 
 ```{r}
 df_complete <- googlesheets::gs_title("Russian wars")
-df_complete <- df_complete %>% googlesheets::gs_read("grayzone_aggregate")
-saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
+df_new <- df_complete %>% googlesheets::gs_read("new_cases")
+df_old <- df_complete %>% googlesheets::gs_read("old_cases")
+
+# Merge the old and new cases inot a single dataframe
+
+
+# Inspect quality
+
+
+#Save
+#saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
 ```
 
 

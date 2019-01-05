@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2018-12-12" />
+<meta name="date" content="2019-01-04" />
 
 <title>07_FullData</title>
 
@@ -1643,7 +1643,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">07_FullData</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2018-12-12</em></h4>
+<h4 class="date"><em>2019-01-04</em></h4>
 
 </div>
 
@@ -1657,12 +1657,12 @@ $(document).ready(function () {
 <li><a href="#prep-for-coverage-comparison">Prep for coverage comparison</a></li>
 <li><a href="#compare-case-coverage-across-datasets">Compare case coverage across datasets</a></li>
 </ul></li>
-<li><a href="#merge-data">Merge data</a></li>
-<li><a href="#summary-statistics">Summary statistics</a><ul>
-<li><a href="#summary">Summary</a></li>
-<li><a href="#plots">Plots</a></li>
+<li><a href="#merge-data">Merge data</a><ul>
+<li><a href="#duplicates">Duplicates</a></li>
+<li><a href="#merge">Merge</a></li>
 </ul></li>
 <li><a href="#save-final-dataframe">Save final dataframe</a></li>
+<li><a href="#reload-dataframe-with-new-variables-coded">Reload dataframe with new variables coded</a></li>
 </ul>
 </div>
 
@@ -1678,15 +1678,16 @@ $(document).ready(function () {
 <p>Pipe operators have trouble loading for individual commands</p>
 <pre class="r"><code>library(magrittr)
 library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
 <p>Load the cleaned and subset versions of each dataset</p>
 <pre class="r"><code># Load data
-cpass &lt;- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
-icb &lt;- readRDS(paste0(here::here(), '/data/grayzone_icb.rds'))
-dcid &lt;- readRDS(paste0(here::here(), '/data/grayzone_dcid.rds'))
-rei &lt;- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))</code></pre>
+cpass &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_cpass.rds&#39;))
+icb &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_icb.rds&#39;))
+dcid &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_dcid.rds&#39;))
+rei &lt;- readRDS(paste0(here::here(), &#39;/data/grayzone_rei.rds&#39;))</code></pre>
 </div>
 </div>
 <div id="compare-coverage" class="section level1">
@@ -1702,33 +1703,33 @@ rei$rei &lt;- 1
 
 # Ensure proper unit of analysis
 dplyr::glimpse(cpass)</code></pre>
-<pre><code>## Observations: 7
+<pre><code>## Observations: 10
 ## Variables: 25
-## $ target                 &lt;chr&gt; &quot;Chechnya&quot;, &quot;Kosovo&quot;, &quot;Estonia&quot;, &quot;Georg...
-## $ year_start             &lt;dbl&gt; 1994, 1999, 2007, 2008, 2014, 2015, 2016
-## $ year_end               &lt;dbl&gt; 1996, 1999, 2007, 2008, NA, NA, NA
-## $ fsu                    &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 0
-## $ det_dist_us_cap        &lt;dbl&gt; 5737, 4839, 4337, 5789, 4880, 5875, 0
-## $ det_dist_us_cent       &lt;dbl&gt; 6154, 5650, 4967, 6341, 5629, 6635, 0
-## $ det_dist_us_min        &lt;dbl&gt; 4936, 4083, 3397, 4466, 3860, 4887, 0
-## $ det_dist_rus_cap       &lt;dbl&gt; 932, 1165, 541, 1022, 471, 1538, 4872
-## $ det_dist_rus_cent      &lt;dbl&gt; 2408, 3335, 2399, 2618, 2667, 3174, 5388
-## $ det_dist_rus_min       &lt;dbl&gt; 0, 760, 0, 0, 0, 376, 2014
-## $ det_alliance           &lt;dbl&gt; 0, 2, 3, 1, 1, 1, 3
-## $ det_rusmiladv          &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 0
-## $ det_rustrade           &lt;dbl&gt; NA, NA, 1938.77, 477.04, 23404.43, 652....
-## $ det_rusenergyexport    &lt;dbl&gt; NA, NA, 1.460, 0.000, 13.900, 0.187, 12...
-## $ det_eu                 &lt;dbl&gt; 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 0.0
-## $ det_rus_vitalinterest  &lt;dbl&gt; 1.0, 0.0, 0.5, 1.0, 1.0, 0.0, 0.0
-## $ resp_convmil           &lt;dbl&gt; 3, 2, 0, 3, 2, 3, 0
-## $ resp_convmil_gro       &lt;dbl&gt; 1.0, 0.5, 0.0, 1.0, 0.5, 0.5, 0.0
-## $ resp_convmil_airsea    &lt;dbl&gt; 1, 0, 0, 1, 1, 1, 0
-## $ resp_paramil           &lt;dbl&gt; 3, 2, 2, 3, 3, 3, 0
-## $ resp_cyberdisrip       &lt;dbl&gt; 2, 3, 3, 3, 3, 2, 1
-## $ resp_infoops           &lt;dbl&gt; 3, 3, 3, 3, 3, 3, 3
-## $ outcome_deaths         &lt;dbl&gt; 3, 0, 0, 2, 2, 1, 0
-## $ outcome_intensity_rank &lt;dbl&gt; 7, 2, 3, 6, 5, 4, 1
-## $ cpass                  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1</code></pre>
+## $ target                &lt;chr&gt; &quot;Chechnya&quot;, &quot;Kosovo&quot;, &quot;Ukraine&quot;, &quot;Canada...
+## $ year_start            &lt;dbl&gt; 1994, 1999, 2015, 2016, 2017, 2018, 2018...
+## $ year_end              &lt;dbl&gt; 1996, 1999, NA, NA, NA, NA, NA, NA, NA, NA
+## $ fsu                   &lt;dbl&gt; 1, 0, 1, 0, 0, 0, 0, 1, 0, 0
+## $ det_dist_us_cap       &lt;dbl&gt; 5737, 4839, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_dist_us_cent      &lt;dbl&gt; 6154, 5650, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_dist_us_min       &lt;dbl&gt; 4936, 4083, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_dist_rus_cap      &lt;dbl&gt; 932, 1165, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_dist_rus_cent     &lt;dbl&gt; 2408, 3335, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_dist_rus_min      &lt;dbl&gt; 0, 760, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_alliance          &lt;dbl&gt; 0, 2, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_rusmiladv         &lt;dbl&gt; 1, 0, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_rustrade          &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_rusenergyexport   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_eu                &lt;dbl&gt; 0.0, 0.5, NA, NA, NA, NA, NA, NA, NA, NA
+## $ det_rus_vitalinterest &lt;dbl&gt; 1, 0, NA, NA, NA, NA, NA, NA, NA, NA
+## $ resp_convmil          &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 1, 0, 0
+## $ resp_convmil_gro      &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 1, 0, 0
+## $ resp_convmil_airsea   &lt;dbl&gt; 1, 0, 1, 0, 0, 0, 0, 1, 0, 0
+## $ resp_paramil          &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 1, 0, 0
+## $ resp_cyberdisrup      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ resp_infoops          &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 1, 0, 1
+## $ source                &lt;chr&gt; &quot;https://www.rand.org/pubs/conf_proceedi...
+## $ notes                 &lt;chr&gt; &quot;Previously coded. Casualties believed t...
+## $ cpass                 &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1</code></pre>
 <pre class="r"><code>dplyr::glimpse(icb)</code></pre>
 <pre><code>## Observations: 5
 ## Variables: 14
@@ -1779,21 +1780,21 @@ dplyr::glimpse(cpass)</code></pre>
 ## $ `Evidence of impact`      &lt;int&gt; 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, ...
 ## $ rei                       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</code></pre>
 <pre class="r"><code># Fix dcid dates to have a year column
-dcid &lt;- tidyr::separate(dcid, 'Start date', c(&quot;Start Year&quot;, &quot;Start Month&quot;, &quot;Start Day&quot;), sep = &quot;-&quot;)
-dcid &lt;- tidyr::separate(dcid, 'End date', c(&quot;End Year&quot;, &quot;End Month&quot;, &quot;End Day&quot;), sep = &quot;-&quot;)
+dcid &lt;- tidyr::separate(dcid, &#39;Start date&#39;, c(&quot;Start Year&quot;, &quot;Start Month&quot;, &quot;Start Day&quot;), sep = &quot;-&quot;)
+dcid &lt;- tidyr::separate(dcid, &#39;End date&#39;, c(&quot;End Year&quot;, &quot;End Month&quot;, &quot;End Day&quot;), sep = &quot;-&quot;)
 
 # Rename merging variables to make things easier
-cpass &lt;- cpass %&gt;% dplyr::rename('Target' = target,
-                                 'Year' = year_start)
+cpass &lt;- cpass %&gt;% dplyr::rename(&#39;Target&#39; = target,
+                                 &#39;Year&#39; = year_start)
 
-icb &lt;- icb %&gt;% dplyr::rename('Target' = Target,
-                             'Year' = Year)
+icb &lt;- icb %&gt;% dplyr::rename(&#39;Target&#39; = Target,
+                             &#39;Year&#39; = Year)
 
-dcid &lt;- dcid %&gt;% dplyr::rename('Target' = Target,
-                               'Year' = 'Start Year')
+dcid &lt;- dcid %&gt;% dplyr::rename(&#39;Target&#39; = Target,
+                               &#39;Year&#39; = &#39;Start Year&#39;)
 
-rei &lt;- rei %&gt;% dplyr::rename('Target' = Target,
-                             'Year' = Year)
+rei &lt;- rei %&gt;% dplyr::rename(&#39;Target&#39; = Target,
+                             &#39;Year&#39; = Year)
 
 # Fix date types
 cpass$Year &lt;- as.numeric(cpass$Year)
@@ -1804,13 +1805,13 @@ rei$Year &lt;- as.numeric(rei$Year)</code></pre>
 <div id="compare-case-coverage-across-datasets" class="section level2">
 <h2>Compare case coverage across datasets</h2>
 <pre class="r"><code># Create dataframe versions of just variables to merge for the match
-cpass_join &lt;- cpass[ , c('Target', 'Year', 'cpass')]
-icb_join &lt;- icb[ , c('Target', 'Year', 'icb')]
-dcid_join &lt;- dcid[ , c('Target', 'Year', 'dcid')]
-rei_join &lt;- rei[ , c('Target', 'Year', 'rei')]
+cpass_coverage &lt;- cpass[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;cpass&#39;)]
+icb_coverage &lt;- icb[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;icb&#39;)]
+dcid_coverage &lt;- dcid[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;dcid&#39;)]
+rei_coverage &lt;- rei[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;rei&#39;)]
 
 # Merge datasets with just ID vars
-coverage &lt;- dplyr::full_join(cpass_join, icb_join) %&gt;% dplyr::full_join(., dcid_join) %&gt;% dplyr::full_join(., rei_join)</code></pre>
+coverage &lt;- dplyr::full_join(cpass_coverage, icb_coverage) %&gt;% dplyr::full_join(., dcid_coverage) %&gt;% dplyr::full_join(., rei_coverage)</code></pre>
 <pre><code>## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)
 ## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)
 ## Joining, by = c(&quot;Target&quot;, &quot;Year&quot;)</code></pre>
@@ -1827,10 +1828,10 @@ coverage &lt;- coverage[order(coverage$Year, decreasing = FALSE), ]
 # Make html table
 formattable::formattable(coverage,
                          align = c(&quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;),
-                         list('cpass' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
-                              'icb' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
-                              'dcid' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
-                              'rei' = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;)))</code></pre>
+                         list(&#39;cpass&#39; = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              &#39;icb&#39; = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              &#39;dcid&#39; = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;),
+                              &#39;rei&#39; = formattable::color_tile(&quot;transparent&quot;, &quot;lightblue&quot;)))</code></pre>
 <table class="table table-condensed">
 <thead>
 <tr>
@@ -2123,7 +2124,7 @@ Estonia
 2007
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
@@ -2163,7 +2164,7 @@ Georgia
 2008
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
@@ -2423,7 +2424,7 @@ Ukraine
 2014
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
@@ -2537,13 +2538,33 @@ Moldova
 </tr>
 <tr>
 <td style="text-align:center;">
-Syria
+Ukraine
 </td>
 <td style="text-align:center;">
 2015
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Syria
+</td>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
@@ -2597,7 +2618,7 @@ United Kingdom
 </tr>
 <tr>
 <td style="text-align:center;">
-United States
+Canada
 </td>
 <td style="text-align:center;">
 2016
@@ -2612,7 +2633,7 @@ United States
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 <td style="text-align:center;">
-<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
 </td>
 </tr>
 <tr>
@@ -2757,6 +2778,46 @@ United Kingdom
 </tr>
 <tr>
 <td style="text-align:center;">
+United States
+</td>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United Kingdom
+</td>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 Czech Republic
 </td>
 <td style="text-align:center;">
@@ -2875,28 +2936,206 @@ Spain
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
 </td>
 </tr>
+<tr>
+<td style="text-align:center;">
+Netherlands
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Saudi Arabia
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ukraine
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United Kingdom
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+United States
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #add8e6">1</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+<td style="text-align:center;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">0</span>
+</td>
+</tr>
 </tbody>
 </table>
+<pre class="r"><code># Make Venn diagram
+coverage_venn &lt;- coverage[ , c(&#39;cpass&#39;, &#39;icb&#39;, &#39;dcid&#39;, &#39;rei&#39;)]
+gplots::venn(coverage_venn)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAAxlBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZrY6AAA6ADo6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmOgBmOjpmZgBmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv+QOgCQOjqQZjqQZmaQkGaQkLaQtraQttuQ2/+2ZgC2Zjq2kDq2kGa2kJC2tma2tpC2ttu229u22/+2/7a2///bkDrbkGbbtmbbtpDb25Db27bb29vb2//b////tmb/25D/27b/29v//7b//9v////PEV0rAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3da4PcRJancRmMPQ1jBpuZ7ekBlr1A9dA7C0s1XmZd2K78/l9qS3lVKlNK6ejEuYSe3xtM2ZU6cSLin8qbstkAAEQa7wIAICsCFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAi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RxVjZuyWTY9KdKLFIkAxA7mjkjyDt1369hVuG/VgPcDCaN5NzqWbtyKMO6WbwfqwNGBufg5OjLZiNwxcxzpBBIVSjbREWSwdABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQAhAhQAhAhQABAiQAFAiAAFACECFACECFAAECJAAUCIAAUAIQIUAIQIUAAQIkABQIgABQCh/w9epIUsJBG5qgAAAABJRU5ErkJggg==" width="672" /></p>
 </div>
 </div>
 <div id="merge-data" class="section level1">
 <h1>Merge data</h1>
-<p>First we identify the variables in each dataset and which are duplicates</p>
+<div id="duplicates" class="section level2">
+<h2>Duplicates</h2>
+<p>First we identify the variables of interest in each dataset and those which are duplicates. We exclude the ICB cases here since our universe of cases is restricted to instances of known Russian cyberattacks</p>
+<pre class="r"><code># Create dataframe versions of just variables to merge for the match
+cpass_join &lt;- cpass[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;cpass&#39;, &#39;det_alliance&#39;, &#39;resp_convmil&#39;, &#39;resp_convmil_gro&#39;, &#39;resp_convmil_airsea&#39;, &#39;resp_paramil&#39;, &#39;resp_cyberdisrup&#39;, &#39;resp_infoops&#39;)]
+
+# Add ICB merge
+icb_join &lt;- icb
+
+# Rename the dcid severity variable so we know the source
+dcid &lt;- dcid %&gt;% dplyr::rename(&quot;dcid_severity&quot; = &quot;Incident severity&quot;)
+dcid_join &lt;- dcid[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;dcid&#39;, &#39;Incident&#39;, &#39;dcid_severity&#39;)]
+
+# Rename the rei variables so we know the source
+rei &lt;- rei %&gt;% dplyr::rename(
+  &quot;rei_infoops&quot; = &quot;Disinformation campaign&quot;,
+  &quot;rei_cyberdisrup&quot; = &quot;Cyberattack&quot;,
+  &quot;rei_matsupp&quot; = &quot;Material support&quot;)
+
+rei_join &lt;- rei[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;rei&#39;, &#39;rei_infoops&#39;, &#39;rei_cyberdisrup&#39;, &#39;rei_matsupp&#39;)]</code></pre>
 </div>
-<div id="summary-statistics" class="section level1">
-<h1>Summary statistics</h1>
-<div id="summary" class="section level2">
-<h2>Summary</h2>
-<p>Make a table summarizing the data on Russian crisis participation</p>
-</div>
-<div id="plots" class="section level2">
-<h2>Plots</h2>
-<p>Given the number of cases, summarize them in plot format.</p>
+<div id="merge" class="section level2">
+<h2>Merge</h2>
+<p>Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded</p>
+<pre class="r"><code># Merge datasets with just ID vars
+cases_old &lt;- dplyr::full_join(icb_join, dcid_join) %&gt;% dplyr::full_join(., rei_join)</code></pre>
+<pre><code>## Joining, by = c(&quot;Year&quot;, &quot;Target&quot;)
+## Joining, by = c(&quot;Year&quot;, &quot;Target&quot;)</code></pre>
+<pre><code>## Warning: Column `Target` has different attributes on LHS and RHS of join</code></pre>
+<pre class="r"><code># Delete duplicates
+cases_old &lt;- unique(cases_old)
+
+# Sort chronologically
+cases_old &lt;- cases_old[order(cases_old$Year, decreasing = FALSE), ]</code></pre>
 </div>
 </div>
 <div id="save-final-dataframe" class="section level1">
 <h1>Save final dataframe</h1>
-<pre class="r"><code># saveRDS(rei, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_rei.rds&quot;))</code></pre>
+<pre class="r"><code>saveRDS(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.rds&quot;))
+write.csv(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.csv&quot;))</code></pre>
+</div>
+<div id="reload-dataframe-with-new-variables-coded" class="section level1">
+<h1>Reload dataframe with new variables coded</h1>
+<p>The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now abd nerged with the new cases that were similarly coded to analyze the complete version of the dataset</p>
+<pre class="r"><code>df_complete &lt;- googlesheets::gs_title(&quot;Russian wars&quot;)</code></pre>
+<pre><code>## Sheet successfully identified: &quot;Russian wars&quot;</code></pre>
+<pre class="r"><code>df_new &lt;- df_complete %&gt;% googlesheets::gs_read(&quot;new_cases&quot;)</code></pre>
+<pre><code>## Accessing worksheet titled &#39;new_cases&#39;.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   target = col_character(),
+##   det_rustrade = col_logical(),
+##   det_rusenergyexport = col_logical(),
+##   source = col_character(),
+##   notes = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>df_old &lt;- df_complete %&gt;% googlesheets::gs_read(&quot;old_cases&quot;)</code></pre>
+<pre><code>## Accessing worksheet titled &#39;old_cases&#39;.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Incident = col_character(),
+##   Target = col_character(),
+##   Year = col_double(),
+##   cpass = col_double(),
+##   dcid = col_double(),
+##   rei = col_double(),
+##   det_alliance = col_double(),
+##   resp_convmil = col_double(),
+##   resp_convmil_gro = col_double(),
+##   resp_convmil_airsea = col_double(),
+##   resp_paramil = col_double(),
+##   resp_cyberdisrup = col_double(),
+##   resp_infoops = col_double(),
+##   sources = col_character(),
+##   notes = col_character(),
+##   dcid_severity = col_double(),
+##   rei_infoops = col_double(),
+##   rei_cyberdisrup = col_double(),
+##   rei_matsupp = col_double()
+## )</code></pre>
+<pre class="r"><code># Merge the old and new cases inot a single dataframe
+
+
+# Inspect quality
+
+
+#Save
+#saveRDS(df_complete, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_aggregate_cpass.rds&quot;))</code></pre>
 </div>
 
 

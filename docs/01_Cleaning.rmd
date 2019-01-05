@@ -33,7 +33,7 @@ library(magrittr)
 We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance and trade data represented here was calculated using the code in 02_Distance.Rmd and 03_Trade.Rmd and then inputed into the google spreadsheet.
 ```{r}
 grayzone <- googlesheets::gs_title("Russian wars")
-grayzone <- grayzone %>% googlesheets::gs_read("r_pull")
+grayzone <- grayzone %>% googlesheets::gs_read("new_cases")
 ```
 # Save file
 ```{r}

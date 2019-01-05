@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2019-01-03" />
+<meta name="date" content="2019-01-04" />
 
 <title>01 Cleaning</title>
 
@@ -94,7 +94,7 @@ display: none;
 padding: 0 4px 0 4px;
 }
 .pagedtable .even {
-background-color: #fcfcfc;
+background-color: rgba(140, 140, 140, 0.1);
 }
 .pagedtable-padding-col {
 display: none;
@@ -2717,6 +2717,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 <style type="text/css">
@@ -2748,9 +2751,70 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -2764,7 +2828,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
 
 
 
@@ -2881,7 +2944,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">01 Cleaning</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2019-01-03</em></h4>
+<h4 class="date"><em>2019-01-04</em></h4>
 
 </div>
 
@@ -2951,7 +3014,7 @@ See spec(...) for full column specifications.</code></pre>
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIjAxIENsZWFuaW5nIg0KYXV0aG9yOiBKIEFuZHJlcyBHYW5ub24sIEVyaWsgR2FydHprZSwgYW5kIEpvbiBMaW5kc2F5LCBDZW50ZXIgZm9yIFBlYWNlIGFuZCBTZWN1cml0eSBTdHVkaWVzIChjUEFTUykNCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCINCm91dHB1dDoNCiAgaHRtbF9ub3RlYm9vazoNCiAgICBmaWdfaGVpZ2h0OiA4DQogICAgZmlnX3dpZHRoOiAxMg0KICAgIG51bWJlcl9zZWN0aW9uczogeWVzDQogICAgdGhlbWU6IGZsYXRseQ0KICAgIHRvYzogeWVzDQogICAgdG9jX2RlcHRoOiA1DQogICAgdG9jX2Zsb2F0Og0KICAgICAgY29sbGFwc2VkOiB5ZXMNCmVkaXRvcl9vcHRpb25zOg0KICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lDQotLS0NCjxzdHlsZT4NCiAgICBib2R5IC5tYWluLWNvbnRhaW5lciB7DQogICAgICAgIG1heC13aWR0aDogMTAwJTsNCiAgICB9DQo8L3N0eWxlPg0KDQpUaGlzIGlzIHRoZSBlbnRyeSBwb2ludCBmb3IgdGhlIHBhcGVyICJBZnRlciBEZXRlcnJlbmNlOiBFeHBsYWluaW5nIENvbmZsaWN0IFNob3J0IG9mIFdhciIgDQoNCiMgTG9hZCBwYWNrYWdlcw0KUGlwZSBvcGVyYXRvcnMgZG9uJ3QgcGxheSBuaWNlIGFuZCBtdXN0IGJlIG1hbnVhbGx5IGxvYWRlZCB1cCBmcm9udA0KYGBge3J9DQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KYGBgDQoNCiMgTG9hZCBkYXRhDQpXZSBsb2FkIHRoZSBkYXRhIGZyb20gdGhlIGdvb2dsZSBzcHJlYWRzaGVldCB0YWIgdGhhdCBoYXMgYWdncmVnYXRlZCB0aGUgaW5mbyBmcm9tIHByZXZpb3VzIHZlcnNpb25zLiBFYWNoIHJvdyBpcyBub3cgYSBncmF5IHpvbmUgY2FzZSBhbmQgdGhlIGNvbHVtbnMgYXJlIGNvZGVkIGNvdmFyaWF0ZXMuIFRoZSBkaXN0YW5jZSBhbmQgdHJhZGUgZGF0YSByZXByZXNlbnRlZCBoZXJlIHdhcyBjYWxjdWxhdGVkIHVzaW5nIHRoZSBjb2RlIGluIDAyX0Rpc3RhbmNlLlJtZCBhbmQgMDNfVHJhZGUuUm1kIGFuZCB0aGVuIGlucHV0ZWQgaW50byB0aGUgZ29vZ2xlIHNwcmVhZHNoZWV0Lg0KYGBge3J9DQpncmF5em9uZSA8LSBnb29nbGVzaGVldHM6OmdzX3RpdGxlKCJSdXNzaWFuIHdhcnMiKQ0KZ3JheXpvbmUgPC0gZ3JheXpvbmUgJT4lIGdvb2dsZXNoZWV0czo6Z3NfcmVhZCgicl9wdWxsIikNCmBgYA0KIyBTYXZlIGZpbGUNCmBgYHtyfQ0Kc2F2ZVJEUyhncmF5em9uZSwgcGFzdGUwKGhlcmU6OmhlcmUoKSwgIi9kYXRhLyIsImdyYXl6b25lX2NwYXNzLnJkcyIpKQ0KYGBgDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIjAxIENsZWFuaW5nIg0KYXV0aG9yOiBKIEFuZHJlcyBHYW5ub24sIEVyaWsgR2FydHprZSwgYW5kIEpvbiBMaW5kc2F5LCBDZW50ZXIgZm9yIFBlYWNlIGFuZCBTZWN1cml0eSBTdHVkaWVzIChjUEFTUykNCmRhdGU6ICJgciBTeXMuRGF0ZSgpYCINCm91dHB1dDoNCiAgaHRtbF9ub3RlYm9vazoNCiAgICBmaWdfaGVpZ2h0OiA4DQogICAgZmlnX3dpZHRoOiAxMg0KICAgIG51bWJlcl9zZWN0aW9uczogeWVzDQogICAgdGhlbWU6IGZsYXRseQ0KICAgIHRvYzogeWVzDQogICAgdG9jX2RlcHRoOiA1DQogICAgdG9jX2Zsb2F0Og0KICAgICAgY29sbGFwc2VkOiB5ZXMNCmVkaXRvcl9vcHRpb25zOg0KICBjaHVua19vdXRwdXRfdHlwZTogaW5saW5lDQotLS0NCjxzdHlsZT4NCiAgICBib2R5IC5tYWluLWNvbnRhaW5lciB7DQogICAgICAgIG1heC13aWR0aDogMTAwJTsNCiAgICB9DQo8L3N0eWxlPg0KDQpUaGlzIGlzIHRoZSBlbnRyeSBwb2ludCBmb3IgdGhlIHBhcGVyICJBZnRlciBEZXRlcnJlbmNlOiBFeHBsYWluaW5nIENvbmZsaWN0IFNob3J0IG9mIFdhciIgDQoNCiMgTG9hZCBwYWNrYWdlcw0KUGlwZSBvcGVyYXRvcnMgZG9uJ3QgcGxheSBuaWNlIGFuZCBtdXN0IGJlIG1hbnVhbGx5IGxvYWRlZCB1cCBmcm9udA0KYGBge3J9DQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KYGBgDQoNCiMgTG9hZCBkYXRhDQpXZSBsb2FkIHRoZSBkYXRhIGZyb20gdGhlIGdvb2dsZSBzcHJlYWRzaGVldCB0YWIgdGhhdCBoYXMgYWdncmVnYXRlZCB0aGUgaW5mbyBmcm9tIHByZXZpb3VzIHZlcnNpb25zLiBFYWNoIHJvdyBpcyBub3cgYSBncmF5IHpvbmUgY2FzZSBhbmQgdGhlIGNvbHVtbnMgYXJlIGNvZGVkIGNvdmFyaWF0ZXMuIFRoZSBkaXN0YW5jZSBhbmQgdHJhZGUgZGF0YSByZXByZXNlbnRlZCBoZXJlIHdhcyBjYWxjdWxhdGVkIHVzaW5nIHRoZSBjb2RlIGluIDAyX0Rpc3RhbmNlLlJtZCBhbmQgMDNfVHJhZGUuUm1kIGFuZCB0aGVuIGlucHV0ZWQgaW50byB0aGUgZ29vZ2xlIHNwcmVhZHNoZWV0Lg0KYGBge3J9DQpncmF5em9uZSA8LSBnb29nbGVzaGVldHM6OmdzX3RpdGxlKCJSdXNzaWFuIHdhcnMiKQ0KZ3JheXpvbmUgPC0gZ3JheXpvbmUgJT4lIGdvb2dsZXNoZWV0czo6Z3NfcmVhZCgibmV3X2Nhc2VzIikNCmBgYA0KIyBTYXZlIGZpbGUNCmBgYHtyfQ0Kc2F2ZVJEUyhncmF5em9uZSwgcGFzdGUwKGhlcmU6OmhlcmUoKSwgIi9kYXRhLyIsImdyYXl6b25lX2NwYXNzLnJkcyIpKQ0KYGBgDQo=</div>
 
 
 </div>
