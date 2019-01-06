@@ -228,6 +228,8 @@ cases_all <- cases_all[ , vars_keep]
 
 #Save
 saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
+write.csv(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.csv"))
+
 ```
 
 
