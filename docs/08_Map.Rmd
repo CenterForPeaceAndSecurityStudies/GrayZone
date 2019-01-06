@@ -73,14 +73,18 @@ rworldmap::mapDevice()
 mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
-                                       mapTitle = "Cyber Attack Average Severity",
-                                       addLegend = TRUE
+                                       mapTitle = "\nRussian cyber attack severity (2005-2016) - Valeriano and Maness data",
+                                       addLegend = FALSE,
+                                       xlim = c(-167, 50),
+                                       ylim = c(30,50)
                                       )
-do.call(rworldmap::addMapLegend,
+do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
-          legendLabels = "all"
+          title = "Severity"
           )
         )
+
+text(x = -127, y = -20, labels = c("DCID data"), cex = 1)
 
 
 ```
@@ -90,6 +94,8 @@ do.call(rworldmap::addMapLegend,
 Map of the REI cases showing variation in severity. Info ops are coded as least severe, cyber disruption as moderate, and material support as most severe. Code each case by whatever is the most severe level that is present.
 ```{r}
 rei <- readRDS(file = paste0(here::here(),"/data/grayzone_rei.rds"))
+
+rei[rei$Target == "Ukraine ", "Target"] <- "Ukraine"
 
 country <- unique(rei$Target)
 average_severity <- NULL 
@@ -108,17 +114,22 @@ rworldmap::mapDevice()
 
 mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
-                                       catMethod = c(0, 0.5, 1, 1.5, 2),
-                                       mapTitle = "Cyber Electoral Interference Average Severity",
+                                       catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
+                                       mapTitle = "\nRussian cyber attack severity (1994-2017) - Way and Casey data",
                                        #colourPalette = c("lightgoldenrod", "yellow", "orange", "red"),
-                                       addLegend = TRUE
+                                       addLegend = FALSE,
+                                       xlim = c(-167, 50),
+                                       ylim = c(30,50)
                                       )
-do.call(rworldmap::addMapLegend,
+do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
-          legendLabels = "all"
+          horiz = FALSE,
+          title = "Severity"
+          #legendLabels = "all"
           )
         )
 
+text(x = -128, y = -20, labels = c("REI data"), cex = 1)
 
 ```
 
