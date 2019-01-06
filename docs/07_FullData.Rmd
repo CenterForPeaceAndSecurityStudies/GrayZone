@@ -131,13 +131,13 @@ gplots::venn(coverage_venn)
 # Merge data
 
 ## Duplicates
-First we identify the variables of interest in each dataset and those which are duplicates. We exclude the ICB cases here since our universe of cases is restricted to instances of known Russian cyberattacks
+First we identify the variables of interest in each dataset and those which are duplicates.
 ```{r}
-# Create dataframe versions of just variables to merge for the match
-cpass_join <- cpass[ , c('Target', 'Year', 'cpass', 'det_alliance', 'resp_convmil', 'resp_convmil_gro', 'resp_convmil_airsea', 'resp_paramil', 'resp_cyberdisrup', 'resp_infoops')]
-
 # Add ICB merge
-icb_join <- icb
+icb <- icb %>% dplyr::rename("icb_viol_crisis_cent" = "Crisis Violence Centrality",
+                                  "icb_viol_crisis_sev" = "Crisis Violence Severity",
+                                  "icb_viol_actor_sev" = "Actor Violence Severity")
+icb_join <- icb[ , c('Year', 'Target', 'icb_viol_crisis_cent', 'icb_viol_crisis_sev', 'icb_viol_actor_sev', 'icb')]
 
 # Rename the dcid severity variable so we know the source
 dcid <- dcid %>% dplyr::rename("dcid_severity" = "Incident severity")
@@ -153,7 +153,8 @@ rei_join <- rei[ , c('Target', 'Year', 'rei', 'rei_infoops', 'rei_cyberdisrup', 
 ```
 
 ## Merge
-Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded
+Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded.
+
 ```{r}
 # Merge datasets with just ID vars
 cases_old <- dplyr::full_join(icb_join, dcid_join) %>% dplyr::full_join(., rei_join)
@@ -163,32 +164,70 @@ cases_old <- unique(cases_old)
 
 # Sort chronologically
 cases_old <- cases_old[order(cases_old$Year, decreasing = FALSE), ]
-
 ```
 
 # Save final dataframe
+This dataframe should now match the one in the google doc for old_cases. SOme duplicate country-years will be merged assuming all other values are identical. They can now have new variables added for our coding of the severity of Russian actions
 ```{r}
 saveRDS(cases_old, paste0(here::here(), "/data/","grayzone_old.rds"))
 write.csv(cases_old, paste0(here::here(), "/data/","grayzone_old.csv"))
 ```
 
-
 # Reload dataframe with new variables coded
-The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now abd nerged with the new cases that were similarly coded to analyze the complete version of the dataset
+## Clean for merge
+The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now and nerged with the new cases that were similarly coded to analyze the complete version of the dataset. The variables from the new data need to match up with their equivalents in the old data. We'll change the old data to match it up
 
 ```{r}
 df_complete <- googlesheets::gs_title("Russian wars")
 df_new <- df_complete %>% googlesheets::gs_read("new_cases")
 df_old <- df_complete %>% googlesheets::gs_read("old_cases")
 
-# Merge the old and new cases inot a single dataframe
+# Clean data for a clean merge
+colnames(df_new)
+colnames(df_old)
 
+# Fix variables names
+df_new$new <- 1
+df_old <- df_old %>% dplyr::rename("incident" = "Incident",
+                                   "target" = "Target",
+                                   "year_start" = "Year")
+```
+
+## Merge
+```{r}
+# Merge the old and new cases inot a single dataframe
+cases_all <- dplyr::full_join(df_new, df_old)
+
+# Sort by date
+cases_all <- cases_all[order(cases_all$year_start, decreasing = FALSE), ]
 
 # Inspect quality
+summary(cases_all)
 
+# Drop columns we're not using now
+vars_keep <- c("target",
+               "year_start",
+               "resp_convmil",
+               "resp_convmil_gro",
+               "resp_convmil_airsea",
+               "resp_paramil",
+               "resp_cyberdisrup",
+               "resp_infoops",
+               "source",
+               "notes",
+               "new",
+               "incident",
+               "dcid",
+               "rei",
+               "dcid_severity",
+               "rei_infoops",
+               "rei_cyberdisrup",
+               "rei_matsupp")
+
+cases_all <- cases_all[ , vars_keep]
 
 #Save
-#saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
+saveRDS(df_complete, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
 ```
 
 
