@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2019-01-04" />
+<meta name="date" content="2019-01-06" />
 
 <title>07_FullData</title>
 
@@ -1643,7 +1643,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">07_FullData</h1>
 <h4 class="author"><em>J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</em></h4>
-<h4 class="date"><em>2019-01-04</em></h4>
+<h4 class="date"><em>2019-01-06</em></h4>
 
 </div>
 
@@ -1662,7 +1662,10 @@ $(document).ready(function () {
 <li><a href="#merge">Merge</a></li>
 </ul></li>
 <li><a href="#save-final-dataframe">Save final dataframe</a></li>
-<li><a href="#reload-dataframe-with-new-variables-coded">Reload dataframe with new variables coded</a></li>
+<li><a href="#reload-dataframe-with-new-variables-coded">Reload dataframe with new variables coded</a><ul>
+<li><a href="#clean-for-merge">Clean for merge</a></li>
+<li><a href="#merge-1">Merge</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -3048,12 +3051,12 @@ gplots::venn(coverage_venn)</code></pre>
 <h1>Merge data</h1>
 <div id="duplicates" class="section level2">
 <h2>Duplicates</h2>
-<p>First we identify the variables of interest in each dataset and those which are duplicates. We exclude the ICB cases here since our universe of cases is restricted to instances of known Russian cyberattacks</p>
-<pre class="r"><code># Create dataframe versions of just variables to merge for the match
-cpass_join &lt;- cpass[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;cpass&#39;, &#39;det_alliance&#39;, &#39;resp_convmil&#39;, &#39;resp_convmil_gro&#39;, &#39;resp_convmil_airsea&#39;, &#39;resp_paramil&#39;, &#39;resp_cyberdisrup&#39;, &#39;resp_infoops&#39;)]
-
-# Add ICB merge
-icb_join &lt;- icb
+<p>First we identify the variables of interest in each dataset and those which are duplicates.</p>
+<pre class="r"><code># Add ICB merge
+icb &lt;- icb %&gt;% dplyr::rename(&quot;icb_viol_crisis_cent&quot; = &quot;Crisis Violence Centrality&quot;,
+                                  &quot;icb_viol_crisis_sev&quot; = &quot;Crisis Violence Severity&quot;,
+                                  &quot;icb_viol_actor_sev&quot; = &quot;Actor Violence Severity&quot;)
+icb_join &lt;- icb[ , c(&#39;Year&#39;, &#39;Target&#39;, &#39;icb_viol_crisis_cent&#39;, &#39;icb_viol_crisis_sev&#39;, &#39;icb_viol_actor_sev&#39;, &#39;icb&#39;)]
 
 # Rename the dcid severity variable so we know the source
 dcid &lt;- dcid %&gt;% dplyr::rename(&quot;dcid_severity&quot; = &quot;Incident severity&quot;)
@@ -3069,7 +3072,7 @@ rei_join &lt;- rei[ , c(&#39;Target&#39;, &#39;Year&#39;, &#39;rei&#39;, &#39;re
 </div>
 <div id="merge" class="section level2">
 <h2>Merge</h2>
-<p>Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded</p>
+<p>Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded.</p>
 <pre class="r"><code># Merge datasets with just ID vars
 cases_old &lt;- dplyr::full_join(icb_join, dcid_join) %&gt;% dplyr::full_join(., rei_join)</code></pre>
 <pre><code>## Joining, by = c(&quot;Year&quot;, &quot;Target&quot;)
@@ -3084,13 +3087,17 @@ cases_old &lt;- cases_old[order(cases_old$Year, decreasing = FALSE), ]</code></p
 </div>
 <div id="save-final-dataframe" class="section level1">
 <h1>Save final dataframe</h1>
+<p>This dataframe should now match the one in the google doc for old_cases. SOme duplicate country-years will be merged assuming all other values are identical. They can now have new variables added for our coding of the severity of Russian actions</p>
 <pre class="r"><code>saveRDS(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.rds&quot;))
 write.csv(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.csv&quot;))</code></pre>
 </div>
 <div id="reload-dataframe-with-new-variables-coded" class="section level1">
 <h1>Reload dataframe with new variables coded</h1>
-<p>The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now abd nerged with the new cases that were similarly coded to analyze the complete version of the dataset</p>
+<div id="clean-for-merge" class="section level2">
+<h2>Clean for merge</h2>
+<p>The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now and nerged with the new cases that were similarly coded to analyze the complete version of the dataset. The variables from the new data need to match up with their equivalents in the old data. We’ll change the old data to match it up</p>
 <pre class="r"><code>df_complete &lt;- googlesheets::gs_title(&quot;Russian wars&quot;)</code></pre>
+<pre><code>## Auto-refreshing stale OAuth token.</code></pre>
 <pre><code>## Sheet successfully identified: &quot;Russian wars&quot;</code></pre>
 <pre class="r"><code>df_new &lt;- df_complete %&gt;% googlesheets::gs_read(&quot;new_cases&quot;)</code></pre>
 <pre><code>## Accessing worksheet titled &#39;new_cases&#39;.</code></pre>
@@ -3111,7 +3118,6 @@ write.csv(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.
 ##   Incident = col_character(),
 ##   Target = col_character(),
 ##   Year = col_double(),
-##   cpass = col_double(),
 ##   dcid = col_double(),
 ##   rei = col_double(),
 ##   det_alliance = col_double(),
@@ -3121,21 +3127,139 @@ write.csv(cases_old, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_old.
 ##   resp_paramil = col_double(),
 ##   resp_cyberdisrup = col_double(),
 ##   resp_infoops = col_double(),
-##   sources = col_character(),
+##   source = col_character(),
 ##   notes = col_character(),
 ##   dcid_severity = col_double(),
 ##   rei_infoops = col_double(),
 ##   rei_cyberdisrup = col_double(),
 ##   rei_matsupp = col_double()
 ## )</code></pre>
+<pre class="r"><code># Clean data for a clean merge
+colnames(df_new)</code></pre>
+<pre><code>##  [1] &quot;target&quot;                &quot;year_start&quot;           
+##  [3] &quot;year_end&quot;              &quot;fsu&quot;                  
+##  [5] &quot;det_dist_us_cap&quot;       &quot;det_dist_us_cent&quot;     
+##  [7] &quot;det_dist_us_min&quot;       &quot;det_dist_rus_cap&quot;     
+##  [9] &quot;det_dist_rus_cent&quot;     &quot;det_dist_rus_min&quot;     
+## [11] &quot;det_alliance&quot;          &quot;det_rusmiladv&quot;        
+## [13] &quot;det_rustrade&quot;          &quot;det_rusenergyexport&quot;  
+## [15] &quot;det_eu&quot;                &quot;det_rus_vitalinterest&quot;
+## [17] &quot;resp_convmil&quot;          &quot;resp_convmil_gro&quot;     
+## [19] &quot;resp_convmil_airsea&quot;   &quot;resp_paramil&quot;         
+## [21] &quot;resp_cyberdisrup&quot;      &quot;resp_infoops&quot;         
+## [23] &quot;source&quot;                &quot;notes&quot;</code></pre>
+<pre class="r"><code>colnames(df_old)</code></pre>
+<pre><code>##  [1] &quot;Incident&quot;            &quot;Target&quot;              &quot;Year&quot;               
+##  [4] &quot;dcid&quot;                &quot;rei&quot;                 &quot;det_alliance&quot;       
+##  [7] &quot;resp_convmil&quot;        &quot;resp_convmil_gro&quot;    &quot;resp_convmil_airsea&quot;
+## [10] &quot;resp_paramil&quot;        &quot;resp_cyberdisrup&quot;    &quot;resp_infoops&quot;       
+## [13] &quot;source&quot;              &quot;notes&quot;               &quot;dcid_severity&quot;      
+## [16] &quot;rei_infoops&quot;         &quot;rei_cyberdisrup&quot;     &quot;rei_matsupp&quot;</code></pre>
+<pre class="r"><code># Fix variables names
+df_new$new &lt;- 1
+df_old &lt;- df_old %&gt;% dplyr::rename(&quot;incident&quot; = &quot;Incident&quot;,
+                                   &quot;target&quot; = &quot;Target&quot;,
+                                   &quot;year_start&quot; = &quot;Year&quot;)</code></pre>
+</div>
+<div id="merge-1" class="section level2">
+<h2>Merge</h2>
 <pre class="r"><code># Merge the old and new cases inot a single dataframe
-
+cases_all &lt;- dplyr::full_join(df_new, df_old)</code></pre>
+<pre><code>## Joining, by = c(&quot;target&quot;, &quot;year_start&quot;, &quot;det_alliance&quot;, &quot;resp_convmil&quot;, &quot;resp_convmil_gro&quot;, &quot;resp_convmil_airsea&quot;, &quot;resp_paramil&quot;, &quot;resp_cyberdisrup&quot;, &quot;resp_infoops&quot;, &quot;source&quot;, &quot;notes&quot;)</code></pre>
+<pre class="r"><code># Sort by date
+cases_all &lt;- cases_all[order(cases_all$year_start, decreasing = FALSE), ]
 
 # Inspect quality
+summary(cases_all)</code></pre>
+<pre><code>##     target            year_start      year_end         fsu      
+##  Length:82          Min.   :1994   Min.   :1996   Min.   :0.00  
+##  Class :character   1st Qu.:2008   1st Qu.:1997   1st Qu.:0.00  
+##  Mode  :character   Median :2014   Median :1998   Median :0.00  
+##                     Mean   :2011   Mean   :1998   Mean   :0.30  
+##                     3rd Qu.:2016   3rd Qu.:1998   3rd Qu.:0.75  
+##                     Max.   :2018   Max.   :1999   Max.   :1.00  
+##                                    NA&#39;s   :80     NA&#39;s   :72    
+##  det_dist_us_cap det_dist_us_cent det_dist_us_min det_dist_rus_cap
+##  Min.   :4839    Min.   :5650     Min.   :4083    Min.   : 932.0  
+##  1st Qu.:5064    1st Qu.:5776     1st Qu.:4296    1st Qu.: 990.2  
+##  Median :5288    Median :5902     Median :4510    Median :1048.5  
+##  Mean   :5288    Mean   :5902     Mean   :4510    Mean   :1048.5  
+##  3rd Qu.:5512    3rd Qu.:6028     3rd Qu.:4723    3rd Qu.:1106.8  
+##  Max.   :5737    Max.   :6154     Max.   :4936    Max.   :1165.0  
+##  NA&#39;s   :80      NA&#39;s   :80       NA&#39;s   :80      NA&#39;s   :80      
+##  det_dist_rus_cent det_dist_rus_min  det_alliance  det_rusmiladv 
+##  Min.   :2408      Min.   :  0      Min.   :0.00   Min.   :0.00  
+##  1st Qu.:2640      1st Qu.:190      1st Qu.:1.00   1st Qu.:0.25  
+##  Median :2872      Median :380      Median :1.00   Median :0.50  
+##  Mean   :2872      Mean   :380      Mean   :1.50   Mean   :0.50  
+##  3rd Qu.:3103      3rd Qu.:570      3rd Qu.:2.25   3rd Qu.:0.75  
+##  Max.   :3335      Max.   :760      Max.   :3.00   Max.   :1.00  
+##  NA&#39;s   :80        NA&#39;s   :80       NA&#39;s   :62     NA&#39;s   :80    
+##  det_rustrade   det_rusenergyexport     det_eu      det_rus_vitalinterest
+##  Mode:logical   Mode:logical        Min.   :0.000   Min.   :0.00         
+##  NA&#39;s:82        NA&#39;s:82             1st Qu.:0.125   1st Qu.:0.25         
+##                                     Median :0.250   Median :0.50         
+##                                     Mean   :0.250   Mean   :0.50         
+##                                     3rd Qu.:0.375   3rd Qu.:0.75         
+##                                     Max.   :0.500   Max.   :1.00         
+##                                     NA&#39;s   :80      NA&#39;s   :80           
+##   resp_convmil    resp_convmil_gro resp_convmil_airsea  resp_paramil   
+##  Min.   :0.0000   Min.   :0.000    Min.   :0.0000      Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.000    1st Qu.:0.0000      1st Qu.:0.0000  
+##  Median :0.0000   Median :0.000    Median :0.0000      Median :0.0000  
+##  Mean   :0.2625   Mean   :0.200    Mean   :0.2278      Mean   :0.2658  
+##  3rd Qu.:1.0000   3rd Qu.:0.125    3rd Qu.:0.0000      3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :1.000    Max.   :1.0000      Max.   :1.0000  
+##  NA&#39;s   :2        NA&#39;s   :2        NA&#39;s   :3           NA&#39;s   :3       
+##  resp_cyberdisrup  resp_infoops       source             notes          
+##  Min.   :1        Min.   :0.0000   Length:82          Length:82         
+##  1st Qu.:1        1st Qu.:0.0000   Class :character   Class :character  
+##  Median :1        Median :1.0000   Mode  :character   Mode  :character  
+##  Mean   :1        Mean   :0.7027                                        
+##  3rd Qu.:1        3rd Qu.:1.0000                                        
+##  Max.   :1        Max.   :1.0000                                        
+##  NA&#39;s   :9        NA&#39;s   :8                                             
+##       new       incident              dcid         rei     dcid_severity  
+##  Min.   :1    Length:82          Min.   :1    Min.   :1    Min.   :1.000  
+##  1st Qu.:1    Class :character   1st Qu.:1    1st Qu.:1    1st Qu.:2.000  
+##  Median :1    Mode  :character   Median :1    Median :1    Median :2.500  
+##  Mean   :1                       Mean   :1    Mean   :1    Mean   :2.762  
+##  3rd Qu.:1                       3rd Qu.:1    3rd Qu.:1    3rd Qu.:4.000  
+##  Max.   :1                       Max.   :1    Max.   :1    Max.   :4.000  
+##  NA&#39;s   :72                      NA&#39;s   :40   NA&#39;s   :51   NA&#39;s   :40     
+##   rei_infoops     rei_cyberdisrup   rei_matsupp    
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :1.0000   Median :1.0000   Median :0.0000  
+##  Mean   :0.5161   Mean   :0.5161   Mean   :0.4194  
+##  3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+##  NA&#39;s   :51       NA&#39;s   :51       NA&#39;s   :51</code></pre>
+<pre class="r"><code># Drop columns we&#39;re not using now
+vars_keep &lt;- c(&quot;target&quot;,
+               &quot;year_start&quot;,
+               &quot;resp_convmil&quot;,
+               &quot;resp_convmil_gro&quot;,
+               &quot;resp_convmil_airsea&quot;,
+               &quot;resp_paramil&quot;,
+               &quot;resp_cyberdisrup&quot;,
+               &quot;resp_infoops&quot;,
+               &quot;source&quot;,
+               &quot;notes&quot;,
+               &quot;new&quot;,
+               &quot;incident&quot;,
+               &quot;dcid&quot;,
+               &quot;rei&quot;,
+               &quot;dcid_severity&quot;,
+               &quot;rei_infoops&quot;,
+               &quot;rei_cyberdisrup&quot;,
+               &quot;rei_matsupp&quot;)
 
+cases_all &lt;- cases_all[ , vars_keep]
 
 #Save
-#saveRDS(df_complete, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_aggregate_cpass.rds&quot;))</code></pre>
+saveRDS(df_complete, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_aggregate_cpass.rds&quot;))</code></pre>
+</div>
 </div>
 
 
