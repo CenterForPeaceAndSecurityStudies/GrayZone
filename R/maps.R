@@ -78,3 +78,59 @@ do.call(rworldmap::addMapLegendBoxes,
           #legendLabels = "all"
         )
 )
+
+
+
+
+#### aggregate
+
+rei_dcid <- readRDS(paste0(here::here(), "/data/grayzone_aggregate_cpass.rds"))
+
+rei_dcid[is.na(rei_dcid[,4]), 4] <- 0
+rei_dcid[is.na(rei_dcid[,5]), 5] <- 0
+rei_dcid[is.na(rei_dcid[,6]), 6] <- 0
+rei_dcid[is.na(rei_dcid[,7]), 7] <- 0
+rei_dcid[is.na(rei_dcid[,8]), 8] <- 0
+
+rei_dcid$resp_convmil_gro <- rei_dcid$resp_convmil_gro * 5
+rei_dcid$resp_convmil_airsea <- rei_dcid$resp_convmil_airsea * 4
+rei_dcid$resp_paramil <- rei_dcid$resp_paramil * 3
+rei_dcid$rei_cyberdisrup <- rei_dcid$rei_cyberdisrup * 2
+
+
+for( i in 1:nrow(rei_dcid)){
+  rei_dcid$intensity[i] <- max(rei_dcid$resp_convmil_gro[i], rei_dcid$resp_convmil_airsea[i], rei_dcid$resp_paramil[i], rei_dcid$resp_cyberdisrup[i], rei_dcid$resp_infoops[i])
+}
+
+country <- unique(rei_dcid$target)
+average_severity <- NULL
+for( i in 1:length(country)){
+  average_severity[i] <- median(rei_dcid[rei_dcid$target == country[i], "intensity"])
+  #average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "severity_comparable"]), 2)
+}
+
+rei_dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
+rei_dcid$average_severity <- as.numeric(rei_dcid$average_severity)
+
+map <- rworldmap::joinCountryData2Map(rei_dcid,
+                                      nameJoinColumn="country",
+                                      joinCode="NAME" )
+
+
+mapParams <- rworldmap::mapCountryData(map,
+                                       nameColumnToPlot='average_severity',
+                                       catMethod = "categorical",
+                                       #catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
+                                       mapTitle = "\n\nRussian attack intensity (1994-2017)",
+                                       addLegend = FALSE,
+                                       xlim = c(-157, 50),
+                                       ylim = c(30,50)
+)
+do.call(rworldmap::addMapLegendBoxes,
+        c(mapParams,
+          horiz = FALSE,
+          title = "Severity",
+          cex = 1
+          #legendLabels = "all"
+        )
+)
