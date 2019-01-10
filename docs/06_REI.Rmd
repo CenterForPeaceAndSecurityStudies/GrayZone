@@ -108,6 +108,13 @@ formattable::formattable(rei,
 )
 ```
 
+## Composite severity variable
+There is no variable that directly codes the severity of Russian interference to allow for inter-case comparison. We can make a composite index of that by noting the highest level of interference in each case.
+
+```{r}
+
+```
+
 ## Plots
 Given the number of cases, summarize them in plot format.
 ```{r}
