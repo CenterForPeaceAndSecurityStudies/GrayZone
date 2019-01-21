@@ -9,8 +9,8 @@ dcid[dcid$`Incident severity` > 2 & dcid$`Incident severity` < 7, "severity_comp
 country <- unique(dcid$Target)
 average_severity <- NULL
 for( i in 1:length(country)){
-  average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "Incident severity"]), 2)
-  #average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "severity_comparable"]), 2)
+  #average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "Incident severity"]), 2)
+  average_severity[i] <- round(median(dcid[dcid$Target == country[i], "severity_comparable"]))
 }
 
 dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
@@ -24,7 +24,8 @@ map <- rworldmap::joinCountryData2Map(dcid,
 
 mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
-                                       catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
+                                       #catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
+                                       catMethod = "categorical",
                                        mapTitle = "Russian cyber attack severity (2005-2016)\nValeriano and Maness data",
                                        addLegend = FALSE,
                                        xlim = c(-167, 50),
@@ -32,10 +33,12 @@ mapParams <- rworldmap::mapCountryData(map,
 )
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
-          title = "Severity (1-10)",
+          title = "Severity",
           cex = 0.8
         )
 )
+
+text(x = -118, y = 4, labels = c("No cases coded with severity\nless than 1 or greater than 4"), cex = 0.6)
 
 
 rei <- readRDS(file = paste0(here::here(),"/data/grayzone_rei.rds"))
@@ -50,7 +53,7 @@ country <- unique(rei$Target)
 average_severity <- NULL
 for( i in 1:length(country)){
   #average_severity[i] <- round(mean(rei[rei$Target == country[i], "Favorable outcome"]), 2)
-  average_severity[i] <- round(mean(rei[rei$Target == country[i], "severity_comparable"]), 2)
+  average_severity[i] <- round(median(rei[rei$Target == country[i], "severity_comparable"]))
 }
 
 rei <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
@@ -73,16 +76,14 @@ mapParams <- rworldmap::mapCountryData(map,
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
-          title = "Severity (1-2)",
+          title = "Severity",
           cex = 0.8
           #legendLabels = "all"
         )
 )
 
 
-
-
-#### aggregate
+######################################### aggregate ############################################
 
 rei_dcid <- readRDS(paste0(here::here(), "/data/grayzone_aggregate_cpass.rds"))
 
@@ -105,7 +106,7 @@ for( i in 1:nrow(rei_dcid)){
 country <- unique(rei_dcid$target)
 average_severity <- NULL
 for( i in 1:length(country)){
-  average_severity[i] <- median(rei_dcid[rei_dcid$target == country[i], "intensity"])
+  average_severity[i] <- max(rei_dcid[rei_dcid$target == country[i], "intensity"])
   #average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "severity_comparable"]), 2)
 }
 
@@ -121,7 +122,7 @@ mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        catMethod = "categorical",
                                        #catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
-                                       mapTitle = "\n\nRussian attack intensity (1994-2017)",
+                                       mapTitle = "\n\nIntensity of Russian activity (1994-2017)",
                                        addLegend = FALSE,
                                        xlim = c(-157, 50),
                                        ylim = c(30,50)
@@ -130,7 +131,11 @@ do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
           title = "Severity",
-          cex = 1
+          cex = 0.8,
+          x = -160,
+          y = 40
           #legendLabels = "all"
         )
 )
+
+text(x = -122, y = -4, labels = c("For countries that have multiple, distinct\nobservations the highest intensity was used"), cex = 0.6)
