@@ -98,7 +98,6 @@ rei_dcid$resp_convmil_airsea <- rei_dcid$resp_convmil_airsea * 4
 rei_dcid$resp_paramil <- rei_dcid$resp_paramil * 3
 rei_dcid$rei_cyberdisrup <- rei_dcid$rei_cyberdisrup * 2
 
-
 for( i in 1:nrow(rei_dcid)){
   rei_dcid$intensity[i] <- max(rei_dcid$resp_convmil_gro[i], rei_dcid$resp_convmil_airsea[i], rei_dcid$resp_paramil[i], rei_dcid$resp_cyberdisrup[i], rei_dcid$resp_infoops[i])
 }
@@ -112,6 +111,13 @@ for( i in 1:length(country)){
 
 rei_dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
 rei_dcid$average_severity <- as.numeric(rei_dcid$average_severity)
+rei_dcid <- rbind(rei_dcid, c("Thailand", 2))
+
+#rei_dcid[rei_dcid$average_severity == 1, "average_severity"] <- "1 Info Ops"
+#rei_dcid[rei_dcid$average_severity == 2, "average_severity"] <- "2 Cyber Disruption"
+#rei_dcid[rei_dcid$average_severity == 3, "average_severity"] <- "3 Paramilitary"
+#rei_dcid[rei_dcid$average_severity == 4, "average_severity"] <- "4 Conventional Military (air/sea)"
+#rei_dcid[rei_dcid$average_severity == 5, "average_severity"] <- "5 Conventional Military (ground)"
 
 map <- rworldmap::joinCountryData2Map(rei_dcid,
                                       nameJoinColumn="country",
@@ -133,9 +139,9 @@ do.call(rworldmap::addMapLegendBoxes,
           title = "Severity",
           cex = 0.8,
           x = -160,
-          y = 40
+          y = 45
           #legendLabels = "all"
         )
 )
 
-text(x = -122, y = -4, labels = c("For countries that have multiple, distinct\nobservations the highest intensity was used"), cex = 0.6)
+text(x = -122, y = -6, labels = c("For countries that have multiple, distinct\nobservations the highest intensity was used"), cex = 0.6)
