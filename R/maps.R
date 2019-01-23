@@ -10,11 +10,14 @@ country <- unique(dcid$Target)
 average_severity <- NULL
 for( i in 1:length(country)){
   #average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "Incident severity"]), 2)
-  average_severity[i] <- round(median(dcid[dcid$Target == country[i], "severity_comparable"]))
+  average_severity[i] <- round(median(dcid[dcid$Target == country[i], "severity_comparable"], na.rm = T))
 }
 
 dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
 dcid$average_severity <- as.numeric(dcid$average_severity)
+
+dcid[dcid$average_severity == 1, "average_severity"] <- "1 Info Ops"
+dcid[dcid$average_severity == 2, "average_severity"] <- "2 Cyber Disruption"
 
 map <- rworldmap::joinCountryData2Map(dcid,
                                       nameJoinColumn="country",
@@ -34,11 +37,13 @@ mapParams <- rworldmap::mapCountryData(map,
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           title = "Severity",
-          cex = 0.8
+          cex = 0.8,
+          x = -176,
+          y = 32
         )
 )
 
-text(x = -118, y = 4, labels = c("No cases coded with severity\nless than 1 or greater than 4"), cex = 0.6)
+text(x = -114, y = 1, labels = c("No cases coded with severity less than 1 or greater than 4"), cex = 0.6)
 
 
 rei <- readRDS(file = paste0(here::here(),"/data/grayzone_rei.rds"))
@@ -53,11 +58,16 @@ country <- unique(rei$Target)
 average_severity <- NULL
 for( i in 1:length(country)){
   #average_severity[i] <- round(mean(rei[rei$Target == country[i], "Favorable outcome"]), 2)
-  average_severity[i] <- round(median(rei[rei$Target == country[i], "severity_comparable"]))
+  average_severity[i] <- round(median(rei[rei$Target == country[i], "severity_comparable"], na.rm = T))
 }
 
 rei <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
 rei$average_severity <- as.numeric(rei$average_severity)
+
+rei <- rei[!is.na(rei$average_severity),]
+
+rei[rei$average_severity == 1, "average_severity"] <- "1 Info Ops"
+rei[rei$average_severity == 2, "average_severity"] <- "2 Cyber Disruption"
 
 map <- rworldmap::joinCountryData2Map(rei,
                                       nameJoinColumn="country",
@@ -77,7 +87,9 @@ do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
           title = "Severity",
-          cex = 0.8
+          cex = 0.8,
+          x = -176,
+          y = 32
           #legendLabels = "all"
         )
 )
@@ -113,11 +125,11 @@ rei_dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F
 rei_dcid$average_severity <- as.numeric(rei_dcid$average_severity)
 rei_dcid <- rbind(rei_dcid, c("Thailand", 2))
 
-#rei_dcid[rei_dcid$average_severity == 1, "average_severity"] <- "1 Info Ops"
-#rei_dcid[rei_dcid$average_severity == 2, "average_severity"] <- "2 Cyber Disruption"
-#rei_dcid[rei_dcid$average_severity == 3, "average_severity"] <- "3 Paramilitary"
-#rei_dcid[rei_dcid$average_severity == 4, "average_severity"] <- "4 Conventional Military (air/sea)"
-#rei_dcid[rei_dcid$average_severity == 5, "average_severity"] <- "5 Conventional Military (ground)"
+rei_dcid[rei_dcid$average_severity == 1, "average_severity"] <- "1 Info Ops"
+rei_dcid[rei_dcid$average_severity == 2, "average_severity"] <- "2 Cyber Disruption"
+rei_dcid[rei_dcid$average_severity == 3, "average_severity"] <- "3 Paramilitary"
+rei_dcid[rei_dcid$average_severity == 4, "average_severity"] <- "4 Conventional Military (air/sea)"
+rei_dcid[rei_dcid$average_severity == 5, "average_severity"] <- "5 Conventional Military (ground)"
 
 map <- rworldmap::joinCountryData2Map(rei_dcid,
                                       nameJoinColumn="country",
@@ -131,17 +143,18 @@ mapParams <- rworldmap::mapCountryData(map,
                                        mapTitle = "\n\nIntensity of Russian activity (1994-2017)",
                                        addLegend = FALSE,
                                        xlim = c(-157, 50),
-                                       ylim = c(30,50)
+                                       ylim = c(30,50),
+                                       colourPalette = RColorBrewer::brewer.pal(5, "YlOrRd")
 )
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
           title = "Severity",
-          cex = 0.8,
-          x = -160,
-          y = 45
+          cex = 0.6,
+          x = -165,
+          y = 25
           #legendLabels = "all"
         )
 )
 
-text(x = -122, y = -6, labels = c("For countries that have multiple, distinct\nobservations the highest intensity was used"), cex = 0.6)
+text(x = -80, y = -15, labels = c("For countries that have multiple, distinct observations the highest intensity was used"), cex = 0.6)
