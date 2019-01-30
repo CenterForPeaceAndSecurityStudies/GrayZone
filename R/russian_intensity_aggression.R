@@ -49,8 +49,8 @@ df <- as.data.frame(df)
 
 
 #### bar chart
-g <- ggplot(df, aes(years, severity_avg_annual))
-g + geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
+g <- ggplot(df, aes(years, severity_avg_annual)) +
+  geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
   labs(title="Average intensity of Russian aggression (1994-2018)",
        subtitle="", x = "Year", y="Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
@@ -72,6 +72,8 @@ g + geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
         axis.title.y = element_text(size = 18)
         )
 
+g
+
 ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg",path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 
 
@@ -91,8 +93,8 @@ df_max <- as.data.frame(df_max)
 
 
 #### bar chart
-g <- ggplot(df_max, aes(years, severity_max_annual))
-g + geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
+g <- ggplot(df_max, aes(years, severity_max_annual)) +
+  geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
   labs(title="Maximum intensity of Russian aggression (1994-2018)",
        subtitle="", x = "Year", y="Maximum Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
@@ -114,5 +116,6 @@ g + geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
         axis.title.y = element_text(size = 18)
   )
 
+g
 ggsave(paste0("maximum_intensity_russian_aggression.jpeg"),g,"jpeg",path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 
