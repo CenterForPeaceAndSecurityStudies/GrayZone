@@ -1,5 +1,6 @@
 gac <- readRDS("~/GrayZone/data/grayzone_aggregate_cpass.rds")
 #plotting the severity of Russian attacks from 1994-2018.
+library(ggplot2)
 
 gac <- gac[c("target","year_start","resp_convmil_gro","resp_convmil_airsea",
             "resp_paramil","resp_cyberdisrup","resp_infoops")]
@@ -74,7 +75,8 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
 
 g
 
-ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg",path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+#ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg",
+#       path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 
 
 ####################### by MAX intensity
@@ -117,5 +119,6 @@ g <- ggplot(df_max, aes(years, severity_max_annual)) +
   )
 
 g
-ggsave(paste0("maximum_intensity_russian_aggression.jpeg"),g,"jpeg",path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+
+#ggsave(paste0("maximum_intensity_russian_aggression.jpeg"),g,"jpeg",path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 
