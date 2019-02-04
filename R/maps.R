@@ -29,11 +29,15 @@ mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        #catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
                                        catMethod = "categorical",
-                                       mapTitle = "Russian cyber attack severity (2005-2016)\nValeriano and Maness data",
+                                       mapTitle = "Intensity of Russian cyber attacks (2000-2014)\nValeriano and Maness data",
                                        addLegend = FALSE,
-                                       xlim = c(-167, 50),
-                                       ylim = c(30,50)
+                                       xlim = c(-100, 50), #c(-167, 50),
+                                       ylim = c(40,70), #c(30,50),
+                                       colourPalette = c("grey60", "grey30")
 )
+
+mapParams$legendText <- c("Info Ops", "Cyber Disruption")
+
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           title = "Severity",
@@ -43,7 +47,7 @@ do.call(rworldmap::addMapLegendBoxes,
         )
 )
 
-text(x = -114, y = 1, labels = c("No cases coded with severity less than 1 or greater than 4"), cex = 0.6)
+#text(x = -114, y = 1, labels = c("No cases coded with severity less than 1 or greater than 4"), cex = 0.6)
 
 
 rei <- readRDS(file = paste0(here::here(),"/data/grayzone_rei.rds"))
@@ -78,11 +82,15 @@ mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        catMethod = "categorical",
                                        #catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
-                                       mapTitle = "Russian cyber attack severity (1994-2017)\nWay and Casey data",
+                                       mapTitle = "Intensity of Russian cyber attacks (1994-2017)\nWay and Casey data",
                                        addLegend = FALSE,
-                                       xlim = c(-167, 50),
-                                       ylim = c(30,50)
+                                       xlim = c(-100, 50), #c(-167, 50),
+                                       ylim = c(40,70), #c(30,50),
+                                       colourPalette = c("grey60", "grey30")
 )
+
+mapParams$legendText <- c("Info Ops", "Cyber Disruption")
+
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
@@ -140,21 +148,37 @@ mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        catMethod = "categorical",
                                        #catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
-                                       mapTitle = "\n\nIntensity of Russian activity (1994-2017)",
+                                       mapTitle = "\n\n\n\nIntensity of Russian activity (1994-2017)",
                                        addLegend = FALSE,
-                                       xlim = c(-157, 50),
-                                       ylim = c(30,50),
-                                       colourPalette = RColorBrewer::brewer.pal(5, "YlOrRd")
+                                       xlim = c(-100,50), #c(-157, 50),
+                                       ylim = c(40,70), #c(30,50),
+                                       #colourPalette = RColorBrewer::brewer.pal(5, "Greys")
+                                       colourPalette = c("grey85", "grey60", "grey40", "grey20", "grey0")
 )
+
+mapParams$legendText <- c("Info Ops", "Cyber Disruption", "Paramilitary", "Conventional Military (air/sea)", "Conventional Military (ground)")
+
+#do.call(rworldmap::addMapLegendBoxes,
+#        c(mapParams,
+#          horiz = FALSE,
+#          title = "Severity",
+#          cex = 0.6,
+#          x = -165,
+#          y = 19
+          #legendLabels = "all"
+#        )
+#)
+
+
 do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           horiz = FALSE,
           title = "Severity",
           cex = 0.6,
-          x = -165,
-          y = 25
+          x = -105,
+          y = 26
           #legendLabels = "all"
         )
 )
 
-text(x = -80, y = -15, labels = c("For countries that have multiple, distinct observations the highest intensity was used"), cex = 0.6)
+#text(x = -80, y = -15, labels = c("For countries that have multiple, distinct observations the highest intensity was used"), cex = 0.6)
