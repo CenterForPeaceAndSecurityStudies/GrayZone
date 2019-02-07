@@ -30,36 +30,39 @@ for(i in 1:nrow(gac)){
 
 gac$score <- severity
 
-years <- sort(unique(gac$year_start))
+years <- 1994:2018
 severity_avg_annual <- c()
+numint <- c()
 
 for(yr in years){
   temp <- gac[which(gac$year_start==yr),]
-  avg <- mean(temp$score)
-  severity_avg_annual <- c(severity_avg_annual, avg)
+  if(nrow(temp)>0){
+    avg <- mean(temp$score)
+    numint <- c(numint,nrow(temp))
+    severity_avg_annual <- c(severity_avg_annual, avg)
+  }
+  else{
+    numint <- c(numint,0)
+    severity_avg_annual <- c(severity_avg_annual, 0)
+  }
 }
 
-df <- cbind(years,severity_avg_annual)
+df <- cbind(years,severity_avg_annual,numint)
 df <- as.data.frame(df)
-
-#geom_text(label = "Info Ops", y = 1, x = 1994) +
-#geom_text(label = "Cyber Disrup.", y = 2, x = 1994) +
-#geom_text(label = "Paramil.", y = 3, x = 1994) +
-#geom_text(label = "Mil. Air/Sea", y = 4, x = 1994) +
-#geom_text(label = "Mil. Ground", y = 5, x = 1994) +
-
 
 #### bar chart
 g <- ggplot(df, aes(years, severity_avg_annual)) +
   geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
+  geom_line(aes(y = numint/4)) +
   labs(title="Average intensity of Russian aggression (1994-2018)",
        subtitle="", x = "Year", y="Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(breaks = c(1, 2, 3, 4, 5), labels = c("1" = "1 Info ops",
-                                                           "2" = "2 Cyber Disrup.",
-                                                           "3" = "3 Paramil.",
-                                                           "4" = "4 Mil (Air/sea)",
-                                                           "5" = "5 Mil (Gro)")) +
+  scale_y_continuous(sec.axis = sec_axis(~.0:20,name = "Number of Russian Interventions"),
+                     breaks = c(1:5), labels = c("1" = "1 Info ops",
+                                                 "2" = "2 Cyber Disrup.",
+                                                 "3" = "3 Paramil.",
+                                                 "4" = "4 Mil (Air/sea)",
+                                                 "5" = "5 Mil (Gro)")) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -81,26 +84,36 @@ g
 
 ####################### by MAX intensity
 
-years <- sort(unique(gac$year_start))
+years <- 1994:2018
 severity_max_annual <- c()
+numint_max <- c()
 
 for(yr in years){
   temp <- gac[which(gac$year_start==yr),]
-  max <- max(temp$score)
-  severity_max_annual <- c(severity_max_annual, max)
+  if(nrow(temp)>0){
+    max <- max(temp$score)
+    numint_max <- c(numint_max,nrow(temp))
+    severity_max_annual <- c(severity_max_annual, max)
+  }
+  else{
+    numint_max <- c(numint_max,0)
+    severity_max_annual <- c(severity_max_annual, 0)
+  }
 }
 
-df_max <- cbind(years,severity_max_annual)
+df_max <- cbind(years,severity_max_annual,numint_max)
 df_max <- as.data.frame(df_max)
 
 
 #### bar chart
 g <- ggplot(df_max, aes(years, severity_max_annual)) +
   geom_bar(stat="identity", width = 1, fill="gray", color = "black") +
+  geom_line(aes(y = numint_max/4)) +
   labs(title="Maximum intensity of Russian aggression (1994-2018)",
        subtitle="", x = "Year", y="Maximum Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(breaks = c(1, 2, 3, 4, 5), labels = c("1" = "1 Info ops",
+  scale_y_continuous(sec.axis = sec_axis(~.0:20,name = "Number of Russian Interventions"),
+                     breaks = c(1, 2, 3, 4, 5), labels = c("1" = "1 Info ops",
                                                            "2" = "2 Cyber Disrup.",
                                                            "3" = "3 Paramil.",
                                                            "4" = "4 Mil (Air/sea)",
