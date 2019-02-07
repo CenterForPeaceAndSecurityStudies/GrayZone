@@ -42,8 +42,8 @@ do.call(rworldmap::addMapLegendBoxes,
         c(mapParams,
           title = "Severity",
           cex = 0.8,
-          x = -176,
-          y = 32
+          x = 10, #-176,
+          y = 36
         )
 )
 
@@ -96,8 +96,8 @@ do.call(rworldmap::addMapLegendBoxes,
           horiz = FALSE,
           title = "Severity",
           cex = 0.8,
-          x = -176,
-          y = 32
+          x = 10, #-176,
+          y = 36
           #legendLabels = "all"
         )
 )
@@ -106,6 +106,8 @@ do.call(rworldmap::addMapLegendBoxes,
 ######################################### aggregate ############################################
 
 rei_dcid <- readRDS(paste0(here::here(), "/data/grayzone_aggregate_cpass.rds"))
+
+rei_dcid[rei_dcid$target == "Chechnya", "target"] <- "Russia"
 
 rei_dcid[is.na(rei_dcid[,4]), 4] <- 0
 rei_dcid[is.na(rei_dcid[,5]), 5] <- 0
