@@ -1,0 +1,143 @@
+---
+title: "07_FullData"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document visualizes the geographic relationship between deterrence and the severity of Russian cyber operations.
+
+Research assistance for this rmd provided by Cole Reynolds.
+
+# Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+library(ggplot2)
+```
+
+## Load data
+Load the cleaned and subset versions of each dataset
+```{r}
+# Load data
+russia_cyber <- readRDS(paste0(here::here(), '/data/grayzone_aggregate.rds'))
+```
+
+## Check data
+```{r}
+summary(russia_cyber)
+```
+
+# Prior data maps
+Map the data using prior variable codings from other datasets
+
+## DCID
+Map of the DCID cases showing variation in severity
+```{r}
+dcid <- readRDS(file = paste0(here::here(),"/data/grayzone_dcid.rds"))
+
+country <- unique(dcid$Target)
+average_severity <- NULL 
+for( i in 1:length(country)){
+  average_severity[i] <- round(mean(dcid[dcid$Target == country[i], "Incident severity"]), 2)
+}
+
+dcid <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
+dcid$average_severity <- as.numeric(dcid$average_severity)
+
+map <- rworldmap::joinCountryData2Map(dcid,
+                                      nameJoinColumn="country",
+                                      joinCode="NAME" )
+
+rworldmap::mapDevice()
+
+mapParams <- rworldmap::mapCountryData(map,
+                                       nameColumnToPlot='average_severity',
+                                       catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
+                                       mapTitle = "\nRussian cyber attack severity (2005-2016) - Valeriano and Maness data",
+                                       addLegend = FALSE,
+                                       xlim = c(-167, 50),
+                                       ylim = c(30,50)
+                                      )
+do.call(rworldmap::addMapLegendBoxes,
+        c(mapParams,
+          title = "Severity"
+          )
+        )
+
+text(x = -127, y = -20, labels = c("DCID data"), cex = 1)
+
+
+```
+
+
+## REI
+Map of the REI cases showing variation in severity. Info ops are coded as least severe, cyber disruption as moderate, and material support as most severe. Code each case by whatever is the most severe level that is present.
+```{r}
+rei <- readRDS(file = paste0(here::here(),"/data/grayzone_rei.rds"))
+
+rei[rei$Target == "Ukraine ", "Target"] <- "Ukraine"
+
+country <- unique(rei$Target)
+average_severity <- NULL 
+for( i in 1:length(country)){
+  average_severity[i] <- round(mean(rei[rei$Target == country[i], "Favorable outcome"]), 2)
+}
+
+rei <- as.data.frame(cbind(country, average_severity), stringsAsFactors = F)
+rei$average_severity <- as.numeric(rei$average_severity)
+
+map <- rworldmap::joinCountryData2Map(rei,
+                                      nameJoinColumn="country",
+                                      joinCode="NAME" )
+
+rworldmap::mapDevice()
+
+mapParams <- rworldmap::mapCountryData(map,
+                                       nameColumnToPlot='average_severity',
+                                       catMethod = c(0, 0.4, 0.8, 1.2, 1.6, 2),
+                                       mapTitle = "\nRussian cyber attack severity (1994-2017) - Way and Casey data",
+                                       #colourPalette = c("lightgoldenrod", "yellow", "orange", "red"),
+                                       addLegend = FALSE,
+                                       xlim = c(-167, 50),
+                                       ylim = c(30,50)
+                                      )
+do.call(rworldmap::addMapLegendBoxes,
+        c(mapParams,
+          horiz = FALSE,
+          title = "Severity"
+          #legendLabels = "all"
+          )
+        )
+
+text(x = -128, y = -20, labels = c("REI data"), cex = 1)
+
+```
+
+
+## Combined
+There should only be one case that is coded in both DCID and REI. For all the rest, scale their scores so we get a single score for each case in either dataset and we can compare across datasets. We know this is a rough coding since one is coding severity of the cyber attack and the other is coding the type of attack, but we'll start here.
+
+
+# Current data maps

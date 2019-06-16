@@ -1,0 +1,235 @@
+---
+title: "07_FullData"
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document compares case and variable coverage across all the Russia cyber data investigated.
+
+The data comes from the following sources:
+
+ICB comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
+
+DCID comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
+
+REI comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
+
+# Preparation
+## Load packages
+Pipe operators have trouble loading for individual commands
+```{r}
+library(magrittr)
+library(ggplot2)
+```
+
+## Load data
+Load the cleaned and subset versions of each dataset
+```{r}
+# Load data
+cpass <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+icb <- readRDS(paste0(here::here(), '/data/grayzone_icb.rds'))
+dcid <- readRDS(paste0(here::here(), '/data/grayzone_dcid.rds'))
+rei <- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))
+```
+
+# Compare coverage
+Before merging the data, compare the different cases covered by each one
+
+## Prep for coverage comparison
+```{r}
+# Create identifier variables for each dataset
+cpass$cpass <- 1
+icb$icb <- 1
+dcid$dcid <- 1
+rei$rei <- 1
+
+# Ensure proper unit of analysis
+dplyr::glimpse(cpass)
+dplyr::glimpse(icb)
+dplyr::glimpse(dcid)
+dplyr::glimpse(rei)
+
+# Fix dcid dates to have a year column
+dcid <- tidyr::separate(dcid, 'Start date', c("Start Year", "Start Month", "Start Day"), sep = "-")
+dcid <- tidyr::separate(dcid, 'End date', c("End Year", "End Month", "End Day"), sep = "-")
+
+# Rename merging variables to make things easier
+cpass <- cpass %>% dplyr::rename('Target' = target,
+                                 'Year' = year_start)
+
+icb <- icb %>% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+dcid <- dcid %>% dplyr::rename('Target' = Target,
+                               'Year' = 'Start Year')
+
+rei <- rei %>% dplyr::rename('Target' = Target,
+                             'Year' = Year)
+
+# Fix date types
+cpass$Year <- as.numeric(cpass$Year)
+icb$Year <- as.numeric(icb$Year)
+dcid$Year <- as.numeric(dcid$Year)
+rei$Year <- as.numeric(rei$Year)
+```
+
+## Compare case coverage across datasets
+```{r fig.path = '../paper/figures/', dev = c('png')}
+# Create dataframe versions of just variables to merge for the match
+cpass_coverage <- cpass[ , c('Target', 'Year', 'cpass')]
+icb_coverage <- icb[ , c('Target', 'Year', 'icb')]
+dcid_coverage <- dcid[ , c('Target', 'Year', 'dcid')]
+rei_coverage <- rei[ , c('Target', 'Year', 'rei')]
+
+# Merge datasets with just ID vars
+coverage <- dplyr::full_join(cpass_coverage, icb_coverage) %>% dplyr::full_join(., dcid_coverage) %>% dplyr::full_join(., rei_coverage)
+
+# Delete duplicates
+coverage <- unique(coverage)
+
+# Convert NAs to 0 to make table easier to read
+coverage[is.na(coverage)] <- 0
+
+# Sort chronologically
+coverage <- coverage[order(coverage$Year, decreasing = FALSE), ]
+
+# Make html table
+formattable::formattable(coverage,
+                         align = c("c", "c", "c", "c", "c", "c"),
+                         list('cpass' = formattable::color_tile("transparent", "lightblue"),
+                              'icb' = formattable::color_tile("transparent", "lightblue"),
+                              'dcid' = formattable::color_tile("transparent", "lightblue"),
+                              'rei' = formattable::color_tile("transparent", "lightblue")))
+
+# Make Venn diagram
+coverage_venn <- coverage[ , c('cpass', 'icb', 'dcid', 'rei')]
+gplots::venn(coverage_venn)
+
+```
+
+# Merge data
+
+## Duplicates
+First we identify the variables of interest in each dataset and those which are duplicates.
+```{r}
+# Add ICB merge
+icb <- icb %>% dplyr::rename("icb_viol_crisis_cent" = "Crisis Violence Centrality",
+                                  "icb_viol_crisis_sev" = "Crisis Violence Severity",
+                                  "icb_viol_actor_sev" = "Actor Violence Severity")
+icb_join <- icb[ , c('Year', 'Target', 'icb_viol_crisis_cent', 'icb_viol_crisis_sev', 'icb_viol_actor_sev', 'icb')]
+
+# Rename the dcid severity variable so we know the source
+dcid <- dcid %>% dplyr::rename("dcid_severity" = "Incident severity")
+dcid_join <- dcid[ , c('Target', 'Year', 'dcid', 'Incident', 'dcid_severity')]
+
+# Rename the rei variables so we know the source
+rei <- rei %>% dplyr::rename(
+  "rei_infoops" = "Disinformation campaign",
+  "rei_cyberdisrup" = "Cyberattack",
+  "rei_matsupp" = "Material support")
+
+rei_join <- rei[ , c('Target', 'Year', 'rei', 'rei_infoops', 'rei_cyberdisrup', 'rei_matsupp')]
+```
+
+## Merge
+Merge the old datasets into a single dataframe so they can uploaded to a googlesheet and new variables can be coded.
+
+```{r}
+# Merge datasets with just ID vars
+cases_old <- dplyr::full_join(icb_join, dcid_join) %>% dplyr::full_join(., rei_join)
+
+# Delete duplicates
+cases_old <- unique(cases_old)
+
+# Sort chronologically
+cases_old <- cases_old[order(cases_old$Year, decreasing = FALSE), ]
+```
+
+# Save final dataframe
+This dataframe should now match the one in the google doc for old_cases. SOme duplicate country-years will be merged assuming all other values are identical. They can now have new variables added for our coding of the severity of Russian actions
+```{r}
+saveRDS(cases_old, paste0(here::here(), "/data/","grayzone_old.rds"))
+write.csv(cases_old, paste0(here::here(), "/data/","grayzone_old.csv"))
+```
+
+# Reload dataframe with new variables coded
+## Clean for merge
+The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now and nerged with the new cases that were similarly coded to analyze the complete version of the dataset. The variables from the new data need to match up with their equivalents in the old data. We'll change the old data to match it up
+
+```{r}
+df_complete <- googlesheets::gs_title("Russian wars")
+df_new <- df_complete %>% googlesheets::gs_read("new_cases")
+df_old <- df_complete %>% googlesheets::gs_read("old_cases")
+
+# Clean data for a clean merge
+colnames(df_new)
+colnames(df_old)
+
+# Fix variables names
+df_new$new <- 1
+df_old <- df_old %>% dplyr::rename("incident" = "Incident",
+                                   "target" = "Target",
+                                   "year_start" = "Year")
+```
+
+## Merge
+```{r}
+# Merge the old and new cases inot a single dataframe
+cases_all <- dplyr::full_join(df_new, df_old)
+
+# Sort by date
+cases_all <- cases_all[order(cases_all$year_start, decreasing = FALSE), ]
+
+# Inspect quality
+summary(cases_all)
+
+# Drop columns we're not using now
+vars_keep <- c("target",
+               "year_start",
+               "resp_convmil",
+               "resp_convmil_gro",
+               "resp_convmil_airsea",
+               "resp_paramil",
+               "resp_cyberdisrup",
+               "resp_infoops",
+               "source",
+               "notes",
+               "new",
+               "incident",
+               "dcid",
+               "rei",
+               "dcid_severity",
+               "rei_infoops",
+               "rei_cyberdisrup",
+               "rei_matsupp")
+
+cases_all <- cases_all[ , vars_keep]
+
+#Save
+saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
+write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_cpass.csv"))
+
+```
+
+
