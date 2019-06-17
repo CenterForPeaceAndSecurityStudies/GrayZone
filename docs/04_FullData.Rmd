@@ -169,8 +169,8 @@ cases_old <- cases_old[order(cases_old$Year, decreasing = FALSE), ]
 # Save final dataframe
 This dataframe should now match the one in the google doc for old_cases. SOme duplicate country-years will be merged assuming all other values are identical. They can now have new variables added for our coding of the severity of Russian actions
 ```{r}
-saveRDS(cases_old, paste0(here::here(), "/data/","grayzone_old.rds"))
-write.csv(cases_old, paste0(here::here(), "/data/","grayzone_old.csv"))
+saveRDS(cases_old, paste0(here::here(), "/data/raw/","grayzone_old.rds"))
+write.csv(cases_old, paste0(here::here(), "/data/raw/","grayzone_old.csv"))
 ```
 
 # Reload dataframe with new variables coded
@@ -178,9 +178,13 @@ write.csv(cases_old, paste0(here::here(), "/data/","grayzone_old.csv"))
 The new variables for intensity have been coded by hand into the previous spreadsheet. That can be reloaded now and nerged with the new cases that were similarly coded to analyze the complete version of the dataset. The variables from the new data need to match up with their equivalents in the old data. We'll change the old data to match it up
 
 ```{r}
-df_complete <- googlesheets::gs_title("Russian wars")
-df_new <- df_complete %>% googlesheets::gs_read("new_cases")
-df_old <- df_complete %>% googlesheets::gs_read("old_cases")
+#df_complete <- googlesheets::gs_title("Russian wars")
+#df_new <- df_complete %>% googlesheets::gs_read("new_cases")
+#df_old <- df_complete %>% googlesheets::gs_read("old_cases")
+
+df_old <- read.csv(paste0(here::here(), "/data/raw/RussianWars-old_cases.csv"))
+df_new <- read.csv(paste0(here::here(), "/data/raw/RussianWars-new_cases.csv"))
+
 
 # Clean data for a clean merge
 colnames(df_new)

@@ -25,7 +25,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document will look at coverage of Russian electoral inference (1991-2017) from Casey and Ahmad (2017) and identify variables of interest.
+This document will look at coverage of Russian electoral inference (1991-2017) from Casey and Ahmad (2017) and identify variables of interest. This is the third of 3 prior datasets used to determine the universe of cases.
 
 The cyber data comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
 
@@ -38,6 +38,7 @@ library(ggplot2)
 ```
 
 ## Load data
+File is loaded from inst/ext where external data files are stored
 ```{r}
 # Load data
 load(paste0(here::here(), '/inst/extdata/russian_electoral_interventions_1991-2017.RData'))
@@ -109,11 +110,7 @@ formattable::formattable(rei,
 ```
 
 ## Composite severity variable
-There is no variable that directly codes the severity of Russian interference to allow for inter-case comparison. We can make a composite index of that by noting the highest level of interference in each case.
-
-```{r}
-
-```
+There is no variable that directly codes the severity of Russian interference to allow for inter-case comparison.
 
 ## Plots
 Given the number of cases, summarize them in plot format.

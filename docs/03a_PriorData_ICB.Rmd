@@ -1,5 +1,5 @@
 ---
-title: "04_ICB"
+title: "03a_PriorData_ICB"
 author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
   Studies (cPASS)
 date: "`r Sys.Date()`"
@@ -25,7 +25,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document will look at coverage of Russian military interventions from 1991-2015 in the ICB data and identify variables of interest.
+This document will look at coverage of Russian military interventions from 1991-2015 in the ICB data and identify variables of interest. It is the first of 3 prior dataset used to identify the universe of cases.
 
 The ICB data comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
 
@@ -37,7 +37,7 @@ library(magrittr)
 ```
 
 ## Load data
-The ICB data exists in two forms. ICB1 is system-level data and ICB2 is actor-level data. We'll primarily be using the actor-level data but will load both.
+The ICB data exists in two forms. ICB1 is system-level data and ICB2 is actor-level data. We'll primarily be using the actor-level data but will load both. Data files not created by the authors are stored in inst/extdata/
 ```{r}
 # Load system-level data
 icb_sys <- read.csv(file = paste0(here::here(), '/inst/extdata/icb1v12.csv'))

@@ -21,21 +21,25 @@ editor_options:
     }
 </style>
 
-This is the entry point for the paper "After Deterrence: Explaining Conflict Short of War" 
+This is the entry point for the paper "After Deterrence: Explaining Conflict Short of War". This document creates the raw data as a .rds file pulled from the googlesheet where the data structure was manually created.
 
 # Load packages
-Pipe operators don't play nice and must be manually loaded up front
+Pipe operators don't play nice and must be manually loaded up front. All other package functions are extracted using ::
 ```{r}
-library(magrittr)
+library("magrittr")
 ```
 
 # Load data
 We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance data represented here was calculated using the code in 02_Distance.Rmd and then inputed into the google spreadsheet.
+
+For replication, the googlesheet is located in data/raw so access permissions are not a problem
 ```{r}
-grayzone <- googlesheets::gs_title("Russian wars")
-grayzone <- grayzone %>% googlesheets::gs_read("new_cases")
+#grayzone <- googlesheets::gs_title("Russian wars")
+#grayzone <- grayzone %>% googlesheets::gs_read("new_cases")
+grayzone <- read.csv(paste0(here::here(), "/data/raw/RussianWars-new_cases.csv"))
 ```
 # Save file
+New .rds file is saved so the raw data remains unmodified by future changes
 ```{r}
 saveRDS(grayzone, paste0(here::here(), "/data/","grayzone_cpass.rds"))
 ```

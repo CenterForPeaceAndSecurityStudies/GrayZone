@@ -25,14 +25,14 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document will look at coverage of Russian cyber attacks (2001-2011) in the Dyadic Cyber Incident and Dispute (DCID) data and identify variables of interest.
+This document will look at coverage of Russian cyber attacks (2001-2011) in the Dyadic Cyber Incident and Dispute (DCID) data and identify variables of interest. It is the 2nd of 3 prior datasets used to compile our universe of cases.
 
 The cyber data comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
 
 
 # Preparation
 ## Load packages
-Pipe operators have trouble loading for individual commands
+Pipe operators have trouble loading for individual commands.
 ```{r}
 library(magrittr)
 library(ggplot2)
@@ -40,6 +40,8 @@ library(ggplot2)
 
 ## Load data
 We use version 1.1 of the data. Note that since we're loading from an excel file, the date formats are inconsistent. Some are formatted using excel date numbers while others are formatted using month/day/year.
+
+Data files not created by the authors are stored in inst/extdata/
 ```{r}
 # Load system-level data
 dcid <- openxlsx::read.xlsx(paste0(here::here(), '/inst/extdata/DCID_V11.xlsx'))

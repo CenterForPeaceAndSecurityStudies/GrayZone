@@ -11,7 +11,7 @@
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2019-06-16" />
+<meta name="date" content="2019-06-17" />
 
 <title>01 Data Load</title>
 
@@ -1358,8 +1358,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -1387,9 +1385,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -1793,13 +1796,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -2901,8 +2904,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -2950,7 +2951,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">01 Data Load</h1>
 <h4 class="author">J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</h4>
-<h4 class="date">2019-06-16</h4>
+<h4 class="date">2019-06-17</h4>
 
 </div>
 
@@ -2961,41 +2962,40 @@ div.tocify {
         max-width: 100%;
     }
 </style>
-<p>This is the entry point for the paper “After Deterrence: Explaining Conflict Short of War”</p>
+<p>This is the entry point for the paper “After Deterrence: Explaining Conflict Short of War”. This document creates the raw data as a .rds file pulled from the googlesheet where the data structure was manually created.</p>
 <div id="load-packages" class="section level1">
 <h1><span class="header-section-number">1</span> Load packages</h1>
-<p>Pipe operators don’t play nice and must be manually loaded up front</p>
+<p>Pipe operators don’t play nice and must be manually loaded up front. All other package functions are extracted using ::</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcbmBgYCJ9 -->
-<pre class="r"><code>library(magrittr)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="load-data" class="section level1">
 <h1><span class="header-section-number">2</span> Load data</h1>
 <p>We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance data represented here was calculated using the code in 02_Distance.Rmd and then inputed into the google spreadsheet.</p>
+<p>For replication, the googlesheet is located in data/raw so access permissions are not a problem</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JheXpvbmUgPC0gZ29vZ2xlc2hlZXRzOjpnc190aXRsZShcIlJ1c3NpYW4gd2Fyc1wiKVxuZ3JheXpvbmUgPC0gZ3JheXpvbmUgJT4lIGdvb2dsZXNoZWV0czo6Z3NfcmVhZChcIm5ld19jYXNlc1wiKVxuYGBgIn0= -->
-<pre class="r"><code>grayzone &lt;- googlesheets::gs_title(&quot;Russian wars&quot;)
-grayzone &lt;- grayzone %&gt;% googlesheets::gs_read(&quot;new_cases&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JheXpvbmUgPC0gcmVhZC5jc3YocGFzdGUwKGhlcmU6OmhlcmUoKSwgXCJkYXRhL3Jhdy9SdXNzaWFuV2Fycy1uZXdfY2FzZXMuY3N2XCIpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>grayzone &lt;- read.csv(paste0(here::here(), &quot;data/raw/RussianWars-new_cases.csv&quot;))
+</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnL2hvbWUvYW5kcmVzZ2Fubm9uL0Ryb3Bib3ggKHJleCkvR3JhZCBTY2hvb2wvYW5kcmVzX2dpdGh1Yl9wcml2YXRlL0dyYXlab25lZGF0YS9yYXcvUnVzc2lhbldhcnMtbmV3X2Nhc2VzLmNzdic6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnlFcnJvciBpbiBmaWxlKGZpbGUsIFwicnRcIikgOiBjYW5ub3Qgb3BlbiB0aGUgY29ubmVjdGlvblxuIn0= -->
+<pre><code>cannot open file '/home/andresgannon/Dropbox (rex)/Grad School/andres_github_private/GrayZonedata/raw/RussianWars-new_cases.csv': No such file or directoryError in file(file, &quot;rt&quot;) : cannot open the connection</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="save-file" class="section level1">
 <h1><span class="header-section-number">3</span> Save file</h1>
+<p>New .rds file is saved so the raw data remains unmodified by future changes</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2F2ZVJEUyhncmF5em9uZSwgcGFzdGUwKGhlcmU6OmhlcmUoKSwgXCIvZGF0YS9cIixcImdyYXl6b25lX2NwYXNzLnJkc1wiKSlcbmBgYCJ9 -->
-<pre class="r"><code>saveRDS(grayzone, paste0(here::here(), &quot;/data/&quot;,&quot;grayzone_cpass.rds&quot;))</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIjAxIERhdGEgTG9hZCINCmF1dGhvcjogSiBBbmRyZXMgR2Fubm9uLCBFcmlrIEdhcnR6a2UsIGFuZCBKb24gTGluZHNheSwgQ2VudGVyIGZvciBQZWFjZSBhbmQgU2VjdXJpdHkgU3R1ZGllcyAoY1BBU1MpDQpkYXRlOiAiYHIgU3lzLkRhdGUoKWAiDQpvdXRwdXQ6DQogIGh0bWxfbm90ZWJvb2s6DQogICAgZmlnX2hlaWdodDogOA0KICAgIGZpZ193aWR0aDogMTINCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcw0KICAgIHRoZW1lOiBmbGF0bHkNCiAgICB0b2M6IHllcw0KICAgIHRvY19kZXB0aDogNQ0KICAgIHRvY19mbG9hdDoNCiAgICAgIGNvbGxhcHNlZDogeWVzDQplZGl0b3Jfb3B0aW9uczoNCiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQ0KLS0tDQo8c3R5bGU+DQogICAgYm9keSAubWFpbi1jb250YWluZXIgew0KICAgICAgICBtYXgtd2lkdGg6IDEwMCU7DQogICAgfQ0KPC9zdHlsZT4NCg0KVGhpcyBpcyB0aGUgZW50cnkgcG9pbnQgZm9yIHRoZSBwYXBlciAiQWZ0ZXIgRGV0ZXJyZW5jZTogRXhwbGFpbmluZyBDb25mbGljdCBTaG9ydCBvZiBXYXIiIA0KDQojIExvYWQgcGFja2FnZXMNClBpcGUgb3BlcmF0b3JzIGRvbid0IHBsYXkgbmljZSBhbmQgbXVzdCBiZSBtYW51YWxseSBsb2FkZWQgdXAgZnJvbnQNCmBgYHtyfQ0KbGlicmFyeShtYWdyaXR0cikNCmBgYA0KDQojIExvYWQgZGF0YQ0KV2UgbG9hZCB0aGUgZGF0YSBmcm9tIHRoZSBnb29nbGUgc3ByZWFkc2hlZXQgdGFiIHRoYXQgaGFzIGFnZ3JlZ2F0ZWQgdGhlIGluZm8gZnJvbSBwcmV2aW91cyB2ZXJzaW9ucy4gRWFjaCByb3cgaXMgbm93IGEgZ3JheSB6b25lIGNhc2UgYW5kIHRoZSBjb2x1bW5zIGFyZSBjb2RlZCBjb3ZhcmlhdGVzLiBUaGUgZGlzdGFuY2UgZGF0YSByZXByZXNlbnRlZCBoZXJlIHdhcyBjYWxjdWxhdGVkIHVzaW5nIHRoZSBjb2RlIGluIDAyX0Rpc3RhbmNlLlJtZCBhbmQgdGhlbiBpbnB1dGVkIGludG8gdGhlIGdvb2dsZSBzcHJlYWRzaGVldC4NCmBgYHtyfQ0KZ3JheXpvbmUgPC0gZ29vZ2xlc2hlZXRzOjpnc190aXRsZSgiUnVzc2lhbiB3YXJzIikNCmdyYXl6b25lIDwtIGdyYXl6b25lICU+JSBnb29nbGVzaGVldHM6OmdzX3JlYWQoIm5ld19jYXNlcyIpDQpgYGANCiMgU2F2ZSBmaWxlDQpgYGB7cn0NCnNhdmVSRFMoZ3JheXpvbmUsIHBhc3RlMChoZXJlOjpoZXJlKCksICIvZGF0YS8iLCJncmF5em9uZV9jcGFzcy5yZHMiKSkNCmBgYA0K</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiMDEgRGF0YSBMb2FkIgphdXRob3I6IEogQW5kcmVzIEdhbm5vbiwgRXJpayBHYXJ0emtlLCBhbmQgSm9uIExpbmRzYXksIENlbnRlciBmb3IgUGVhY2UgYW5kIFNlY3VyaXR5IFN0dWRpZXMgKGNQQVNTKQpkYXRlOiAiYHIgU3lzLkRhdGUoKWAiCm91dHB1dDoKICBodG1sX25vdGVib29rOgogICAgZmlnX2hlaWdodDogOAogICAgZmlnX3dpZHRoOiAxMgogICAgbnVtYmVyX3NlY3Rpb25zOiB5ZXMKICAgIHRoZW1lOiBmbGF0bHkKICAgIHRvYzogeWVzCiAgICB0b2NfZGVwdGg6IDUKICAgIHRvY19mbG9hdDoKICAgICAgY29sbGFwc2VkOiB5ZXMKZWRpdG9yX29wdGlvbnM6CiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQotLS0KPHN0eWxlPgogICAgYm9keSAubWFpbi1jb250YWluZXIgewogICAgICAgIG1heC13aWR0aDogMTAwJTsKICAgIH0KPC9zdHlsZT4KClRoaXMgaXMgdGhlIGVudHJ5IHBvaW50IGZvciB0aGUgcGFwZXIgIkFmdGVyIERldGVycmVuY2U6IEV4cGxhaW5pbmcgQ29uZmxpY3QgU2hvcnQgb2YgV2FyIi4gVGhpcyBkb2N1bWVudCBjcmVhdGVzIHRoZSByYXcgZGF0YSBhcyBhIC5yZHMgZmlsZSBwdWxsZWQgZnJvbSB0aGUgZ29vZ2xlc2hlZXQgd2hlcmUgdGhlIGRhdGEgc3RydWN0dXJlIHdhcyBtYW51YWxseSBjcmVhdGVkLgoKIyBMb2FkIHBhY2thZ2VzClBpcGUgb3BlcmF0b3JzIGRvbid0IHBsYXkgbmljZSBhbmQgbXVzdCBiZSBtYW51YWxseSBsb2FkZWQgdXAgZnJvbnQuIEFsbCBvdGhlciBwYWNrYWdlIGZ1bmN0aW9ucyBhcmUgZXh0cmFjdGVkIHVzaW5nIDo6CmBgYHtyfQpsaWJyYXJ5KCJtYWdyaXR0ciIpCmBgYAoKIyBMb2FkIGRhdGEKV2UgbG9hZCB0aGUgZGF0YSBmcm9tIHRoZSBnb29nbGUgc3ByZWFkc2hlZXQgdGFiIHRoYXQgaGFzIGFnZ3JlZ2F0ZWQgdGhlIGluZm8gZnJvbSBwcmV2aW91cyB2ZXJzaW9ucy4gRWFjaCByb3cgaXMgbm93IGEgZ3JheSB6b25lIGNhc2UgYW5kIHRoZSBjb2x1bW5zIGFyZSBjb2RlZCBjb3ZhcmlhdGVzLiBUaGUgZGlzdGFuY2UgZGF0YSByZXByZXNlbnRlZCBoZXJlIHdhcyBjYWxjdWxhdGVkIHVzaW5nIHRoZSBjb2RlIGluIDAyX0Rpc3RhbmNlLlJtZCBhbmQgdGhlbiBpbnB1dGVkIGludG8gdGhlIGdvb2dsZSBzcHJlYWRzaGVldC4KCkZvciByZXBsaWNhdGlvbiwgdGhlIGdvb2dsZXNoZWV0IGlzIGxvY2F0ZWQgaW4gZGF0YS9yYXcgc28gYWNjZXNzIHBlcm1pc3Npb25zIGFyZSBub3QgYSBwcm9ibGVtCmBgYHtyfQojZ3JheXpvbmUgPC0gZ29vZ2xlc2hlZXRzOjpnc190aXRsZSgiUnVzc2lhbiB3YXJzIikKI2dyYXl6b25lIDwtIGdyYXl6b25lICU+JSBnb29nbGVzaGVldHM6OmdzX3JlYWQoIm5ld19jYXNlcyIpCmdyYXl6b25lIDwtIHJlYWQuY3N2KHBhc3RlMChoZXJlOjpoZXJlKCksICIvZGF0YS9yYXcvUnVzc2lhbldhcnMtbmV3X2Nhc2VzLmNzdiIpKQpgYGAKIyBTYXZlIGZpbGUKTmV3IC5yZHMgZmlsZSBpcyBzYXZlZCBzbyB0aGUgcmF3IGRhdGEgcmVtYWlucyB1bm1vZGlmaWVkIGJ5IGZ1dHVyZSBjaGFuZ2VzCmBgYHtyfQpzYXZlUkRTKGdyYXl6b25lLCBwYXN0ZTAoaGVyZTo6aGVyZSgpLCAiL2RhdGEvIiwiZ3JheXpvbmVfY3Bhc3MucmRzIikpCmBgYAo=</div>
 
 
 </div>
