@@ -1,5 +1,5 @@
 ---
-title: "07_FullData"
+title: "04_FullData"
 author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
   Studies (cPASS)
 date: "`r Sys.Date()`"
@@ -47,7 +47,7 @@ library(ggplot2)
 Load the cleaned and subset versions of each dataset
 ```{r}
 # Load data
-cpass <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
+new <- readRDS(paste0(here::here(), '/data/grayzone_cpass.rds'))
 icb <- readRDS(paste0(here::here(), '/data/grayzone_icb.rds'))
 dcid <- readRDS(paste0(here::here(), '/data/grayzone_dcid.rds'))
 rei <- readRDS(paste0(here::here(), '/data/grayzone_rei.rds'))
@@ -59,13 +59,13 @@ Before merging the data, compare the different cases covered by each one
 ## Prep for coverage comparison
 ```{r}
 # Create identifier variables for each dataset
-cpass$cpass <- 1
+new$new <- 1
 icb$icb <- 1
 dcid$dcid <- 1
 rei$rei <- 1
 
 # Ensure proper unit of analysis
-dplyr::glimpse(cpass)
+dplyr::glimpse(new)
 dplyr::glimpse(icb)
 dplyr::glimpse(dcid)
 dplyr::glimpse(rei)
@@ -75,7 +75,7 @@ dcid <- tidyr::separate(dcid, 'Start date', c("Start Year", "Start Month", "Star
 dcid <- tidyr::separate(dcid, 'End date', c("End Year", "End Month", "End Day"), sep = "-")
 
 # Rename merging variables to make things easier
-cpass <- cpass %>% dplyr::rename('Target' = target,
+new <- new %>% dplyr::rename('Target' = target,
                                  'Year' = year_start)
 
 icb <- icb %>% dplyr::rename('Target' = Target,
@@ -88,7 +88,7 @@ rei <- rei %>% dplyr::rename('Target' = Target,
                              'Year' = Year)
 
 # Fix date types
-cpass$Year <- as.numeric(cpass$Year)
+new$Year <- as.numeric(new$Year)
 icb$Year <- as.numeric(icb$Year)
 dcid$Year <- as.numeric(dcid$Year)
 rei$Year <- as.numeric(rei$Year)
@@ -97,13 +97,13 @@ rei$Year <- as.numeric(rei$Year)
 ## Compare case coverage across datasets
 ```{r fig.path = '../paper/figures/', dev = c('png')}
 # Create dataframe versions of just variables to merge for the match
-cpass_coverage <- cpass[ , c('Target', 'Year', 'cpass')]
+new_coverage <- new[ , c('Target', 'Year', 'new')]
 icb_coverage <- icb[ , c('Target', 'Year', 'icb')]
 dcid_coverage <- dcid[ , c('Target', 'Year', 'dcid')]
 rei_coverage <- rei[ , c('Target', 'Year', 'rei')]
 
 # Merge datasets with just ID vars
-coverage <- dplyr::full_join(cpass_coverage, icb_coverage) %>% dplyr::full_join(., dcid_coverage) %>% dplyr::full_join(., rei_coverage)
+coverage <- dplyr::full_join(new_coverage, icb_coverage) %>% dplyr::full_join(., dcid_coverage) %>% dplyr::full_join(., rei_coverage)
 
 # Delete duplicates
 coverage <- unique(coverage)
@@ -113,19 +113,19 @@ coverage[is.na(coverage)] <- 0
 
 # Sort chronologically
 coverage <- coverage[order(coverage$Year, decreasing = FALSE), ]
+saveRDS(coverage, paste0(here::here(), "/data/","coverage.rds"))
 
 # Make html table
 formattable::formattable(coverage,
                          align = c("c", "c", "c", "c", "c", "c"),
-                         list('cpass' = formattable::color_tile("transparent", "lightblue"),
+                         list('new' = formattable::color_tile("transparent", "lightblue"),
                               'icb' = formattable::color_tile("transparent", "lightblue"),
                               'dcid' = formattable::color_tile("transparent", "lightblue"),
                               'rei' = formattable::color_tile("transparent", "lightblue")))
 
 # Make Venn diagram
-coverage_venn <- coverage[ , c('cpass', 'icb', 'dcid', 'rei')]
+coverage_venn <- coverage[ , c('new', 'icb', 'dcid', 'rei')]
 gplots::venn(coverage_venn)
-
 ```
 
 # Merge data
@@ -231,8 +231,8 @@ vars_keep <- c("target",
 cases_all <- cases_all[ , vars_keep]
 
 #Save
-saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_cpass.rds"))
-write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_cpass.csv"))
+saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_new.rds"))
+write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_new.csv"))
 
 ```
 

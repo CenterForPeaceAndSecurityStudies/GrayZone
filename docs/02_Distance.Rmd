@@ -1,8 +1,13 @@
 ---
 title: "02_Distance"
-author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)
+author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
+  Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
   html_notebook:
     fig_height: 8
     fig_width: 12

@@ -1,5 +1,5 @@
 ---
-title: "07_FullData"
+title: "05a_Figures_Intensity"
 author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
   Studies (cPASS)
 date: "`r Sys.Date()`"
@@ -40,7 +40,7 @@ library(ggplot2)
 ## Load data
 For this figure, we load the aggregated dataset that include the new severity codings for all cases in the 3 prior datasets as well as the new cases we have identified.
 ```{r}
-gac <- readRDS(paste0(here::here(), '/data/grayzone__aggregate_cpass.rds'))
+gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_cpass.rds'))
 ```
 
 # Plotting
@@ -105,7 +105,7 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
   labs(title = "Average intensity of Russian aggression (1994-2018)",
        subtitle = "", x = "Year", y = "Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(sec.axis = sec_axis(~. 0:20, name = "Number of Russian Interventions"),
+  scale_y_continuous(sec.axis = sec_axis(~.0:20, name = "Number of Russian Interventions"),
                      breaks = c(1:5), labels = c("1" = "1 Info ops",
                                                  "2" = "2 Cyber Disrup.",
                                                  "3" = "3 Paramil.",
@@ -126,8 +126,7 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
 
 g
 
-#ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg",
-#       path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg", path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 ```
 
 ## Maximum intensity
@@ -156,12 +155,12 @@ df_max <- as.data.frame(df_max)
 
 #### bar chart
 g <- ggplot(df_max, aes(years, severity_max_annual)) +
-  geom_bar(stat = "identity", width = 1, fill="gray", color = "black") +
+  geom_bar(stat = "identity", width = 1, fill = "gray", color = "black") +
   geom_line(aes(y = numint_max/4)) +
   labs(title = "Maximum intensity of Russian aggression (1994-2018)",
        subtitle = "", x = "Year", y = "Maximum Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(sec.axis = sec_axis(~. 0:20, name = "Number of Russian Interventions"),
+  scale_y_continuous(sec.axis = sec_axis(~.0:20, name = "Number of Russian Interventions"),
                      breaks = c(1, 2, 3, 4, 5), labels = c("1" = "1 Info ops",
                                                            "2" = "2 Cyber Disrup.",
                                                            "3" = "3 Paramil.",
