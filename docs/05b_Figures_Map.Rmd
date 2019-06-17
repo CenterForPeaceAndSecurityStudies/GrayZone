@@ -1,5 +1,5 @@
 ---
-title: "07_FullData"
+title: "05b_Figures_Map"
 author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
   Studies (cPASS)
 date: "`r Sys.Date()`"
@@ -41,7 +41,7 @@ library(ggplot2)
 Load the cleaned and subset versions of each dataset
 ```{r}
 # Load data
-russia_cyber <- readRDS(paste0(here::here(), '/data/grayzone_aggregate.rds'))
+russia_cyber <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_cpass.rds'))
 ```
 
 ## Check data
@@ -80,13 +80,6 @@ mapParams <- rworldmap::mapCountryData(map,
                                        xlim = c(-167, 50),
                                        ylim = c(30,50)
                                       )
-do.call(rworldmap::addMapLegendBoxes,
-        c(mapParams,
-          title = "Severity"
-          )
-        )
-
-text(x = -127, y = -20, labels = c("DCID data"), cex = 1)
 ```
 
 ## REI
@@ -120,18 +113,7 @@ mapParams <- rworldmap::mapCountryData(map,
                                        xlim = c(-167, 50),
                                        ylim = c(30,50)
                                       )
-do.call(rworldmap::addMapLegendBoxes,
-        c(mapParams,
-          horiz = FALSE,
-          title = "Severity"
-          #legendLabels = "all"
-          )
-        )
-
-text(x = -128, y = -20, labels = c("REI data"), cex = 1)
-
 ```
-
 
 ## Combined
 There should only be one case that is coded in both DCID and REI. For all the rest, scale their scores so we get a single score for each case in either dataset and we can compare across datasets. We know this is a rough coding since one is coding severity of the cyber attack and the other is coding the type of attack, but we'll start here.
@@ -192,29 +174,4 @@ mapParams <- rworldmap::mapCountryData(map,
 )
 
 mapParams$legendText <- c("Info Ops", "Cyber Disruption", "Paramilitary", "Conventional Military (air/sea)", "Conventional Military (ground)")
-
-#do.call(rworldmap::addMapLegendBoxes,
-#        c(mapParams,
-#          horiz = FALSE,
-#          title = "Severity",
-#          cex = 0.6,
-#          x = -165,
-#          y = 19
-          #legendLabels = "all"
-#        )
-#)
-
-
-do.call(rworldmap::addMapLegendBoxes,
-        c(mapParams,
-          horiz = FALSE,
-          title = "Severity",
-          cex = 0.6,
-          x = -105,
-          y = 26
-          #legendLabels = "all"
-        )
-)
-
-#text(x = -80, y = -15, labels = c("For countries that have multiple, distinct observations the highest intensity was used"), cex = 0.6)
 ```

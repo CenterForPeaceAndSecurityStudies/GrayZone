@@ -1,0 +1,46 @@
+---
+title: "Appendix"
+author: 
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  html_notebook:
+    fig_height: 8
+    fig_width: 12
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This appendix provides supplemental information about the dataset of Russian gray zone campaigns introduced in the accompanying paper "After Deterrence: Explaining Conflict Short of War"
+
+# Case selection
+The universe of cases was created by first identifying cases of Russian foreign interventions from 3 prior datasets; ICB, DCID, and REI. Code replicating those findings is provided in the appropriate RMarkdown files. These cases were then supplemented with additional cases of Russian interference the authors were able to identify.
+
+A comparison of what cases were covered in each individual dataset is provided here
+```{r, echo = FALSE}
+# Read dataset
+coverage <- readRDS(paste0(here::here(), '/data/coverage.rds'))
+
+# Create table
+formattable::formattable(coverage,
+                         align = c("c", "c", "c", "c", "c", "c"),
+                         list('new' = formattable::color_tile("transparent", "lightblue"),
+                              'icb' = formattable::color_tile("transparent", "lightblue"),
+                              'dcid' = formattable::color_tile("transparent", "lightblue"),
+                              'rei' = formattable::color_tile("transparent", "lightblue")))
+
+```
+
