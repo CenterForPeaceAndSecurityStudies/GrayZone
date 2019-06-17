@@ -44,7 +44,7 @@ gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_cpass.rds'))
 ```
 
 # Plotting
-## Severity of Russian attacks
+## Avergage severity of Russian attacks
 We now plot changes in the severity of Russian attacks over the time period in question. The severity will be coded as the highest severity in any given year.
 ```{r}
 #plotting the severity of Russian attacks from 1994-2018.
@@ -95,10 +95,8 @@ for(yr in years){
 
 df <- cbind(years,severity_avg_annual,numint)
 df <- as.data.frame(df)
-```
 
-## Create bar chart
-```{r}
+## Start bar chart
 g <- ggplot(df, aes(years, severity_avg_annual)) +
   geom_bar(stat = "identity", width = 1, fill = "gray", color = "black") +
   geom_line(aes(y = numint/4)) +

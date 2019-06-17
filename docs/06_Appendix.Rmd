@@ -1,11 +1,10 @@
 ---
 title: "Appendix"
-author: 
+author: "Author names redacted"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    df_print: paged
-    toc: yes
+  word_document:
+    toc: no
     toc_depth: '5'
   html_notebook:
     fig_height: 8
@@ -16,6 +15,13 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
 editor_options:
   chunk_output_type: inline
 ---
@@ -29,18 +35,50 @@ This appendix provides supplemental information about the dataset of Russian gra
 # Case selection
 The universe of cases was created by first identifying cases of Russian foreign interventions from 3 prior datasets; ICB, DCID, and REI. Code replicating those findings is provided in the appropriate RMarkdown files. These cases were then supplemented with additional cases of Russian interference the authors were able to identify.
 
-A comparison of what cases were covered in each individual dataset is provided here
+## Coverage of current datasets
+A comparison of what cases were covered in each individual dataset is provided here:
 ```{r, echo = FALSE}
 # Read dataset
 coverage <- readRDS(paste0(here::here(), '/data/coverage.rds'))
 
 # Create table
-formattable::formattable(coverage,
-                         align = c("c", "c", "c", "c", "c", "c"),
-                         list('new' = formattable::color_tile("transparent", "lightblue"),
-                              'icb' = formattable::color_tile("transparent", "lightblue"),
-                              'dcid' = formattable::color_tile("transparent", "lightblue"),
-                              'rei' = formattable::color_tile("transparent", "lightblue")))
+coverage$Year <- as.factor(coverage$Year)
+col_keys = c("new", "icb", "dcid", "rei")
 
+table <- flextable::flextable(coverage)
+table <- flextable::theme_vanilla(table)
+table <- flextable::align(table, align = "center", part = "all")
+table <- flextable::colformat_num(table, col_keys, digits = 0)
+table <- flextable::color(table, i = ~ new < 1, j = ~ new, color = "white")
+table <- flextable::color(table, i = ~ icb < 1, j = ~ icb, color = "white")
+table <- flextable::color(table, i = ~ dcid < 1, j = ~ dcid, color = "white")
+table <- flextable::color(table, i = ~ rei < 1, j = ~ rei, color = "white")
+table
 ```
 
+The overlap between cases is seen here:
+```{r, echo = FALSE}
+coverage_venn <- coverage[ , c('new', 'icb', 'dcid', 'rei')]
+gplots::venn(coverage_venn)
+```
+
+## Consistency of current datasets
+
+Aside from the cases covered, the intensity codings for current datasets ar difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID (Valeriano and Maness) and REI (Way and Casey) is visualized here:
+
+![](../paper/figures/map_prior-data.png)
+
+The DCID data identifies the United States, United Kingdom, Poland and Ukraine as targets of the most severe Russian cyber operations. In the cases documented by REI, the most severe Russian attacks occurred against France, Austria, and Ukraine. Part of this discrepancy is due to the respective foci of each dataset; DCID seeks out cases of cyber incidents and disputes while REI focuses on Russian electoral interference. While a majority of the REI cases include some form of Russian cyber activity, there are a few cases where only material support was provided (eg. Moldova 2014 and Belarus 1994). This discrepancy exemplifies not only the challenges of relying on open source reporting for identifying cyber influence or disruption campaigns, but also differences in defining what counts as an attack. The only country-year that appears in both datasets is Ukraine 2014. We standardized codings across the two datasets using variable definitions from respective codebooks. A severity less than or equal to 2 in DCID’s coding is synonymous in our recoding with REI’s coding for disinformation, a severity between 3 and 7 equals REI’s coding for cyberattack, and no cases in DCID have a severity greater than 7. We adopted Valeriano and Maness (2014)’s approach of sampling on intensity when there are multiple observations in a given time unit. 
+
+# Variable codings
+For each incident, we code whether Russia used conventional ground forces, conventional air or sea forces, paramilitary or covert forces, cyber disruption, and information operations. By distinguishing between these five types of aggression, we obtain a clearer picture of the intensity of each case of Russian intervention. The vast majority of cases include at least some type of cyber operations. In a few cases, data limitations preclude coding of non-kinetic activity by Russia or other actors. In Moldova 2005, for example, Russia provided material support for the Communist Party but there is no credible evidence of cyber activities.
+
+The following binary coding criteria were used for each case:
+
+- resp_infoops - Did Russia use information operations during this event? That includes propaganda, misinformation campaigns, etc
+- resp_cyberdisrup - Did Russia use cyber attacks during this operation? That includes hacking, phishing, cyber espionage, DDOS attacks, etc
+- resp_paramil - Did Russia use paramilitary troops during this event? Special forces, covert troops, speznatz, etc all count
+- resp_convmil_airsea - Did Russia use conventional naval or air forces during this event?
+- resp_convmil_gro - Did Russia use conventional ground troops like their army, artillery, tanks, etc during this event?
+
+The complete dataset is provided in the appropriate .csv file. It includes sources used for the codings as well as justifications and explanations where needed.
