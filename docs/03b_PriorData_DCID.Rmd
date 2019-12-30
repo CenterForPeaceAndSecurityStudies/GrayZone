@@ -39,12 +39,12 @@ library(ggplot2)
 ```
 
 ## Load data
-We use version 1.1 of the data. Note that since we're loading from an excel file, the date formats are inconsistent. Some are formatted using excel date numbers while others are formatted using month/day/year.
+We use version 1.5 of the data, released in the summer of 2019. Note that since we're loading from an excel file, the date formats are inconsistent. Some are formatted using excel date numbers while others are formatted using month/day/year.
 
 Data files not created by the authors are stored in inst/extdata/
 ```{r}
 # Load system-level data
-dcid <- openxlsx::read.xlsx(paste0(here::here(), '/inst/extdata/DCID_V11.xlsx'))
+dcid <- openxlsx::read.xlsx(paste0(here::here(), '/inst/extdata/DCID Version 1.5_public_final.xlsx'))
 ```
 
 ## Subset
@@ -186,12 +186,12 @@ Given the number of cases, summarize them in plot format.
 ```{r}
 ggplot2::ggplot(dcid_rus, aes(Type, ..count..)) +
   geom_bar() +
-  labs(x = "Cyberattack Type", y = "Count", title = "Russian Cyberattack Types (2008-2011)")
+  labs(x = "Cyberattack Type", y = "Count", title = "Russian Cyberattack Types (2005-2016)")
 ggplot2::ggsave("cyberattacks_type.png", path = paste0(here::here(), '/paper/figures'))
 
 ggplot2::ggplot(dcid_rus, aes(Method, ..count..)) +
   geom_bar() +
-  labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2008-2011)")
+  labs(x = "Cyberattack Method", y = "Count", title = "Russian Cyberattacks Methods (2005-2016)")
 ggplot2::ggsave("cyberattacks_methods.png", path = paste0(here::here(), '/paper/figures'))
 ```
 

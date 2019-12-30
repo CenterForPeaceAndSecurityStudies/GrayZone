@@ -64,7 +64,7 @@ gplots::venn(coverage_venn)
 
 ## Consistency of current datasets
 
-Aside from the cases covered, the intensity codings for current datasets ar difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID (Valeriano and Maness) and REI (Way and Casey) is visualized here:
+Aside from the cases covered, the intensity codings for current datasets are difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID (Valeriano and Maness) and REI (Way and Casey) is visualized here:
 
 ![](../paper/figures/map_prior-data.png)
 
@@ -75,10 +75,10 @@ For each incident, we code whether Russia used conventional ground forces, conve
 
 The following binary coding criteria were used for each case:
 
-- resp_infoops - Did Russia use information operations during this event? That includes propaganda, misinformation campaigns, etc
-- resp_cyberdisrup - Did Russia use cyber attacks during this operation? That includes hacking, phishing, cyber espionage, DDOS attacks, etc
-- resp_paramil - Did Russia use paramilitary troops during this event? Special forces, covert troops, speznatz, etc all count
-- resp_convmil_airsea - Did Russia use conventional naval or air forces during this event?
-- resp_convmil_gro - Did Russia use conventional ground troops like their army, artillery, tanks, etc during this event?
+- **resp_infoops** - Did Russia use information operations during this event? That includes propaganda, misinformation campaigns, etc
+- **resp_cyberdisrup** - Did Russia use cyber attacks during this operation? That includes hacking, phishing, cyber espionage, DDOS attacks, etc
+- **resp_paramil** - Did Russia use paramilitary troops during this event? Special forces, covert troops, speznatz, etc all count
+- **resp_convmil_airsea** - Did Russia use conventional naval or air forces during this event?
+- **resp_convmil_gro** - Did Russia use conventional ground troops like their army, artillery, tanks, etc during this event?
 
 The complete dataset is provided in the appropriate .csv file. It includes sources used for the codings as well as justifications and explanations where needed.

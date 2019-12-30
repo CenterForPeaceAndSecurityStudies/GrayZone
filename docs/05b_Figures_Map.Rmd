@@ -75,7 +75,7 @@ rworldmap::mapDevice()
 mapParams <- rworldmap::mapCountryData(map,
                                        nameColumnToPlot='average_severity',
                                        catMethod = c(2, 2.3, 2.6, 2.9, 3.2, 3.5),
-                                       mapTitle = "\nRussian cyber attack severity (2005-2016) - Valeriano and Maness data",
+                                       mapTitle = "\nRussian cyber attack severity (2005-2017) - Valeriano and Maness data",
                                        addLegend = FALSE,
                                        xlim = c(-167, 50),
                                        ylim = c(30,50)

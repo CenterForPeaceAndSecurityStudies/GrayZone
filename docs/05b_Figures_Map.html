@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2019-06-17" />
+<meta name="date" content="2019-12-30" />
 
 <title>05b_Figures_Map</title>
 
@@ -1541,7 +1541,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1603,6 +1602,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1614,18 +1614,6 @@ summary {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -1648,7 +1636,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">05b_Figures_Map</h1>
 <h4 class="author">J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</h4>
-<h4 class="date">2019-06-17</h4>
+<h4 class="date">2019-12-30</h4>
 
 </div>
 
@@ -1749,9 +1737,9 @@ dcid$average_severity &lt;- as.numeric(dcid$average_severity)
 map &lt;- rworldmap::joinCountryData2Map(dcid,
                                       nameJoinColumn=&quot;country&quot;,
                                       joinCode=&quot;NAME&quot; )</code></pre>
-<pre><code>## 8 codes from your data successfully matched countries in the map
+<pre><code>## 14 codes from your data successfully matched countries in the map
 ## 0 codes from your data failed to match with a country code in the map
-## 235 codes from the map weren't represented in your data</code></pre>
+## 231 codes from the map weren't represented in your data</code></pre>
 <pre class="r"><code>rworldmap::mapDevice()
 
 mapParams &lt;- rworldmap::mapCountryData(map,
@@ -1878,6 +1866,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

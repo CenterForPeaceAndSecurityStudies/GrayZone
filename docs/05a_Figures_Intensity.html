@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)" />
 
-<meta name="date" content="2019-06-17" />
+<meta name="date" content="2019-12-30" />
 
 <title>05a_Figures_Intensity</title>
 
@@ -1541,7 +1541,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1603,6 +1602,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1614,18 +1614,6 @@ summary {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -1648,7 +1636,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">05a_Figures_Intensity</h1>
 <h4 class="author">J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security Studies (cPASS)</h4>
-<h4 class="date">2019-06-17</h4>
+<h4 class="date">2019-12-30</h4>
 
 </div>
 
@@ -1659,8 +1647,7 @@ $(document).ready(function () {
 <li><a href="#load-data">Load data</a></li>
 </ul></li>
 <li><a href="#plotting">Plotting</a><ul>
-<li><a href="#severity-of-russian-attacks">Severity of Russian attacks</a></li>
-<li><a href="#create-bar-chart">Create bar chart</a></li>
+<li><a href="#avergage-severity-of-russian-attacks">Avergage severity of Russian attacks</a></li>
 <li><a href="#maximum-intensity">Maximum intensity</a></li>
 </ul></li>
 </ul>
@@ -1684,8 +1671,8 @@ library(ggplot2)</code></pre>
 </div>
 <div id="plotting" class="section level1">
 <h1>Plotting</h1>
-<div id="severity-of-russian-attacks" class="section level2">
-<h2>Severity of Russian attacks</h2>
+<div id="avergage-severity-of-russian-attacks" class="section level2">
+<h2>Avergage severity of Russian attacks</h2>
 <p>We now plot changes in the severity of Russian attacks over the time period in question. The severity will be coded as the highest severity in any given year.</p>
 <pre class="r"><code>#plotting the severity of Russian attacks from 1994-2018.
 gac &lt;- gac[c(&quot;target&quot;,&quot;year_start&quot;,&quot;resp_convmil_gro&quot;,&quot;resp_convmil_airsea&quot;,
@@ -1734,11 +1721,10 @@ for(yr in years){
 }
 
 df &lt;- cbind(years,severity_avg_annual,numint)
-df &lt;- as.data.frame(df)</code></pre>
-</div>
-<div id="create-bar-chart" class="section level2">
-<h2>Create bar chart</h2>
-<pre class="r"><code>g &lt;- ggplot(df, aes(years, severity_avg_annual)) +
+df &lt;- as.data.frame(df)
+
+## Start bar chart
+g &lt;- ggplot(df, aes(years, severity_avg_annual)) +
   geom_bar(stat = &quot;identity&quot;, width = 1, fill = &quot;gray&quot;, color = &quot;black&quot;) +
   geom_line(aes(y = numint/4)) +
   labs(title = &quot;Average intensity of Russian aggression (1994-2018)&quot;,
@@ -1842,6 +1828,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

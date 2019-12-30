@@ -31,7 +31,7 @@ The data comes from the following sources:
 
 ICB comes from Brecher, Michael and Jonathan Wilkenfeld (2000). A Study of Crisis. Ann Arbor: University of Michigan Press.
 
-DCID comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940
+DCID comes from Valeriano, B., & Maness, R. C. (2014). The dynamics of cyber conflict between rival antagonists, 2001–11. Journal of Peace Research, 51(3), 347–360. https://doi.org/10.1177/0022343313518940. We here use the 1.5 version of the data, released in the summer of 2019.
 
 REI comes from Casey, Adam; Way, Lucan Ahmad, 2017, "Russian Electoral Interventions, 1991-2017", https://doi.org/10.5683/SP/BYRQQS, Scholars Portal Dataverse
 
@@ -233,7 +233,6 @@ cases_all <- cases_all[ , vars_keep]
 #Save
 saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_new.rds"))
 write.csv(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_new.csv"))
-
 ```
 
 
