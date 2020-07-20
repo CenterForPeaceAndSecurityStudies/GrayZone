@@ -22,8 +22,53 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+library(magrittr)
+library(ggplot2)
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Save
-saveRDS(cases_all, paste0(here::here(), "/data/","grayzone_aggregate_new.rds"))
+# Load
+```{r}
+df <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
+```
+
+# Clean
+Drop columns that describe the coding process. This table shows a list of the 60 unique target-years in the data. It drops 22 cases that are repeat Russian interventions with the same target-year.
+```{r}
+# Subset
+df <- df %>% dplyr::select(dplyr::starts_with("resp_"), target, year_start) %>%
+    dplyr::rename(year = year_start)
+
+# Figure out how to deal with multiple observations within a country-year
+df %>% dplyr::select(target, year) %>%
+  dplyr::distinct() %>%
+  DT::datatable()
+```
+
+# Add variables
+```{r}
+# COW codes
+df$ccode1 <- countrycode::countrycode(df$target, "country.name", "cown")
+df$ccode2 <- 365
+
+# Distance from the US and Russia
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE)
+
+df <- dplyr::left_join(df, df_dist)
+
+# CINC scores
+
+
+# Polity
+
+
+# Recent civil war
+
+
+# Nuclear status
+
+
+# GDP
+
+```
