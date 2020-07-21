@@ -1,0 +1,46 @@
+Graham IPE Data Resource V2.0 Readme
+Benjamin A.T. Graham
+and Jacob R. Tucker
+July 11, 2017
+
+This document briefly describes the Master IPE dataset and associated files. 
+
+-​ The​ ​​IPE Data Resource Codebook V2.0 "IPE Codebook Public Version 2.0”
+	This is the codebook that lists all the datasets used, their sources, the data cleaning involved in the preparation process, citations, codebooks, and all the variables included in the data resource.
+
+-​ ​ ​The IPE Data Resource V2.0 "Graham_Tucker_IPE_v2_0.tab” and “Graham_Tucker_IPE_v2_0.RDATA”
+	These are the master data .tab and .RDATA files, which have all countries and years, with nothing dropped or discarded. They are the product of merging many of the most common international political and economic datasets together. These two files are identical, but one is for use in R and the other for use in STATA.
+
+
+- ​The ​IPE Data Resource (COW version) V2.0 "Graham_Tucker_IPE_v2_0_COW.tab” and “Graham_Tucker_IPE_v2_0_COW.RDATA”
+	These files also have all countries and years available. However, instead of Gleditsch-Ward numbers as the master country ID system, the unique country identifier in this dataset is the COW country code (ccode).
+
+- Subdivided Datasets
+	These files contain subsets of the data listed above, limiting the subject area and year coverage. These subsets are created to facilitate software with a limit on the number of variables it can import. The data are subdivided into three parts: economic; political; and social, cultural and geographic. These subsets contain data only from 1975 to 2016.
+
+- The ​ Master Merge file "IPE Master Merge version 2.0.R”
+	This R script assembles all the prepared component datasets in a single file. There are extensive comments within, listing all the operations required to create the master file. Data was merged by Gleditsch-Ward country code number (gwno) and year.
+
+- The merge prep ​code files for each component dataset, ​prefixed "P​​rep_".
+	Each .do and .R file formats the data in a given component dataset into GWNO or GWNO-year arrangements. Each .do and .R file also lists the source of the data at the top of the file. These files allow users to see the details of the data cleaning for each component dataset.
+
+- The ​set file paths files ​"SetFilePaths.do​"​ and ​"​SetFilePaths.R​"
+	This .do and .R file sets three global variables that should contain the file path to where you have stored the raw data, prepped data, and the merge prep do files. These globals are used by each prep file to find and save datasets, so this file must be run before running any of the merge prep do files or the master merge file. 
+
+- The ​append ids file "append_ids.do​"
+	This .do file is called by each prep file using the STATA command "$preppeddata/Append_ids.do," which simply runs the code in the Append_ids.do file as if it were included in each individual prep file. This appends the Gleditsch-Ward numbers, the COW Country Codes, and the IFS Codes to each dataset. There is also a smaller version of this file titled "country to gwno [ongoing].do,” which simply appends the GWNO numbers. This file is only called by a few of the merge prep do files where it was more convenient to only append the GWNO numbers during the preparation process.
+
+- ​The country excel sheet "​country_to_gwno_JR.xlsx​"​
+	This Excel sheet collects all the possible country names for each Gleditsch-Ward number, and adds a min year and max year for a country if applicable.
+
+- The ​append ids file "append_ids.R​"​ 
+        This .R file is called by each prep file using the R command dataframe = append_ids(data frame) which runs the function append_ids as if it were included in each individual prep file. This appends the Gleditsch-Ward numbers, Gleditsch-Ward abbreviations, the COW Country Codes, IFS country abbreviation,​ ​IFS Codes, and ​standardizes the country names in each dataset. 
+
+- The ​change append ids file "change append ids.R"
+	This .R file is called every time when a modification has been made to the country_to_gwno.xlsx. It handles countries that have changed their GWNOs in the past, such as Serbia, Korea, and Germany. It also merges all the IFS codes and COW Codes with Gleditsch-Ward numbers into one .RDATA file called "CountryIDsMaster.RDATA", which is referred to by the Append_ids.R file.
+
+- The raw data files​, prefixed​ "RAWDATA_".
+        These are the raw data files for each component dataset before any alterations were made (such as variable renaming or data cleaning). 
+
+- The​ STATA variable labeling code "Append Stata Labels June 2017.do" 
+        This .do file appends labels to all variables in Graham_IPE_v2_0.tab, and at the end of the file, it also has codes to generate all the subdivided datasets.

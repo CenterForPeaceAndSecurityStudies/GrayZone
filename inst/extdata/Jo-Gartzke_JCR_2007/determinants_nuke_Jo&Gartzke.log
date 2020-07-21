@@ -1,0 +1,1385 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+       log:  C:\temp\determinants_nuke_Jo&Gartzke.log
+  log type:  text
+ opened on:  23 Sep 2006, 15:56:28
+
+. *creating time-dependence variables;
+. sort ccode1 year;
+
+. gen count1=0;
+
+. replace count1=count1[_n-1]+1 if ccode1==ccode1[_n-1] & nuk_apl==0;
+(5652 real changes made)
+
+. la var count1 "# years before ap=1";
+
+. sort ccode1 year;
+
+. gen count2=0;
+
+. replace count2=count2[_n-1]+1 if ccode1==ccode1[_n-1] & nuk_apl[_n-1]==1 & nuke_dfl==0;
+(224 real changes made)
+
+. la var count2 "# years after ap=1 & before df=1";
+
+. sort ccode1 year;
+
+. gen temp1=count1;
+
+. replace temp1=temp1[_n-1]+1 if nuk_apl==1 & nuk_apl[_n-1]==0 & ccode1==ccode1[_n-1];
+(24 real changes made)
+
+. sort ccode1 year;
+
+. gen temp2=count2;
+
+. replace temp2=temp2[_n-1]+1 if nuke_dfl==1 & nuke_dfl[_n-1]==0 & ccode1==ccode1[_n-1];
+(9 real changes made)
+
+. replace temp2=0 if ccode==560 & year==1990;
+(1 real change made)
+
+. la var temp1 "# years before apl=1";
+
+. la var temp2 "# years after apl=1 & before dfl=1";
+
+. drop count1 count2;
+
+. ren temp1 count1;
+
+. ren temp2 count2;
+
+. *creating trichotomy of nuclear threat;
+. generate n_threat =0;
+
+. replace n_threat = 1 if r_nukep ==1;
+(463 real changes made)
+
+. replace n_threat = 2 if r_nukeb ==1;
+(302 real changes made)
+
+. *creating trichotomy of democracy;
+. generate tri_demo1 = democ;
+(645 missing values generated)
+
+. generate tri_demo2 = democ;
+(645 missing values generated)
+
+. replace tri_demo1 = 0;
+(3435 real changes made)
+
+. replace tri_demo1 = 1 if democ >=4 & democ <=7;
+(586 real changes made)
+
+. replace tri_demo2 = 0;
+(3435 real changes made)
+
+. replace tri_demo2 = 1 if democ >=8;
+(2294 real changes made)
+
+. *Model 1(Nuclear Weapons Program);
+. probit nuk_apl nuk7set1 new_econ l_year_t
+>         ln_ri_t r_nukep nuke_a_d d_isol ln_xst1 democ npt_rati npt_eff majpow regpowt count1, robust cluster(ccode1);
+
+Iteration 0:   log likelihood = -1460.5936
+Iteration 1:   log likelihood = -507.57283
+Iteration 2:   log likelihood = -338.34338
+Iteration 3:   log likelihood = -278.37366
+Iteration 4:   log likelihood = -259.87236
+Iteration 5:   log likelihood = -256.84753
+Iteration 6:   log likelihood = -256.71238
+Iteration 7:   log likelihood = -256.71187
+
+Probit estimates                                  Number of obs   =       4697
+                                                  Wald chi2(14)   =     644.50
+                                                  Prob > chi2     =     0.0000
+Log likelihood = -256.71187                       Pseudo R2       =     0.8242
+
+                           (standard errors adjusted for clustering on ccode1)
+------------------------------------------------------------------------------
+             |               Robust
+     nuk_apl |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    nuk7set1 |   .4836467   .0792077     6.11   0.000     .3284024     .638891
+    new_econ |    1.48263   1.944495     0.76   0.446    -2.328511    5.293771
+    l_year_t |   1.055037   .2506145     4.21   0.000      .563842    1.546233
+     ln_ri_t |   .7002055     .25807     2.71   0.007     .1943976    1.206013
+     r_nukep |  -.9140483   .3644407    -2.51   0.012    -1.628339   -.1997576
+    nuke_a_d |  -.0976412   .3057702    -0.32   0.749    -.6969397    .5016573
+      d_isol |  -.0601959    .438078    -0.14   0.891    -.9188129    .7984211
+     ln_xst1 |  -.1479527   .0957213    -1.55   0.122    -.3355629    .0396576
+       democ |  -.0262154   .0219774    -1.19   0.233    -.0692902    .0168594
+    npt_rati |  -.7809309   .3631045    -2.15   0.031    -1.492603   -.0692592
+     npt_eff |   .0051981   .0037806     1.37   0.169    -.0022118    .0126081
+      majpow |   2.000029   .3882118     5.15   0.000     1.239148     2.76091
+     regpowt |   1.549146   .2356791     6.57   0.000     1.087223    2.011068
+      count1 |  -.1132394   .0118902    -9.52   0.000    -.1365438    -.089935
+       _cons |  -6.354261   1.001082    -6.35   0.000    -8.316346   -4.392176
+------------------------------------------------------------------------------
+
+note: 480 failures and 0 successes completely determined.
+
+. predict p, p;
+(1630 missing values generated)
+
+. *LR test for nuke program;
+. test nuk7set1 new_econ l_year_t;
+
+ ( 1)  nuk7set1 = 0.0
+ ( 2)  new_econ = 0.0
+ ( 3)  l_year_t = 0.0
+
+           chi2(  3) =   61.20
+         Prob > chi2 =    0.0000
+
+
+. test ln_ri_t r_nukep nuke_a_d d_isol;
+
+ ( 1)  ln_ri_t = 0.0
+ ( 2)  r_nukep = 0.0
+ ( 3)  nuke_a_d = 0.0
+ ( 4)  d_isol = 0.0
+
+           chi2(  4) =    8.62
+         Prob > chi2 =    0.0713
+
+
+. test ln_xst1 democ;
+
+ ( 1)  ln_xst1 = 0.0
+ ( 2)  democ = 0.0
+
+           chi2(  2) =    4.88
+         Prob > chi2 =    0.0872
+
+
+. test npt_rati npt_eff;
+
+ ( 1)  npt_rati = 0.0
+ ( 2)  npt_eff = 0.0
+
+           chi2(  2) =    5.54
+         Prob > chi2 =    0.0627
+
+
+. test majpow regpowt;
+
+ ( 1)  majpow = 0.0
+ ( 2)  regpowt = 0.0
+
+           chi2(  2) =   53.83
+         Prob > chi2 =    0.0000
+
+
+. *preparing the method of recycling;
+. generate b_nuk7set1 = nuk7set1;
+
+. generate b_new_econ = new_econ;
+(468 missing values generated)
+
+. generate b_l_year_t = l_year_t;
+
+. generate b_ln_ri_t = ln_ri_t;
+(8 missing values generated)
+
+. generate b_r_nukep = r_nukep;
+
+. generate b_nuke_a_d = nuke_a_d;
+
+. generate b_d_isol = d_isol;
+(529 missing values generated)
+
+. generate b_ln_xst1 = ln_xst1;
+(688 missing values generated)
+
+. generate b_democ = democ;
+(645 missing values generated)
+
+. generate b_majpow = majpow;
+
+. generate b_regpowt = regpowt;
+
+. generate b_npt_rati = npt_rati;
+
+. generate b_npt_eff = npt_eff;
+
+. sum nuk7set1 new_econ l_year_t ln_ri_t r_nukep nuke_a_d d_isol ln_xst1 democ npt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    nuk7set1 |    6327    2.806859   2.725275          0          7
+    new_econ |    5859    .0091543   .0390237          0   .5799933
+    l_year_t |    6327    3.360427   .6609563   .6931472   4.007333
+     ln_ri_t |    6319    .2033398   .5245587          0   3.239901
+     r_nukep |    6327    .0731784   .2604498          0          1
+    nuke_a_d |    6327    .3121543    .463409          0          1
+      d_isol |    5798    .2742511   .2466739          0    .939759
+     ln_xst1 |    5639    .3950368   .7129883          0   4.454347
+       democ |    5682    3.532559   4.261115          0         10
+     npt_eff |    6327    39.81448   35.07844          0   84.15301
+
+. *Recycling for nuke capability;
+. replace nuk7set1 = 0 if nuk7set1 ~=.;
+(4301 real changes made)
+
+. predict snuk7set1, p;
+(1630 missing values generated)
+
+. sum snuk7set1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   snuk7set1 |    4697    .0100203   .0476281   4.75e-20   .6367388
+
+. drop snuk7set1;
+
+. replace nuk7set1 = 2.827428 if nuk7set1 ~=.;
+nuk7set1 was byte now float
+(6327 real changes made)
+
+. predict mnuk7set1, p;
+(1630 missing values generated)
+
+. sum mnuk7set1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   mnuk7set1 |    4697    .0455796   .1477014   5.50e-15   .9570315
+
+. drop mnuk7set1;
+
+. replace nuk7set1 = 7 if nuk7set1 ~=.;
+(6327 real changes made)
+
+. predict xnuk7set1, p;
+(1630 missing values generated)
+
+. sum xnuk7set1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xnuk7set1 |    4697    .1882291   .2950871   5.68e-09   .9999062
+
+. drop xnuk7set1;
+
+. replace nuk7set1 = b_nuk7set1;
+(5186 real changes made)
+
+. drop b_nuk7set1;
+
+. *Recyling for economic capacity;
+. replace new_econ = 0 if new_econ ~=.;
+(5852 real changes made)
+
+. predict snew_econ, p;
+(1630 missing values generated)
+
+. sum snew_econ;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   snew_econ |    4697    .0937515   .2609324   9.81e-20   .9998447
+
+. drop snew_econ;
+
+. replace new_econ = .0090848 if new_econ ~=.;
+(5859 real changes made)
+
+. predict mnew_econ, p;
+(1630 missing values generated)
+
+. sum mnew_econ;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   mnew_econ |    4697    .0941799   .2614999   1.11e-19   .9998525
+
+. drop mnew_econ;
+
+. replace new_econ = .5799933 if new_econ ~=.;
+(5859 real changes made)
+
+. predict xnew_econ, p;
+(1630 missing values generated)
+
+. sum xnew_econ;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xnew_econ |    4697    .1268963   .2914475   1.74e-16    .999996
+
+. drop xnew_econ;
+
+. replace new_econ = b_new_econ;
+(5858 real changes made)
+
+. drop b_new_econ;
+
+. *Recyling for diffusion;
+. replace l_year_t =  .6931472 if l_year_t ~=.;
+(6327 real changes made)
+
+. predict sl_year_t, p;
+(1630 missing values generated)
+
+. sum sl_year_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   sl_year_t |    4697    .0145278   .0665652   4.10e-36   .6018162
+
+. drop sl_year_t;
+
+. replace l_year_t =  3.400307 if l_year_t ~=.;
+(6327 real changes made)
+
+. predict ml_year_t, p;
+(1630 missing values generated)
+
+. sum ml_year_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   ml_year_t |    4697    .0942972   .2565793   2.81e-22   .9990778
+
+. drop ml_year_t;
+
+. replace l_year_t = 4.043051 if l_year_t ~=.;
+(6327 real changes made)
+
+. predict xl_year_t, p;
+(1630 missing values generated)
+
+. sum xl_year_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xl_year_t |    4697    .1228073   .2848034   1.65e-19   .9999254
+
+. replace l_year_t = b_l_year_t;
+(6327 real changes made)
+
+. drop xl_year_t b_l_year_t;
+
+. *Recyling for conventional threat;
+. replace ln_ri_t = 0 if ln_ri_t ~=.;
+(1125 real changes made)
+
+. predict sln_ri_t, p;
+(1630 missing values generated)
+
+. sum sln_ri_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sln_ri_t |    4697     .081336    .240616   9.82e-20   .9995548
+
+. drop sln_ri_t;
+
+. replace ln_ri_t = .1996342 if ln_ri_t ~=.;
+(6319 real changes made)
+
+. predict mln_ri_t, p;
+(1630 missing values generated)
+
+. sum mln_ri_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    mln_ri_t |    4697    .0858128   .2470775   3.48e-19   .9997327
+
+. drop mln_ri_t;
+
+. replace ln_ri_t = 3.239901 if ln_ri_t ~=.;
+(6319 real changes made)
+
+. predict xln_ri_t, p;
+(1630 missing values generated)
+
+. sum xln_ri_t;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xln_ri_t |    4697    .2265018   .3267791   7.56e-12          1
+
+. replace ln_ri_t = b_ln_ri_t;
+(6318 real changes made)
+
+. *Recyling for nuke threat;
+. replace r_nukep = 0 if r_nukep ~=.;
+(463 real changes made)
+
+. predict sr_nukep, p;
+(1630 missing values generated)
+
+. sum sr_nukep;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sr_nukep |    4697    .1025118   .2749331   9.82e-20   .9999983
+
+. replace r_nukep = 1 if r_nukep ~= .;
+(6327 real changes made)
+
+. predict xr_nukep, p;
+(1630 missing values generated)
+
+. sum xr_nukep;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xr_nukep |    4697    .0773079   .2384009   1.55e-23   .9999062
+
+. replace r_nukep = b_r_nukep;
+(5864 real changes made)
+
+. *Recyling for nuke defender;
+. replace nuke_a_d = 0 if nuke_a_d ~=.;
+(1975 real changes made)
+
+. predict snuke_a_d, p;
+(1630 missing values generated)
+
+. sum snuke_a_d;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   snuke_a_d |    4697    .0957687   .2643217   2.38e-19   .9999062
+
+. replace nuke_a_d = 1 if nuke_a_d ~= .;
+(6327 real changes made)
+
+. predict xnuke_a_d, p;
+(1630 missing values generated)
+
+. sum xnuke_a_d;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xnuke_a_d |    4697    .0927404   .2604606   9.82e-20   .9998624
+
+. replace nuke_a_d = b_nuke_a_d;
+(4352 real changes made)
+
+. *Recyling for diplomatic isolation;
+. replace d_isol = 0 if d_isol ~=.;
+(4538 real changes made)
+
+. predict sd_isol, p;
+(1630 missing values generated)
+
+. sum sd_isol;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     sd_isol |    4697    .0953268   .2638684   1.41e-19   .9999111
+
+. replace d_isol = .271024 if d_isol ~=.;
+(5798 real changes made)
+
+. predict md_isol, p;
+(1630 missing values generated)
+
+. sum md_isol;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     md_isol |    4697    .0948184   .2632289   1.22e-19   .9999051
+
+. replace d_isol = .939759 if d_isol ~=.;
+(5798 real changes made)
+
+. predict xd_isol, p;
+(1630 missing values generated)
+
+. sum xd_isol;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     xd_isol |    4697    .0935747   .2616316   8.45e-20   .9998887
+
+. replace d_isol = b_d_isol;
+(5793 real changes made)
+
+. *Recyling for domestic unrest;
+. replace ln_xst1 = 0 if ln_xst1 ~=.;
+(1686 real changes made)
+
+. predict sln_xst1, p;
+(1630 missing values generated)
+
+. sum sln_xst1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sln_xst1 |    4697    .0982021   .2687637   1.06e-18   .9999062
+
+. replace ln_xst1 =  .3939818 if ln_xst1 ~=.;
+(5639 real changes made)
+
+. predict mln_xst1, p;
+(1630 missing values generated)
+
+. sum mln_xst1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    mln_xst1 |    4697    .0964238   .2666755   6.34e-19    .999882
+
+. replace ln_xst1 =  4.454347 if ln_xst1 ~=.;
+(5639 real changes made)
+
+. predict xln_xst1, p;
+(1630 missing values generated)
+
+. sum xln_xst1;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xln_xst1 |    4697    .0794771   .2415452   2.50e-21   .9989519
+
+. replace ln_xst1 = b_ln_xst1;
+(5638 real changes made)
+
+. *Recyling for democracy;
+. replace democ = 0 if democ ~=.;
+(2790 real changes made)
+
+. predict sdemoc, p;
+(1630 missing values generated)
+
+. sum sdemoc;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+      sdemoc |    4697    .0984332   .2677237   6.51e-19   .9999062
+
+. replace democ = 3.644042 if democ ~=.;
+democ was byte now float
+(5682 real changes made)
+
+. predict mdemoc, p;
+(1630 missing values generated)
+
+. sum mdemoc;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+      mdemoc |    4697    .0954194   .2641628   2.76e-19   .9998636
+
+. replace democ = 10 if democ ~=.;
+(5682 real changes made)
+
+. predict xdemoc, p;
+(1630 missing values generated)
+
+. sum xdemoc;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+      xdemoc |    4697    .0903798   .2576234   6.08e-20   .9997428
+
+. replace democ = b_democ;
+(4475 real changes made)
+
+. *Recyling for NPT membership;
+. replace npt_rati = 0 if npt_rati ~=.;
+(2510 real changes made)
+
+. predict snpt_rati, p;
+(1630 missing values generated)
+
+. sum snpt_rati;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   snpt_rati |    4697    .1030177   .2738622   9.02e-17   .9999062
+
+. drop snpt_rati;
+
+. replace npt_rati = 1 if npt_rati  ~= .;
+(6327 real changes made)
+
+. predict xnpt_rati, p;
+(1630 missing values generated)
+
+. sum xnpt_rati;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xnpt_rati |    4697    .0795604   .2395786   9.82e-20   .9984334
+
+. replace npt_rati = b_npt_rati;
+(3817 real changes made)
+
+. *Recyling for NPT system effect;
+. replace npt_eff = 0 if npt_eff ~=.;
+(3849 real changes made)
+
+. predict snpt_eff, p;
+(1630 missing values generated)
+
+. sum snpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    snpt_eff |    4697    .0884457   .2522149   2.10e-21   .9995546
+
+. replace npt_eff = 42.55004 if npt_eff ~= .;
+(6327 real changes made)
+
+. predict mnpt_eff, p;
+(1630 missing values generated)
+
+. sum mnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    mnpt_eff |    4697    .0956311   .2617791   1.68e-20    .999803
+
+. replace npt_eff =  84.153 if npt_eff ~= .;
+(6327 real changes made)
+
+. predict xnpt_eff, p;
+(1630 missing values generated)
+
+. sum xnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xnpt_eff |    4697    .1032028   .2703981   1.23e-19   .9999152
+
+. replace npt_eff = b_npt_eff;
+(6327 real changes made)
+
+. *Recyling for major power status;
+. replace majpow = 0 if majpow ~=.;
+(278 real changes made)
+
+. predict smajpow, p;
+(1630 missing values generated)
+
+. sum smajpow;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     smajpow |    4697    .0773689   .2175163   9.82e-20   .9935928
+
+. replace majpow = 1 if majpow ~= .;
+(6327 real changes made)
+
+. predict xmajpow, p;
+(1630 missing values generated)
+
+. sum xmajpow;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     xmajpow |    4697    .2104857   .3240864   1.15e-12   .9999964
+
+. replace majpow = b_majpow;
+(6049 real changes made)
+
+. *Recyling for regional power status;
+. replace regpowt = 0 if regpowt ~=.;
+(296 real changes made)
+
+. predict sregpowt, p;
+(1630 missing values generated)
+
+. sum sregpowt;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sregpowt |    4697    .0891327   .2525995   9.82e-20   .9999062
+
+. replace regpowt = 1 if regpowt ~= .;
+(6327 real changes made)
+
+. predict xregpowt, p;
+(1630 missing values generated)
+
+. sum xregpowt;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xregpowt |    4697    .1627211   .3101327   4.13e-14   .9999999
+
+. replace regpowt = b_regpowt;
+(6031 real changes made)
+
+. *End of the analysis of nuke program;
+. *Start of the analysese of nuke possession;
+. *Model 2-2(Non-Censored Model);
+. probit nuke_dfl nuk7set1 new_econ l_year_t
+>         ln_ri_t r_nukep nuke_a_d d_isol ln_xst1 democ npt_eff majpow regpowt count2, robust cluster(ccode1);
+
+Iteration 0:   log likelihood = -956.27602
+Iteration 1:   log likelihood = -297.70828
+Iteration 2:   log likelihood = -201.45621
+Iteration 3:   log likelihood = -157.88924
+Iteration 4:   log likelihood = -140.96795
+Iteration 5:   log likelihood = -135.20467
+Iteration 6:   log likelihood = -133.53906
+Iteration 7:   log likelihood = -133.18752
+Iteration 8:   log likelihood =  -133.1588
+Iteration 9:   log likelihood = -133.15862
+
+Probit estimates                                  Number of obs   =       4697
+                                                  Wald chi2(13)   =     201.58
+                                                  Prob > chi2     =     0.0000
+Log likelihood = -133.15862                       Pseudo R2       =     0.8608
+
+                           (standard errors adjusted for clustering on ccode1)
+------------------------------------------------------------------------------
+             |               Robust
+    nuke_dfl |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    nuk7set1 |     .60815   .2331556     2.61   0.009     .1511734    1.065127
+    new_econ |   6.548002   3.929371     1.67   0.096    -1.153424    14.24943
+    l_year_t |   1.950269   .6978168     2.79   0.005     .5825727    3.317964
+     ln_ri_t |   1.343737   .2578878     5.21   0.000     .8382861    1.849188
+     r_nukep |  -2.153189   .6042003    -3.56   0.000      -3.3374    -.968978
+    nuke_a_d |    -1.3794   .5758163    -2.40   0.017    -2.507979   -.2508206
+      d_isol |   1.695277   .8669797     1.96   0.051    -.0039724    3.394526
+     ln_xst1 |   .4322375   .1199575     3.60   0.000     .1971252    .6673499
+       democ |   .0665699   .0591409     1.13   0.260    -.0493442     .182484
+     npt_eff |   .0006605   .0055161     0.12   0.905    -.0101508    .0114719
+      majpow |   4.692931   .7412407     6.33   0.000     3.240126    6.145736
+     regpowt |   1.545883    .494906     3.12   0.002     .5758848    2.515881
+      count2 |  -.0652377   .0344398    -1.89   0.058    -.1327384    .0022631
+       _cons |  -14.87206   2.477408    -6.00   0.000    -19.72769   -10.01643
+------------------------------------------------------------------------------
+
+note: 2054 failures and 0 successes completely determined.
+
+. *Model 2-1(Censored Model);
+. *Preparation for Model 2-1;
+. generate pn7set1 = nuk_apl*nuk7set1;
+
+. generate pnew_econ = nuk_apl*new_econ;
+(468 missing values generated)
+
+. generate pl_year_t = nuk_apl*l_year_t;
+
+. generate pln_ri_t = nuk_apl*ln_ri_t;
+(8 missing values generated)
+
+. generate pr_nukep = nuk_apl*r_nukep;
+
+. generate pr_nukeb = nuk_apl*r_nukeb;
+
+. generate pnuke_a_d = nuk_apl*nuke_a_d;
+
+. generate pd_isol = nuk_apl*d_isol;
+(529 missing values generated)
+
+. generate pln_xst1 = nuk_apl*ln_xst1;
+(688 missing values generated)
+
+. generate pdemoc = nuk_apl*democ;
+(645 missing values generated)
+
+. generate pnpt_eff =nuk_apl*npt_eff;
+
+. generate pmajpow = nuk_apl*majpow;
+
+. generate pregpowt = nuk_apl*regpowt;
+
+. generate nn_thre =0;
+
+. replace  nn_thre = 1 if pr_nukep ==1;
+(231 real changes made)
+
+. replace  nn_thre = 2 if pr_nukeb ==1;
+(167 real changes made)
+
+. *analysis for Model 2-1;
+. *droping all cases with no nuclear weapons program;
+. replace nuke_dfl = . if nuk_apl ==0;
+(5839 real changes made, 5839 to missing)
+
+. probit nuke_dfl pn7set1 pnew_econ pl_year_t 
+>         pln_ri_t pr_nukep pnuke_a_d pd_isol pln_xst1 pdemoc pnpt_eff pmajpow pregpowt count2, robust cluster(ccode1);
+
+Iteration 0:   log likelihood = -302.57581
+Iteration 1:   log likelihood = -103.58501
+Iteration 2:   log likelihood = -67.227581
+Iteration 3:   log likelihood = -52.220831
+Iteration 4:   log likelihood = -40.939363
+Iteration 5:   log likelihood = -31.776101
+Iteration 6:   log likelihood =  -27.70205
+Iteration 7:   log likelihood = -26.383907
+Iteration 8:   log likelihood = -26.103928
+Iteration 9:   log likelihood =  -26.09354
+Iteration 10:  log likelihood = -26.093527
+
+Probit estimates                                  Number of obs   =        440
+                                                  Wald chi2(13)   =  606935.30
+                                                  Prob > chi2     =     0.0000
+Log likelihood = -26.093527                       Pseudo R2       =     0.9138
+
+                           (standard errors adjusted for clustering on ccode1)
+------------------------------------------------------------------------------
+             |               Robust
+    nuke_dfl |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     pn7set1 |   .4274959   .4480353     0.95   0.340     -.450637    1.305629
+   pnew_econ |   110.5096   28.69662     3.85   0.000     54.26527     166.754
+   pl_year_t |   13.03596   3.801496     3.43   0.001     5.585162    20.48675
+    pln_ri_t |   2.729421   .4533389     6.02   0.000     1.840893    3.617949
+    pr_nukep |  -5.004475   .8344565    -6.00   0.000     -6.63998    -3.36897
+   pnuke_a_d |  -3.550246   .9018589    -3.94   0.000    -5.317857   -1.782635
+     pd_isol |   .3903668   1.067912     0.37   0.715    -1.702701    2.483435
+    pln_xst1 |   .1631659   .1287683     1.27   0.205    -.0892153    .4155471
+      pdemoc |   .2708981   .1069706     2.53   0.011     .0612396    .4805567
+    pnpt_eff |  -.0168551   .0352692    -0.48   0.633    -.0859816    .0522713
+     pmajpow |   7.489776   1.039664     7.20   0.000     5.452071     9.52748
+    pregpowt |   1.209603   .4980239     2.43   0.015     .2334945    2.185712
+      count2 |  -.1474234   .0291116    -5.06   0.000    -.2044811   -.0903657
+       _cons |   -53.8317   10.13206    -5.31   0.000    -73.69016   -33.97323
+------------------------------------------------------------------------------
+
+note: 44 failures and 143 successes completely determined.
+
+. *LR test;
+. test pnew_econ pl_year_t pn7set1;
+
+ ( 1)  pnew_econ = 0.0
+ ( 2)  pl_year_t = 0.0
+ ( 3)  pn7set1 = 0.0
+
+           chi2(  3) =   42.50
+         Prob > chi2 =    0.0000
+
+
+. test pln_ri_t pr_nukep pnuke_a_d pd_isol;
+
+ ( 1)  pln_ri_t = 0.0
+ ( 2)  pr_nukep = 0.0
+ ( 3)  pnuke_a_d = 0.0
+ ( 4)  pd_isol = 0.0
+
+           chi2(  4) =   59.40
+         Prob > chi2 =    0.0000
+
+
+. test pln_xst1 pdemoc;
+
+ ( 1)  pln_xst1 = 0.0
+ ( 2)  pdemoc = 0.0
+
+           chi2(  2) =   15.63
+         Prob > chi2 =    0.0004
+
+
+. test pnpt_eff;
+
+ ( 1)  pnpt_eff = 0.0
+
+           chi2(  1) =    0.23
+         Prob > chi2 =    0.6327
+
+
+. test pmajpow pregpowt;
+
+ ( 1)  pmajpow = 0.0
+ ( 2)  pregpowt = 0.0
+
+           chi2(  2) =   52.07
+         Prob > chi2 =    0.0000
+
+
+. *Preferation of recycling (Model 2-1);
+. generate bpn7set1 = pn7set1;
+
+. generate bpnew_econ = pnew_econ;
+(468 missing values generated)
+
+. generate bpl_year_t = pl_year_t;
+
+. generate bpln_ri_t = pln_ri_t;
+(8 missing values generated)
+
+. generate bpr_nukep = pr_nukep;
+
+. generate bpnuke_a_d = pnuke_a_d;
+
+. generate bpd_isol = pd_isol;
+(529 missing values generated)
+
+. generate bpln_xst1 = pln_xst1;
+(688 missing values generated)
+
+. generate bpdemoc = pdemoc;
+(645 missing values generated)
+
+. generate bpnpt_eff = pnpt_eff;
+
+. generate bpmajpow = pmajpow;
+
+. generate bpregpowt = pregpowt;
+
+. drop if nuke_dfl ==.;
+(5839 observations deleted)
+
+. sum pn7set1 pnew_econ pl_year_t pln_ri_t pd_isol pln_xst1 pdemoc pnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     pn7set1 |     488    6.512295   .8105139          3          7
+   pnew_econ |     480    .0715299    .112118     .00027   .5799933
+   pl_year_t |     488    3.436263   .5690728   1.098612   4.007333
+    pln_ri_t |     488    .7517005   .7213768          0   3.024949
+     pd_isol |     468    .2814245   .2494468          0    .939759
+    pln_xst1 |     462    1.017978   1.079964          0   4.454347
+      pdemoc |     487    5.162218   4.491003          0         10
+    pnpt_eff |     488    43.60191   34.46332          0   84.15301
+
+. *Recycling for nuke capability;
+. replace pn7set1 =  3 if pn7set1 ~=.;
+(487 real changes made)
+
+. predict sn7set1p, p;
+(48 missing values generated)
+
+. sum sn7set1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sn7set1p |     440    .5021047   .4785989          0          1
+
+. replace pn7set1 =  6.534161 if pn7set1 ~=.;
+(488 real changes made)
+
+. predict mn7set1p, p;
+(48 missing values generated)
+
+. sum mn7set1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    mn7set1p |     440    .5533748   .4787027          0          1
+
+. replace pn7set1 =  7 if pn7set1 ~=.;
+(488 real changes made)
+
+. predict xn7set1p, p;
+(48 missing values generated)
+
+. sum xn7set1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xn7set1p |     440    .5604204    .476553          0          1
+
+. replace pn7set1 = bpn7set1;
+(154 real changes made)
+
+. drop sn7set1p mn7set1p xn7set1p;
+
+. *Recyling for economic capacity;
+. replace pnew_econ =  .00027 if new_econ ~=.;
+(480 real changes made)
+
+. predict snew_econp, p;
+(48 missing values generated)
+
+. sum snew_econp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  snew_econp |     440        .391   .4569652          0          1
+
+. replace pnew_econ =  .0751828 if new_econ ~=.;
+(480 real changes made)
+
+. predict mnew_econp, p;
+(48 missing values generated)
+
+. sum mnew_econp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  mnew_econp |     440    .9071434   .2606698   3.04e-14          1
+
+. replace pnew_econ =  .5799933 if new_econ ~=.;
+(480 real changes made)
+
+. predict xnew_econp, p;
+(48 missing values generated)
+
+. sum xnew_econp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  xnew_econp |     440           1          0          1          1
+
+. replace pnew_econ = bpnew_econ;
+(479 real changes made)
+
+. *Recyling for diffusion;
+. replace pl_year_t =  1.098612 if l_year_t ~=.;
+(488 real changes made)
+
+. predict sl_year_tp, p;
+(48 missing values generated)
+
+. sum sl_year_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  sl_year_tp |     440     .050429   .2146379          0          1
+
+. replace pl_year_t =   3.459882 if l_year_t ~=.;
+(488 real changes made)
+
+. predict ml_year_tp, p;
+(48 missing values generated)
+
+. sum ml_year_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  ml_year_tp |     440    .5141869   .4883291   1.52e-34          1
+
+. replace pl_year_t = 4.043051 if l_year_t ~=.;
+(488 real changes made)
+
+. predict xl_year_tp, p;
+(48 missing values generated)
+
+. sum xl_year_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  xl_year_tp |     440    .8219769   .3494754   2.12e-06          1
+
+. replace pl_year_t = bpl_year_t;
+(488 real changes made)
+
+. *Recyling for conventional threat;
+. replace pln_ri_t = 0 if ln_ri_t ~=.;
+(309 real changes made)
+
+. predict sln_ri_tp, p;
+(48 missing values generated)
+
+. sum sln_ri_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   sln_ri_tp |     440    .4773689   .4820275          0          1
+
+. replace pln_ri_t = .7920272 if ln_ri_t ~=.;
+(488 real changes made)
+
+. predict mln_ri_tp, p;
+(48 missing values generated)
+
+. sum mln_ri_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   mln_ri_tp |     440    .5571001   .4749813          0          1
+
+. replace pln_ri_t = 3.239901 if ln_ri_t ~=.;
+(488 real changes made)
+
+. predict xln_ri_tp, p;
+(48 missing values generated)
+
+. sum xln_ri_tp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xln_ri_tp |     440    .8800527   .2940931   1.10e-10          1
+
+. replace pln_ri_t = bpln_ri_t;
+(488 real changes made)
+
+. *Recyling for nuke threat;
+. replace pr_nukep = 0 if r_nukep ~=.;
+(231 real changes made)
+
+. predict sr_nukepp, p;
+(48 missing values generated)
+
+. sum sr_nukepp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   sr_nukepp |     440    .6682802   .4443788          0          1
+
+. replace pr_nukep = 1 if r_nukep ~= .;
+(488 real changes made)
+
+. predict xr_nukepp, p;
+(48 missing values generated)
+
+. sum xr_nukepp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xr_nukepp |     440    .4117494   .4686004          0          1
+
+. replace pr_nukep = bpr_nukep;
+(257 real changes made)
+
+. *Recyling for nuke defender;
+. replace pnuke_a_d = 0 if nuke_a_d ~=.;
+(142 real changes made)
+
+. predict snuke_a_dp, p;
+(48 missing values generated)
+
+. sum snuke_a_dp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  snuke_a_dp |     440    .6146574    .457287          0          1
+
+. replace pnuke_a_d = 1 if nuke_a_d ~= .;
+(488 real changes made)
+
+. predict xnuke_a_dp, p;
+(48 missing values generated)
+
+. sum xnuke_a_dp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+  xnuke_a_dp |     440    .4556692    .476222          0          1
+
+. replace pnuke_a_d = bpnuke_a_d;
+(346 real changes made)
+
+. *Recyling for diplomatic isolation;
+. replace pd_isol = 0 if d_isol ~=.;
+(400 real changes made)
+
+. predict sd_isolp, p;
+(48 missing values generated)
+
+. sum sd_isolp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    sd_isolp |     440    .5491948   .4801785          0          1
+
+. replace pd_isol =  .2948614 if d_isol ~=.;
+(468 real changes made)
+
+. predict md_isolp, p;
+(48 missing values generated)
+
+. sum md_isolp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    md_isolp |     440     .552984   .4793029          0          1
+
+. replace pd_isol =  .939759 if d_isol ~=.;
+(468 real changes made)
+
+. predict xd_isolp, p;
+(48 missing values generated)
+
+. sum xd_isolp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xd_isolp |     440     .561609   .4767824          0          1
+
+. replace pd_isol = bpd_isol;
+(463 real changes made)
+
+. *Recyling for domestic unrest;
+. replace pln_xst1 = 0 if ln_xst1 ~=.;
+(271 real changes made)
+
+. predict sln_xst1p, p;
+(48 missing values generated)
+
+. sum sln_xst1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   sln_xst1p |     440     .546447   .4814834          0          1
+
+. replace pln_xst1 =    1.059107 if ln_xst1 ~=.;
+(462 real changes made)
+
+. predict mln_xst1p, p;
+(48 missing values generated)
+
+. sum mln_xst1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   mln_xst1p |     440    .5518684    .480289          0          1
+
+. replace pln_xst1 =  4.454347 if ln_xst1 ~=.;
+(462 real changes made)
+
+. predict xln_xst1p, p;
+(48 missing values generated)
+
+. sum xln_xst1p;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xln_xst1p |     440    .5710373   .4737754          0          1
+
+. replace pln_xst1 = bpln_xst1;
+(461 real changes made)
+
+. *Recyling for democracy;
+. replace pdemoc = 0 if democ ~=.;
+(299 real changes made)
+
+. predict sdemocp, p;
+(48 missing values generated)
+
+. sum sdemocp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     sdemocp |     440     .491945   .4738689          0          1
+
+. replace pdemoc =  5.445135 if democ ~=.;
+(487 real changes made)
+
+. predict mdemocp, p;
+(48 missing values generated)
+
+. sum mdemocp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     mdemocp |     440     .553331    .475206          0          1
+
+. replace pdemoc = 10 if democ ~=.;
+(487 real changes made)
+
+. predict xdemocp, p;
+(48 missing values generated)
+
+. sum xdemocp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+     xdemocp |     440    .6149304   .4489978          0          1
+
+. replace pdemoc = bpdemoc;
+(338 real changes made)
+
+. *Recyling for NPT system;
+. replace pnpt_eff = 0 if pnpt_eff ~=.;
+(319 real changes made)
+
+. predict spnpt_eff, p;
+(48 missing values generated)
+
+. sum spnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   spnpt_eff |     440    .5846938   .4665617          0          1
+
+. drop spnpt_eff;
+
+. replace pnpt_eff =  45.51803 if pnpt_eff ~= .;
+(488 real changes made)
+
+. predict mpnpt_eff_nptp, p;
+(48 missing values generated)
+
+. sum mpnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+mpnpt_eff_~p |     440    .5529884    .476495          0          1
+
+. drop mpnpt_eff;
+
+. replace pnpt_eff =  84.153 if pnpt_eff ~= .;
+(488 real changes made)
+
+. predict xpnpt_eff_nptp, p;
+(48 missing values generated)
+
+. sum xpnpt_eff;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+xpnpt_eff_~p |     440     .529736    .480168          0          1
+
+. drop xpnpt_eff;
+
+. replace pnpt_eff = bpnpt_eff;
+(488 real changes made)
+
+. drop bpnpt_eff;
+
+. *Recyling for major power status;
+. replace pmajpow = 0 if majpow ~=.;
+(242 real changes made)
+
+. predict smajpowp, p;
+(48 missing values generated)
+
+. sum smajpowp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    smajpowp |     440    .3856333   .4563071          0          1
+
+. replace pmajpow = 1 if majpow ~= .;
+(488 real changes made)
+
+. predict xmajpowp, p;
+(48 missing values generated)
+
+. sum xmajpowp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+    xmajpowp |     440    .9017713   .2706481   3.10e-16          1
+
+. replace pmajpow = bpmajpow;
+(246 real changes made)
+
+. *Recyling for regional power status;
+. replace pregpowt = 0 if regpowt ~=.;
+(53 real changes made)
+
+. predict sregpowtp, p;
+(48 missing values generated)
+
+. sum sregpowtp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   sregpowtp |     440    .5435235   .4811796          0          1
+
+. replace pregpowt = 1 if regpowt ~= .;
+(488 real changes made)
+
+. predict xregpowtp, p;
+(48 missing values generated)
+
+. sum xregpowtp;
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+   xregpowtp |     440    .5894835   .4652182          0          1
+
+. replace pregpowt = bpregpowt;
+(435 real changes made)
+
+. log close;
+       log:  C:\temp\determinants_nuke_Jo&Gartzke.log
+  log type:  text
+ closed on:  23 Sep 2006, 15:56:30
+-----------------------------------------------------------------------------------------------------------------------------------

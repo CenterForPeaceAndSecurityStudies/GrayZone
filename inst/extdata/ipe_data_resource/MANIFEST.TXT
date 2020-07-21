@@ -1,0 +1,15 @@
+1. IPE Codebook Public Version 2.0.docx (application/vnd.openxmlformats-officedocument.wordprocessingml.document) 284859 bytes.
+2. readme IPE Data Resource v2.0.txt (text/plain) 4891 bytes.
+3. Graham_Tucker_IPE_v2_0.RDATA (application/x-rlang-transport) 10855364 bytes.
+4. Graham_Tucker_IPE_2_0.tab (text/tab-separated-values) 66430354 bytes.
+5. Graham_Tucker_IPE_v2_0_COW.RDATA (application/x-rlang-transport) 10816711 bytes.
+6. Graham_Tucker_IPE_2_0_COW.tab (text/tab-separated-values) 65865041 bytes.
+7. Subdivided Data.zip (application/zip) 17424681 bytes.
+8. prepped data v2.0.zip (application/zip) 24339742 bytes.
+9.0. raw data v2.0 .zip (application/zip) 136992277 bytes.
+9.1. set file paths.R (type/x-r-syntax) 2354 bytes.
+9.2. SetFilePaths.do (application/x-stata-syntax) 2192 bytes.
+9.3. append_ids.zip (application/zip) 410871 bytes.
+9.4. merge prep do files.zip (application/zip) 437041 bytes.
+9.5. IPE Master Merge Version 2.0.R (type/x-r-syntax) 70528 bytes.
+9.6. Append Stata Labels June 2017.do (application/x-stata-syntax) 64785 bytes.
