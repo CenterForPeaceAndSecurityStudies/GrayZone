@@ -5,16 +5,12 @@ author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Sec
 date: "`r Sys.Date()`"
 output:
   html_document:
+    theme: flatly
+    code_download: true
     df_print: paged
+    number_sections: yes
     toc: yes
     toc_depth: '5'
-  html_notebook:
-    fig_height: 8
-    fig_width: 12
-    number_sections: yes
-    theme: flatly
-    toc: yes
-    toc_depth: 5
     toc_float:
       collapsed: yes
 editor_options:
@@ -39,8 +35,6 @@ We load the data from the google spreadsheet tab that has aggregated the info fr
 
 For replication, the googlesheet is located in data/raw so access permissions are not a problem
 ```{r}
-#grayzone <- googlesheets::gs_title("Russian wars")
-#grayzone <- grayzone %>% googlesheets::gs_read("new_cases")
 grayzone <- read.csv(paste0(here::here(), "/data/raw/RussianWars-new_cases.csv"))
 ```
 # Save file

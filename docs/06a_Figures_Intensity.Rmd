@@ -40,7 +40,7 @@ library(ggplot2)
 ## Load data
 For this figure, we load the aggregated dataset that include the new severity codings for all cases in the 3 prior datasets as well as the new cases we have identified.
 ```{r}
-gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_cpass.rds'))
+gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
 ```
 
 # Plotting
