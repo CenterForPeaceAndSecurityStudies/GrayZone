@@ -30,58 +30,165 @@ Load the newly created data of Russia interventions post-1994.
 df <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
 ```
 
+Load a blank dataset of European countries from 1994-2018
+```{r}
+countries <- read.csv(paste0(here::here(), "/data/countries_list.csv"))
+
+# Convert to vector
+countries <- as.character(sort(unique(countries$country)))
+
+full <- data.frame(expand.grid(country = c(countries),
+                 year = 1994:2018))
+full$country <- as.character(full$country)
+
+# country code and subset to only countries with COW codes
+full$country_code_cow <- countrycode::countrycode(full$country, "country.name", "cown")
+full <- full[!is.na(full$country_code_cow), ]
+full$country_code_cow <- as.character(full$country_code_cow)
+
+# country COW abbreviation
+full$country_abbrev_cow <- countrycode::countrycode(full$country_code, "cown", "cowc")
+
+# continent
+full$continent <- countrycode::countrycode(full$country_code_cow, 'cown', 'continent')
+
+# Subset to Europe
+full <- full %>%
+  dplyr::filter(continent == "Europe")
+```
+
 # Clean
 Drop columns that describe the coding process. This table shows a list of the 60 unique target-years in the data. It drops 22 cases that are repeat Russian interventions with the same target-year.
 ```{r}
 # Subset
-df <- df %>% dplyr::select(dplyr::starts_with("resp_"), target, year_start) %>%
+df <- df %>% dplyr::select(target, year_start, dplyr::starts_with("resp_")) %>%
     dplyr::rename(year = year_start) %>%
     dplyr::mutate(target = dplyr::recode(target, US = "United States", UK = "United Kingdom"))
 df$target <- stringr::str_trim(df$target)
 
-# Figure out how to deal with multiple observations within a country-year
-df %>% dplyr::select(target, year) %>%
-  dplyr::distinct() %>%
-  DT::datatable()
+# Give ordinal value to each level
+df$resp_convmil_gro <- df$resp_convmil_gro * 5
+df$resp_convmil_airsea <- df$resp_convmil_airsea * 4
+df$resp_paramil <- df$resp_paramil * 3
+df$resp_cyberdisrup <- df$resp_cyberdisrup * 2
+df$resp_infoops <- df$resp_infoops * 1
+
+# Keep highest value per year
+for( i in 1:nrow(df)){
+  df$intensity[i] <- max(df$resp_convmil_gro[i],
+                         df$resp_convmil_airsea[i],
+                         df$resp_paramil[i], 
+                         df$resp_cyberdisrup[i], 
+                         df$resp_infoops[i])
+}
+
+# Subset to the highest value for country
+df <- df %>%
+  dplyr::group_by(target, year) %>%
+  dplyr::filter(intensity == max(intensity)) %>%
+  dplyr::select(target, year, intensity) %>%
+  dplyr::distinct()
+```
+
+Merge the cleaned gray zone data into the Europe country-year dataset
+```{r}
+# Add cow codes to gray zone data for merging
+df$country_code_cow <- countrycode::countrycode(df$target, "country.name", "cown")
+df$country_code_cow <- as.character(df$country_code_cow)
+
+# country COW abbreviation
+df$country_abbrev_cow <- countrycode::countrycode(df$country_code_cow, "cown", "cowc")
+
+# continent
+df$continent <- countrycode::countrycode(df$country_code_cow, 'cown', 'continent')
+
+# We have to manually deal with Georgia, Chechnya, Kosovo, the Czech Republic and drop the non-European observations
+## Georgia
+df$continent[df$country == "Georgia"] <- "Europe"
+
+## Chechnya
+df$continent[df$country == "Chechnya"] <- "Europe"
+
+## Kosovo
+df$continent[df$country == "Kosovo"] <- "Europe"
+
+## Czech Republic
+df$continent[df$country == "Czech Republic"] <- "Europe"
+
+## Drop Vatican City
+df <- df %>%
+  dplyr::filter(!country_abbrev_cow == "PAP")
+
+# Merge
+df <- df %>%
+  dplyr::rename(country = target)
+
+df <- dplyr::left_join(full, df)
+
+# Set non-events as 0
+df$intensity[is.na(df$intensity)] <- 0
+```
+
+# Rename vars
+```{r}
+df <- df %>%
+  dplyr::rename(cname1 = country, cabbrev1 = country_abbrev_cow, ccode1 = country_code_cow) %>%
+  dplyr::select(-continent) %>%
+  dplyr::select(year, cname1, cabbrev1, ccode1, intensity)
+
+df$ccode1 <- as.numeric(df$ccode1)
 ```
 
 # Add variables
-We add a battery of variables for the RHS of the model. First, prep by adding target state COW country codes. SideB is always Russia, so we can hard-code that variable.
+We add a battery of variables for the RHS of the model. SideB is always Russia, so we can hard-code that variable.
 ```{r}
 # COW codes
-df$ccode1 <- countrycode::countrycode(df$target, "country.name", "cown")
+df$cname2 <- "Russia"
+df$cabbrev2 <- "RUS"
 df$ccode2 <- 365
 ```
 
 ## Distance from US
-This is the independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code minimum distance using the Gleditsch and Ward cshapes dataset.
+This is the independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the Gleditsch and Ward cshapes dataset.
 ```{r}
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE)
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
 
-df_dist <- df_dist %>% dplyr::filter(ccode1 > ccode2) %>%
-  dplyr::filter(ccode2 == 2) %>%
-  dplyr::select(ccode1, mindist, year) %>%
-  dplyr::rename(mindist_us = mindist)
+df_dist <- df_dist %>%
+  dplyr::filter(numb == 2) %>%
+  dplyr::select(numa, kmdist) %>%
+  dplyr::rename(capdistkm_us = kmdist, ccode1 = numa)
 
 df <- dplyr::left_join(df, df_dist)
-
-# Code distance between the US and the US as 0
-df$mindist_us[df$ccode1 == 2] <- 0
-
-df$mindist_us <- round(df$mindist_us, digits = 0)
 ```
 
 ## Distance from Russia
 We code distance from Russia to control for Russian resolve using the same data as above.
 ```{r}
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE)
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
+
+df_dist <- df_dist %>%
+  dplyr::filter(numb == 365) %>%
+  dplyr::select(numa, kmdist) %>%
+  dplyr::rename(capdistkm_rus = kmdist, ccode1 = numa)
 
 df <- dplyr::left_join(df, df_dist)
-df <- df %>% dplyr::rename(mindist_rus = mindist)
-df$mindist_rus <- round(df$mindist_rus, digits = 0)
 
-# Code the distance between Russia and Chechnya as 0
-df$mindist_rus[df$target == "Chechnya"] <- 0
+# Add manually for Russia
+df$capdistkm_rus[df$cabbrev1 == "RUS"] <- 0
+```
+
+## NATO membership
+We code NATO membership as a binary variable for each country-year
+```{r}
+nato <- rio::import(paste0(here::here(), "/inst/extdata/ipe_data_resource/3. Graham_Tucker_IPE_v2_0.RDATA"))
+
+nato <- nato %>%
+  dplyr::select(year, ccode, NATOwhen_MEM, NATOmem_MEM) %>%
+  dplyr::mutate(NATOdur_MEM = year - NATOwhen_MEM) %>%
+  dplyr::select(-NATOwhen_MEM) %>%
+  dplyr::rename(ccode1 = ccode)
+
+df <- dplyr::left_join(df, nato)
 ```
 
 ## CINC scores
@@ -91,10 +198,12 @@ cinc <- read.csv(paste0(here::here(), '/inst/extdata/NMC_5_0.csv'))
 
 cinc_ccode1 <- cinc %>% dplyr::select(ccode, year, cinc) %>%
   dplyr::rename(ccode1 = ccode, cinc1 = cinc)
+
 df <- dplyr::left_join(df, cinc_ccode1)
 
 cinc_ccode2 <- cinc %>% dplyr::select(ccode, year, cinc) %>%
   dplyr::rename(ccode2 = ccode, cinc2 = cinc)
+
 df <- dplyr::left_join(df, cinc_ccode2)
 
 df$cinc_ratio <- df$cinc2/(df$cinc1+df$cinc2)
@@ -140,9 +249,8 @@ df$civilwar[is.na(df$civilwar)] <- 0
 We code nuclear status of the target state using the coding from from Jo and Gartzke 2007
 ```{r}
 df$nuclear1 <- 0
-df$nuclear1[df$target == "France" | 
-            df$target == "United Kingdom" |
-            df$target == "United States"] <- 1
+df$nuclear1[df$cname1 == "France" | 
+            df$cname1 == "United Kingdom"] <- 1
 ```
 
 ## GDP
@@ -156,6 +264,7 @@ df <- dplyr::left_join(df, ipe_ccode1)
 
 ipe_ccode2 <- ipe %>% dplyr::select(year, ccode, gdp_WDI_PW) %>%
   dplyr::rename(ccode2 = ccode, gdp2 = gdp_WDI_PW)
+
 df <- dplyr::left_join(df, ipe_ccode2)
 ```
 

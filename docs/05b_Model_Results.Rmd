@@ -25,5 +25,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Model 1 - Linear Regression with state-clustered standard errors
 
-
+# Model 2 - MLE with ordered probit using state-clustered standard errors
