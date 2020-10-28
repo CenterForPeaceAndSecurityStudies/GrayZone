@@ -180,19 +180,29 @@ df$capdistkm_rus[df$cabbrev1 == "RUS"] <- 0
 ## NATO membership
 We code NATO membership as a binary variable for each country-year
 ```{r}
-nato <- rio::import(paste0(here::here(), "/inst/extdata/ipe_data_resource/3. Graham_Tucker_IPE_v2_0.RDATA"))
+nato <- googlesheets4::read_sheet(ss = "https://docs.google.com/spreadsheets/d/1YlMVTe6IjgxEheRjUzITq7zSMlI3DRUSrcpGK35gKUg/edit#gid=0",
+                                  sheet = "nato_membership",
+                                  col_types = "cnnnnnnnnnnnc")
 
 nato <- nato %>%
-  dplyr::select(year, ccode, NATOwhen_MEM, NATOmem_MEM) %>%
-  dplyr::mutate(NATOdur_MEM = year - NATOwhen_MEM) %>%
-  dplyr::select(-NATOwhen_MEM) %>%
-  dplyr::rename(ccode1 = ccode)
+  dplyr::select(state, join_nato_year) %>%
+  dplyr::filter(!join_nato_year == "NA")
+
+nato$ccode1 <- countrycode::countrycode(nato$state, "country.name", "cown")
+
+nato <- nato %>%
+  dplyr::select(-state)
 
 df <- dplyr::left_join(df, nato)
+
+df <- df %>%
+  dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
+  dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
+  dplyr::rename(NATOmem_MEM = nato_memb, NATOdur_MEM = nato_memb_duration, NATOjoined_MEM = join_nato_year)
 ```
 
 ## CINC scores
-We code CINC scores to control for power disparity between the two actors. Constitent with conventional measures, we also cide the ratio of the challenger's (Russia) material capabilities ot the sum of both states capabilities
+We code CINC scores to control for power disparity between the two actors. Constitent with conventional measures, we also code the ratio of the challenger's (Russia) material capabilities ot the sum of both states capabilities
 ```{r}
 cinc <- read.csv(paste0(here::here(), '/inst/extdata/NMC_5_0.csv'))
 
@@ -256,10 +266,23 @@ df$nuclear1[df$cname1 == "France" |
 ## GDP
 We code GDP of Russia and the target state using the World Bank's World Development Indicator (WDI) published in Graham and Tucker 2017.
 ```{r}
-ipe <- rio::import(paste0(here::here(), "/inst/extdata/ipe_data_resource/3. Graham_Tucker_IPE_v2_0.RDATA"))
+WDI::WDIsearch("6.0.GDP_usd", cache = new_wdi_cache)
+
+ipe <- WDI::WDI(indicator = '6.0.GDP_usd',
+                country = "all",
+                start = 1990,
+                end = 2018)
+
+ipe$ccode1 <- countrycode::countrycode(ipe$iso2c, "iso2c", "cown")
+
+ipe_ccode1 <- ipe %>%
+  dplyr::rename(gdp_2005const = "6.0.GDP_usd") %>%
+  dplyr::select(year, ccode1, gdp_2005const)
+
 
 ipe_ccode1 <- ipe %>% dplyr::select(year, ccode, gdp_WDI_PW) %>%
   dplyr::rename(ccode1 = ccode, gdp1 = gdp_WDI_PW)
+
 df <- dplyr::left_join(df, ipe_ccode1)
 
 ipe_ccode2 <- ipe %>% dplyr::select(year, ccode, gdp_WDI_PW) %>%
