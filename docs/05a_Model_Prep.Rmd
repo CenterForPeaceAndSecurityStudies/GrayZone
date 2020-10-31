@@ -25,45 +25,154 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
 ```
 
 # Load
+## New data
 Load the newly created data of Russia interventions post-1994.
 ```{r}
 df <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
 ```
 
-Load a blank dataset of European countries from 1994-2018
+## European states
+Load a blank dataset of European countries from 1994-2018. We use the list of COW states. The time series is constant for all countries except for Montenegro which exists from 2006 onwards and Kosovo which exists from 2008 onward.
 ```{r}
-countries <- read.csv(paste0(here::here(), "/data/countries_list.csv"))
+full <- read.csv(paste0(here::here(), "/inst/extdata/system2016.csv")) %>%
+  dplyr::select(-version)
 
-# Convert to vector
-countries <- as.character(sort(unique(countries$country)))
+# Subset to Europe and code Georgia, Kosovo, Turkey, Yugoslavia, and Czech Republic as Europe
+full$continent <- countrycode::countrycode(full$ccode, 'cown', 'continent')
+full$continent[full$stateabb == "GRG"] <- "Europe"
+full$continent[full$stateabb == "KOS"] <- "Europe"
+full$continent[full$stateabb == "TUR"] <- "Europe"
+full$continent[full$stateabb == "YUG"] <- "Europe"
+full$continent[full$stateabb == "CZE" | full$stateabb == "CZR"] <- "Europe"
 
-full <- data.frame(expand.grid(country = c(countries),
-                 year = 1994:2018))
-full$country <- as.character(full$country)
-
-# country code and subset to only countries with COW codes
-full$country_code_cow <- countrycode::countrycode(full$country, "country.name", "cown")
-full <- full[!is.na(full$country_code_cow), ]
-full$country_code_cow <- as.character(full$country_code_cow)
-
-# country COW abbreviation
-full$country_abbrev_cow <- countrycode::countrycode(full$country_code, "cown", "cowc")
-
-# continent
-full$continent <- countrycode::countrycode(full$country_code_cow, 'cown', 'continent')
-
-# Subset to Europe
 full <- full %>%
-  dplyr::filter(continent == "Europe")
+  dplyr::filter(continent == "Europe") %>%
+  dplyr::filter(year > 1993) %>%
+  dplyr::select(-continent)
+
+# Add 2017 and 2018 for all states
+countries <- as.character(sort(unique(full$ccode)))
+newyr <- data.frame(expand.grid(ccode = c(countries),
+                 year = 2017:2018))
+newyr$ccode <- as.numeric(as.character(newyr$ccode))
+newyr$stateabb <- countrycode::countrycode(newyr$ccode, "cown", "cowc")
+
+full <- rbind(full, newyr)
+
+full <- full %>%
+  dplyr::rename(country_code_cow = ccode)
+
+plyr::count(full, "year")
+```
+
+## Subset of relevant European states
+We want to include all European countries that a) have conflict history with Russia between 1945-1993, b) were former Soviet states, c) are contiguous with Russia. We add a fourth criteria of states that are targets of Russian attacks at any point during our time period, which is unique from the other 3 for Austria, Malta, Spain, and Germany. We include separate measures for inclusion in both criteria for robustness
+```{r}
+# Conflict history
+## MID
+mid <- haven::read_dta(paste0(here::here(),"/inst/extdata/MID/MIDB 4.3.dta"))
+
+# Subset to columns of interest
+mid <- mid %>%
+  dplyr::select(dispnum3, ccode, styear) %>%
+  dplyr::filter(styear > 1945 & styear < 1994) %>%
+  dplyr::select(-styear) %>%
+  dplyr::group_by(dispnum3) %>%
+  dplyr::filter(any(ccode == 365)) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(!ccode == 365) %>%
+  dplyr::select(-dispnum3) %>%
+  dplyr::distinct() %>%
+  dplyr::mutate(disphist = 1) %>%
+  dplyr::rename(country_code_cow = ccode)
+
+## ICB
+icb <- read.csv(file = paste0(here::here(), '/inst/extdata/icb2v12.csv'))
+
+icb <- icb %>%
+  dplyr::select(crisno, cracid, yrtrig) %>%
+  dplyr::filter(yrtrig > 1945 & yrtrig < 1994) %>%
+  dplyr::select(-yrtrig) %>%
+  dplyr::group_by(crisno) %>%
+  dplyr::filter(any(cracid == 365)) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(!cracid == 365) %>%
+  dplyr::select(-crisno) %>%
+  dplyr::distinct() %>%
+  dplyr::rename(country_code_cow = cracid) %>%
+  dplyr::mutate(disphist = 1)
+
+## Merge the two
+disphist <- dplyr::bind_rows(mid, icb) %>%
+  dplyr::distinct()
+
+# FSU
+fsu <- read.csv(paste0(here::here(), "/data/membership.csv"))
+
+fsu <- fsu %>%
+  dplyr::select(state, fsu, wp) %>%
+  dplyr::filter(fsu == 1 | wp == 1) %>%
+  dplyr::mutate(fsu_wp = fsu == 1 | wp == 1)
+fsu$fsu_wp[fsu$fsu_wp == "TRUE"] <- 1
+
+fsu$country_code_cow <- countrycode::countrycode(fsu$state, "country.name", "cown")  
+
+fsu <- fsu %>%
+  dplyr::select(country_code_cow, fsu_wp)
+
+# Contiguous
+contig <- haven::read_dta(paste0(here::here(),"/inst/extdata/DirectContiguity320/contdird.dta"))
+
+contig <- contig %>%
+  dplyr::filter(year > 1945 & year < 1994) %>%
+  dplyr::filter(state1no == 365) %>%
+  dplyr::mutate(contig = conttype < 4) %>%
+  dplyr::select(state2no, year, contig) %>%
+  dplyr::rename(country_code_cow = state2no) %>%
+  dplyr::filter(contig == "TRUE")
+
+# In DCID, REI, or new intervention data
+cyber <- df
+
+cyber$country_code_cow <- countrycode::countrycode(cyber$target, "country.name", "cown")
+
+cyber <- cyber %>%
+  dplyr::mutate(interv = resp_convmil == 1 | 
+                  resp_convmil_gro == 1 | 
+                  resp_convmil_airsea == 1 | 
+                  resp_paramil == 1 | 
+                  resp_cyberdisrup == 1 | 
+                  resp_infoops == 1) %>%
+  dplyr::select(country_code_cow, interv) %>%
+  dplyr::distinct()
+cyber$interv[cyber$interv == "TRUE"] <- 1
+
+# Combine them all with the main data
+full <- dplyr::left_join(full, disphist)
+full <- dplyr::left_join(full, fsu)
+full <- dplyr::left_join(full, contig)
+full <- dplyr::left_join(full, cyber)
+
+full <- full %>%
+  dplyr::mutate(relevant_conserv = disphist == 1 | fsu_wp == 1 | contig == 1) %>%
+  dplyr::mutate(relevant_expansive = disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1) %>%
+  dplyr::select(stateabb, country_code_cow, year, relevant_conserv, relevant_expansive)
+
+full$relevant_conserv[full$relevant_conserv == "TRUE"] <- "1"
+full$relevant_conserv[is.na(full$relevant_conserv)] <- "0"
+
+full$relevant_expansive[full$relevant_expansive == "TRUE"] <- "1"
+full$relevant_expansive[is.na(full$relevant_expansive)] <- "0"
 ```
 
 # Clean
 Drop columns that describe the coding process. This table shows a list of the 60 unique target-years in the data. It drops 22 cases that are repeat Russian interventions with the same target-year.
 ```{r}
-# Subset
+# Subset and replace NAs with 0s for intensity variables
 df <- df %>% dplyr::select(target, year_start, dplyr::starts_with("resp_")) %>%
-    dplyr::rename(year = year_start) %>%
-    dplyr::mutate(target = dplyr::recode(target, US = "United States", UK = "United Kingdom"))
+  dplyr::rename(year = year_start) %>%
+  dplyr::mutate(target = dplyr::recode(target, US = "United States", UK = "United Kingdom")) %>%
+  tidyr::replace_na(list(resp_convmil = 0, resp_convmil_gro = 0, resp_convmil_airsea = 0, resp_paramil = 0, resp_cyberdisrup = 0, resp_infoops = 0))
 df$target <- stringr::str_trim(df$target)
 
 # Give ordinal value to each level
@@ -82,7 +191,7 @@ for( i in 1:nrow(df)){
                          df$resp_infoops[i])
 }
 
-# Subset to the highest value for country
+# Subset to the highest value for country-year
 df <- df %>%
   dplyr::group_by(target, year) %>%
   dplyr::filter(intensity == max(intensity)) %>%
@@ -90,51 +199,41 @@ df <- df %>%
   dplyr::distinct()
 ```
 
-Merge the cleaned gray zone data into the Europe country-year dataset
+Merge the cleaned gray zone data into the Europe country-year dataset. This drops the Chechnya 1999 observation since they are not a recognized European state in the COW dataset
 ```{r}
 # Add cow codes to gray zone data for merging
 df$country_code_cow <- countrycode::countrycode(df$target, "country.name", "cown")
-df$country_code_cow <- as.character(df$country_code_cow)
-
-# country COW abbreviation
-df$country_abbrev_cow <- countrycode::countrycode(df$country_code_cow, "cown", "cowc")
-
-# continent
-df$continent <- countrycode::countrycode(df$country_code_cow, 'cown', 'continent')
-
-# We have to manually deal with Georgia, Chechnya, Kosovo, the Czech Republic and drop the non-European observations
-## Georgia
-df$continent[df$country == "Georgia"] <- "Europe"
-
-## Chechnya
-df$continent[df$country == "Chechnya"] <- "Europe"
-
-## Kosovo
-df$continent[df$country == "Kosovo"] <- "Europe"
-
-## Czech Republic
-df$continent[df$country == "Czech Republic"] <- "Europe"
-
-## Drop Vatican City
+df$country_code_cow <- as.numeric(df$country_code_cow)
 df <- df %>%
-  dplyr::filter(!country_abbrev_cow == "PAP")
+  dplyr::ungroup() %>%
+  dplyr::select(country_code_cow, year, intensity)
 
 # Merge
-df <- df %>%
-  dplyr::rename(country = target)
+df <- dplyr::full_join(full, df)
 
-df <- dplyr::left_join(full, df)
+# Fix state names and abbrevations that were lost in the merging
+df$stateabb <- countrycode::countrycode(df$country_code_cow, "cown", "cowc")
+df$statename <- countrycode::countrycode(df$country_code_cow, "cown", "country.name")
 
 # Set non-events as 0
 df$intensity[is.na(df$intensity)] <- 0
+
+# Set countries that don't meet our 3-prong criteria as 0. Here, that primarily means non-European targets of Russian attacks (US, Canada, Saudi Arabia, etc) as well as some European states like Malta, Spain, Germany, and Austria
+df$relevant_conserv[is.na(df$relevant_conserv)] <- 0
+
+# We do the opposite for the countries in the expansive criteria, since those with NAs are those that were targets of an attack
+df$relevant_expansive[is.na(df$relevant_expansive)] <- 1
+
+# Drop non-countries, which is just Chechnya
+df <- df %>%
+  dplyr::filter(!is.na(country_code_cow))
 ```
 
 # Rename vars
 ```{r}
 df <- df %>%
-  dplyr::rename(cname1 = country, cabbrev1 = country_abbrev_cow, ccode1 = country_code_cow) %>%
-  dplyr::select(-continent) %>%
-  dplyr::select(year, cname1, cabbrev1, ccode1, intensity)
+  dplyr::rename(cname1 = statename, cabbrev1 = stateabb, ccode1 = country_code_cow) %>%
+  dplyr::select(year, cname1, cabbrev1, ccode1, intensity, relevant_conserv, relevant_expansive)
 
 df$ccode1 <- as.numeric(df$ccode1)
 ```
@@ -146,11 +245,16 @@ We add a battery of variables for the RHS of the model. SideB is always Russia, 
 df$cname2 <- "Russia"
 df$cabbrev2 <- "RUS"
 df$ccode2 <- 365
+
+# Re-order the vars to make things more aesthetically pleasing
+df <- df %>%
+  dplyr::select(year, cname1, cabbrev1, ccode1, cname2, cabbrev2, ccode2, relevant_conserv, relevant_expansive, intensity)
 ```
 
 ## Distance from US
-This is the independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the Gleditsch and Ward cshapes dataset.
+This is an independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the cshapes package.
 ```{r}
+# Capital distance
 df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
 
 df_dist <- df_dist %>%
@@ -159,11 +263,40 @@ df_dist <- df_dist %>%
   dplyr::rename(capdistkm_us = kmdist, ccode1 = numa)
 
 df <- dplyr::left_join(df, df_dist)
+
+## Fix edge cases where distance measures don't exist yet
+### Kosovo KOS 347. We calculate the great circle distance between Washington, DC and Pristina, Kosovo using distancecalculator.net. This is the same measure used in the cshapes package, which does not include Kosovo since it ends in 2008
+df$capdistkm_us[df$cabbrev1 == "KOS"] <- 7770
+
+### United States USA 2
+df$capdistkm_us[df$cabbrev1 == "USA"] <- 0
+
+# Minimum distance
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE, sep = " ")
+
+df_dist <- df_dist %>%
+  dplyr::filter(ccode2 == 2) %>%
+  dplyr::select(ccode1, mindist, year) %>%
+  round(df_dist$mindist) %>%
+  dplyr::rename(mindistkm_us = mindist)
+
+df <- dplyr::left_join(df, df_dist)
+
+## Fix edge cases. These values exist for other years, so we just paste them in for the years that are missing
+### Montenegro MNG 341
+df$mindistkm_us[df$cabbrev1 == "MNG"] <- 6451.2804
+
+### Kosovo KOS 347
+df$mindistkm_us[df$cabbrev1 == "KOS"] <- 6571.540
+
+### Saudi Arabia SAU 670
+df$mindistkm_us[df$cabbrev1 == "SAU"] <- 8457.862
 ```
 
 ## Distance from Russia
 We code distance from Russia to control for Russian resolve using the same data as above.
 ```{r}
+# Capital distance
 df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
 
 df_dist <- df_dist %>%
@@ -173,32 +306,104 @@ df_dist <- df_dist %>%
 
 df <- dplyr::left_join(df, df_dist)
 
-# Add manually for Russia
+## Edge cases
+### Kosovo
+df$capdistkm_rus[df$cabbrev1 == "KOS"] <- 1873
+
+## Russia
 df$capdistkm_rus[df$cabbrev1 == "RUS"] <- 0
+
+# Minimum distance
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE, sep = " ")
+
+df_dist <- df_dist %>%
+  dplyr::filter(ccode2 == 365) %>%
+  dplyr::select(ccode1, mindist, year) %>%
+  round(df_dist$mindist) %>%
+  dplyr::rename(mindistkm_rus = mindist)
+
+df <- dplyr::left_join(df, df_dist)
+
+## Fix edge cases. These values exist for other years, so we just paste them in for the years that are missing
+### Kosovo KOS 347
+df$mindistkm_rus[df$cabbrev1 == "KOS"] <- 1223.033956969140035653
+
+### Montenegro
+df$mindistkm_rus[df$cabbrev1 == "MNG"] <- 1211
+
+### Saudi Arabia
+df$mindistkm_rus[df$cabbrev1 == "SAU"] <- 1206.6503
+
+# Round distance columns to the nearest kilometer
+df$capdistkm_us <- round(df$capdistkm_us)
+df$mindistkm_us <- round(df$mindistkm_us)
+
+df$capdistkm_rus <- round(df$capdistkm_rus)
+df$mindistkm_rus <- round(df$mindistkm_rus)
+```
+
+## Recent distances
+For both countries and both measures, we do not have minimum distance data for 2017 and 2018. We impute the values from 2016 into each of those, with the assumption that land borders for European states have not changed since 2016
+```{r}
+naniar::vis_miss(df)
+
+# Create list of 2016 minimum distances
+mindist <- df %>%
+  dplyr::select(year, ccode1, mindistkm_us, mindistkm_rus) %>%
+  dplyr::filter(year == 2016) %>%
+  dplyr::select(-year) %>%
+  dplyr::rename(mindistkm_us_impute = mindistkm_us, mindistkm_rus_impute = mindistkm_rus)
+
+# Convert that into a df with year values
+countries <- as.character(sort(unique(mindist$ccode1)))
+
+newdist <- data.frame(expand.grid(ccode1 = c(countries),
+                                  year = 2017:2018))
+newdist$ccode1 <- as.numeric(as.character(newdist$ccode1))
+
+newdist <- dplyr::left_join(newdist, mindist)
+
+# Merge into original df
+df <- dplyr::left_join(df, newdist)
+
+# Replace NAs in original distance columns with new imputed columns and then delete imputed columns
+df <- df %>%
+  dplyr::mutate(mindistkm_us = dplyr::coalesce(mindistkm_us, mindistkm_us_impute)) %>%
+  dplyr::mutate(mindistkm_rus = dplyr::coalesce(mindistkm_rus, mindistkm_rus_impute)) %>%
+  dplyr::select(-mindistkm_us_impute, -mindistkm_rus_impute)
+
+naniar::vis_miss(df)
 ```
 
 ## NATO membership
 We code NATO membership as a binary variable for each country-year
 ```{r}
-nato <- googlesheets4::read_sheet(ss = "https://docs.google.com/spreadsheets/d/1YlMVTe6IjgxEheRjUzITq7zSMlI3DRUSrcpGK35gKUg/edit#gid=0",
-                                  sheet = "nato_membership",
-                                  col_types = "cnnnnnnnnnnnc")
+# Load NATO membership data
+nato <- read.csv(paste0(here::here(), "/data/membership.csv"))
 
+
+# Filter out irrelevant columns
 nato <- nato %>%
   dplyr::select(state, join_nato_year) %>%
   dplyr::filter(!join_nato_year == "NA")
 
+# Create COW code column for merging
 nato$ccode1 <- countrycode::countrycode(nato$state, "country.name", "cown")
 
 nato <- nato %>%
   dplyr::select(-state)
 
+# Merge
 df <- dplyr::left_join(df, nato)
 
+# Clean
 df <- df %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
   dplyr::rename(NATOmem_MEM = nato_memb, NATOdur_MEM = nato_memb_duration, NATOjoined_MEM = join_nato_year)
+
+df$NATOdur_MEM[is.na(df$NATOdur_MEM)] <- 0
+df$NATOmem_MEM[is.na(df$NATOmem_MEM)] <- 0
 ```
 
 ## CINC scores
@@ -260,35 +465,44 @@ We code nuclear status of the target state using the coding from from Jo and Gar
 ```{r}
 df$nuclear1 <- 0
 df$nuclear1[df$cname1 == "France" | 
-            df$cname1 == "United Kingdom"] <- 1
+              df$cname1 == "United Kingdom" |
+              df$cname1 == "United States"] <- 1
 ```
 
 ## GDP
-We code GDP of Russia and the target state using the World Bank's World Development Indicator (WDI) published in Graham and Tucker 2017.
+We code GDP of Russia and the target state using the World Bank's World Development Indicator (WDI).
 ```{r}
-WDI::WDIsearch("6.0.GDP_usd", cache = new_wdi_cache)
+temp <- as.data.frame(WDI::WDIsearch(string = "gdp"))
 
-ipe <- WDI::WDI(indicator = '6.0.GDP_usd',
+ipe <- WDI::WDI(indicator = 'NY.GDP.MKTP.KD',
                 country = "all",
-                start = 1990,
+                start = 1994,
                 end = 2018)
 
+# Target state
 ipe$ccode1 <- countrycode::countrycode(ipe$iso2c, "iso2c", "cown")
 
 ipe_ccode1 <- ipe %>%
-  dplyr::rename(gdp_2005const = "6.0.GDP_usd") %>%
-  dplyr::select(year, ccode1, gdp_2005const)
-
-
-ipe_ccode1 <- ipe %>% dplyr::select(year, ccode, gdp_WDI_PW) %>%
-  dplyr::rename(ccode1 = ccode, gdp1 = gdp_WDI_PW)
+  dplyr::rename(gdp1_2010const = "NY.GDP.MKTP.KD") %>%
+  dplyr::select(year, ccode1, gdp1_2010const)
 
 df <- dplyr::left_join(df, ipe_ccode1)
 
-ipe_ccode2 <- ipe %>% dplyr::select(year, ccode, gdp_WDI_PW) %>%
-  dplyr::rename(ccode2 = ccode, gdp2 = gdp_WDI_PW)
+# Non-target state
+ipe$ccode2 <- countrycode::countrycode(ipe$iso2c, "iso2c", "cown")
+
+ipe_ccode2 <- ipe %>%
+  dplyr::rename(gdp2_2010const = "NY.GDP.MKTP.KD") %>%
+  dplyr::select(year, ccode2, gdp2_2010const)
 
 df <- dplyr::left_join(df, ipe_ccode2)
+```
+
+## Fix edge cases
+Fix things like duplicates, spelling errors, etc.
+```{r}
+df <- df %>%
+  dplyr::distinct()
 ```
 
 # Data Summary
