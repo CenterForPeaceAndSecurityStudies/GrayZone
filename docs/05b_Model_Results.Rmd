@@ -49,164 +49,24 @@ naniar::gg_miss_var(df)
 ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
 ```
 
-# OLS
-## Conservative subset
-Here, we subset the data to just European countries that could have been the targets of an attack as per our 3 criteria (1) MID/ICB crisis with Russia from 1945-1993, 2) FSU/former Warsaw Pact, 3) contiguous with Russia). Standard errors are clustered by country.
-```{r}
-df_conserv <- df %>%
-  dplyr::filter(relevant_conserv == 1)
-```
+# MLE with ordered probit
+Using state-clustered standard errors
+```{r, eval = FALSE}
+m2 <- oglmx::oglmx(intensity ~ 
+                     capdistkm_rus +
+                     NATOmem_MEM +
+                     nuclear1,
+                   data = df,
+                   link = "probit")
 
-### Model 1
-US capital distance, NATO, and nuclear
-```{r}
-## US capital distance
-m1 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             capdistkm_us +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_conserv,
-                           cluster = "ccode1")
-
-coef(m1)
-vcov(m1)
-summary(m1)
-```
-
-### Model 2
-US minimum distance, NATO, and nuclear
-```{r}
-## US minimum distance
-m2 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             mindistkm_us +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_conserv,
-                           cluster = "ccode1")
-
-coef(m2)
-vcov(m2)
 summary(m2)
+
+oglmx::margins.oglmx(m2,
+                     ascontinuous = TRUE)
 ```
 
-### Model 3
-Russia capital distance, NATO, and nuclear
-```{r}
-## Russia capital distance
-m3 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             capdistkm_rus +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_conserv,
-                           cluster = "ccode1")
-
-coef(m3)
-vcov(m3)
-summary(m3)
-```
-
-### Model 4
-Russia minimum distance, NATO, and nuclear
-```{r}
-## Russia minimum distance
-m4 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             mindistkm_rus +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_conserv,
-                           cluster = "ccode1")
-
-coef(m4)
-vcov(m4)
-summary(m4)
-```
-
-## OLS on expansive subset
-Here, we add countries that were targets of Russian attacks post-1994 regardless of location. This adds a few European states like Spain, Germany, Malta, and Austria as well as some non-European states like the US, Canada, Saudi Arabia, and Syria. Here, standard errors are again clustered by country
-```{r}
-df_expansive <- df %>%
-  dplyr::filter(relevant_expansive == 1)
-```
-
-### Model 5
-US capital distance, NATO, and nuclear
-```{r}
-## US capital distance
-m5 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             capdistkm_us +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_expansive,
-                           cluster = "ccode1")
-
-coef(m5)
-vcov(m5)
-summary(m5)
-```
-
-### Model 6
-US minimum distance, NATO, and nuclear
-```{r}
-## US minimum distance
-m6 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             mindistkm_us +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_expansive,
-                           cluster = "ccode1")
-
-coef(m6)
-vcov(m6)
-summary(m6)
-```
-
-### Model 7
-Russia capital distance, NATO, and nuclear
-```{r}
-## Russia capital distance
-m7 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             capdistkm_rus +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_expansive,
-                           cluster = "ccode1")
-
-coef(m7)
-vcov(m7)
-summary(m7)
-```
-
-### Model 8
-Russia minimum distance, NATO, and nuclear
-```{r}
-## Russia minimum distance
-m8 <- miceadds::lm.cluster(formula = 
-                             intensity ~ 
-                             mindistkm_rus +
-                             NATOmem_MEM +
-                             nuclear1,
-                           data = df_expansive,
-                           cluster = "ccode1")
-
-coef(m8)
-vcov(m8)
-summary(m8)
-```
-
-## OLS on full set
-Here, we subset the data to only cases where there is a known Russian intervention. This means our baseline is the original cases of Russian intervention identified by DCID, REI, and ICB along with the additional cases of known Russian intervention that we have added. From that, we are only interested in the degree of Russia intervention. Importantly, that means we do not include country-years where the level of Russia intervention is "0".
-
-TBD
-
-## Visualize full OLS results
-Regression table of results
+# Cumulative results
+## Table
 ```{r, eval = FALSE}
 texreg::texreg(
   list(m1),
@@ -222,7 +82,7 @@ texreg::texreg(
 )
 ```
 
-Regression plot
+## Figure
 ```{r, eval = FALSE}
 dw1 <- dotwhisker::dwplot(m1, dot_args = list(size = 2.5),
     whisker_args = list(size = 1.5), 
@@ -256,20 +116,4 @@ dw1 <- dotwhisker::dwplot(m1, dot_args = list(size = 2.5),
         legend.justification = c(0, 0), 
         legend.background = element_rect(colour="grey80"),
         legend.title = element_blank())
-```
-
-# MLE with ordered probit
-Using state-clustered standard errors
-```{r, eval = FALSE}
-m2 <- oglmx::oglmx(intensity ~ 
-                     capdistkm_rus +
-                     NATOmem_MEM +
-                     nuclear1,
-                   data = df,
-                   link = "probit")
-
-summary(m2)
-
-oglmx::margins.oglmx(m2,
-                     ascontinuous = TRUE)
 ```

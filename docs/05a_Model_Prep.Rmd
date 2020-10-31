@@ -62,7 +62,8 @@ full <- rbind(full, newyr)
 full <- full %>%
   dplyr::rename(country_code_cow = ccode)
 
-plyr::count(full, "year")
+DT::datatable(plyr::count(full, "stateabb"))
+DT::datatable(plyr::count(full, "year"))
 ```
 
 ## Subset of relevant European states
