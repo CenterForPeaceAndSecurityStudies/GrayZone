@@ -46,7 +46,7 @@ full$continent[full$stateabb == "YUG"] <- "Europe"
 full$continent[full$stateabb == "CZE" | full$stateabb == "CZR"] <- "Europe"
 
 full <- full %>%
-  dplyr::filter(continent == "Europe") %>%
+  dplyr::filter(continent == "Europe" | stateabb == "CAN" | stateabb == "SAU" | stateabb == "SYR" | stateabb == "USA") %>% # Include non-European states in the original data
   dplyr::filter(year > 1993) %>%
   dplyr::select(-continent)
 

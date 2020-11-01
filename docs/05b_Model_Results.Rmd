@@ -78,6 +78,43 @@ df_known <- df %>%
 
 ```
 
+### Models
+We try the 4 different distance metrics
+```{r}
+m1 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     capdistkm_us +
+                     nuclear1,
+                   data = df_known,
+                   link = "probit")
+
+m2 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_known,
+                   link = "probit")
+
+m3 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     capdistkm_rus +
+                     nuclear1,
+                   data = df_known,
+                   link = "probit")
+
+m4 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_known,
+                   link = "probit")
+
+summary(m1)
+summary(m2)
+summary(m3)
+summary(m4)
+```
+
 ## Data 2: Conservative subset
 This includes European countries that could have been targets of an attack per our 3 criteria; 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
 ```{r}
@@ -87,6 +124,42 @@ df_conserv <- df %>%
 
 # Imputed values
 
+```
+
+### Models
+```{r}
+m1 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     capdistkm_us +
+                     nuclear1,
+                   data = df_conserv,
+                   link = "probit")
+
+m2 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_conserv,
+                   link = "probit")
+
+m3 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     capdistkm_rus +
+                     nuclear1,
+                   data = df_conserv,
+                   link = "probit")
+
+m4 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_conserv,
+                   link = "probit")
+
+summary(m1)
+summary(m2)
+summary(m3)
+summary(m4)
 ```
 
 ## Data 3: Expansive subset
@@ -100,17 +173,46 @@ df_expansive <- df %>%
 
 ```
 
-# MLE with ordered probit
-Using state-clustered standard errors
-```{r, eval = FALSE}
+### Models
+```{r}
 m1 <- oglmx::oglmx(intensity ~ 
-                     capdistkm_rus +
                      NATOmem_MEM +
+                     capdistkm_us +
                      nuclear1,
-                   data = df,
+                   data = df_expansive,
                    link = "probit")
 
+m2 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_expansive,
+                   link = "probit")
+
+m3 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     capdistkm_rus +
+                     nuclear1,
+                   data = df_expansive,
+                   link = "probit")
+
+m4 <- oglmx::oglmx(intensity ~ 
+                     NATOmem_MEM +
+                     mindistkm_us +
+                     nuclear1,
+                   data = df_expansive,
+                   link = "probit")
+
+summary(m1)
 summary(m2)
+summary(m3)
+summary(m4)
+```
+
+## Data 4: Full data
+This includes all country-years of all states either in Europe or targets of an attack
+```{r}
+
 ```
 
 # Cumulative results
