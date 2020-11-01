@@ -148,6 +148,13 @@ cyber <- cyber %>%
   dplyr::distinct()
 cyber$interv[cyber$interv == "TRUE"] <- 1
 
+cyber$continent <- countrycode::countrycode(cyber$country_code_cow, 'cown', 'continent')
+cyber$continent[cyber$country_code_cow == "372"] <- "Europe" # Georgia
+cyber$continent[cyber$country_code_cow == "347"] <- "Europe" # Kosovo
+cyber$continent[cyber$country_code_cow == "640"] <- "Europe" # Turkey
+cyber$continent[cyber$country_code_cow == "345"] <- "Europe" # Yugoslavia
+cyber$continent[cyber$country_code_cow == "315" | cyber$stateabb == "316"] <- "Europe" # Czech Republic
+
 # Combine them all with the main data
 full <- dplyr::left_join(full, disphist)
 full <- dplyr::left_join(full, fsu)
@@ -155,15 +162,17 @@ full <- dplyr::left_join(full, contig)
 full <- dplyr::left_join(full, cyber)
 
 full <- full %>%
-  dplyr::mutate(relevant_conserv = disphist == 1 | fsu_wp == 1 | contig == 1) %>%
-  dplyr::mutate(relevant_expansive = disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1) %>%
+  dplyr::mutate(relevant_conserv = continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1)) %>%
+  dplyr::mutate(relevant_expansive = continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1)) %>%
   dplyr::select(stateabb, country_code_cow, year, relevant_conserv, relevant_expansive)
 
 full$relevant_conserv[full$relevant_conserv == "TRUE"] <- "1"
 full$relevant_conserv[is.na(full$relevant_conserv)] <- "0"
+full$relevant_conserv <- as.numeric(full$relevant_conserv)
 
 full$relevant_expansive[full$relevant_expansive == "TRUE"] <- "1"
 full$relevant_expansive[is.na(full$relevant_expansive)] <- "0"
+full$relevant_expansive <- as.numeric(full$relevant_expansive)
 ```
 
 # Clean
@@ -219,15 +228,17 @@ df$statename <- countrycode::countrycode(df$country_code_cow, "cown", "country.n
 # Set non-events as 0
 df$intensity[is.na(df$intensity)] <- 0
 
-# Set countries that don't meet our 3-prong criteria as 0. Here, that primarily means non-European targets of Russian attacks (US, Canada, Saudi Arabia, etc) as well as some European states like Malta, Spain, Germany, and Austria
+# Set countries that don't meet our 3-prong criteria as 0. Here, that primarily means non-European targets of Russian attacks (US, Canada, Saudi Arabia, etc) as well as some European states like Malta, Spain, Germany, and Austria. Do the same for the expansive criteria
 df$relevant_conserv[is.na(df$relevant_conserv)] <- 0
-
-# We do the opposite for the countries in the expansive criteria, since those with NAs are those that were targets of an attack
-df$relevant_expansive[is.na(df$relevant_expansive)] <- 1
+df$relevant_expansive[is.na(df$relevant_expansive)] <- 0
 
 # Drop non-countries, which is just Chechnya
 df <- df %>%
   dplyr::filter(!is.na(country_code_cow))
+
+# Drop Russia since we are not counting attacks on self
+df <- df %>%
+  dplyr::filter(!country_code_cow == 365)
 ```
 
 # Rename vars
@@ -401,7 +412,8 @@ df <- dplyr::left_join(df, nato)
 df <- df %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
-  dplyr::rename(NATOmem_MEM = nato_memb, NATOdur_MEM = nato_memb_duration, NATOjoined_MEM = join_nato_year)
+  dplyr::rename(NATOmem_MEM = nato_memb, NATOdur_MEM = nato_memb_duration, NATOjoined_MEM = join_nato_year) %>%
+  dplyr::select(-NATOjoined_MEM)
 
 df$NATOdur_MEM[is.na(df$NATOdur_MEM)] <- 0
 df$NATOmem_MEM[is.na(df$NATOmem_MEM)] <- 0
@@ -473,8 +485,6 @@ df$nuclear1[df$cname1 == "France" |
 ## GDP
 We code GDP of Russia and the target state using the World Bank's World Development Indicator (WDI).
 ```{r}
-temp <- as.data.frame(WDI::WDIsearch(string = "gdp"))
-
 ipe <- WDI::WDI(indicator = 'NY.GDP.MKTP.KD',
                 country = "all",
                 start = 1994,

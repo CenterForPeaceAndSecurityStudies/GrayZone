@@ -33,26 +33,77 @@ Basic summary statistics of the data and what it includes
 DT::datatable(df)
 funModeling::plot_num(df)
 
-hist(df$intensity)
-hist(df$capdistkm_us)
-hist(df$capdistkm_rus)
-
 df %>%
   dplyr::select(intensity, capdistkm_us, capdistkm_rus, NATOmem_MEM) %>%
   GGally::ggpairs()
 ```
 
-# Impute missing data
-We are missing data, primarily for certain control variables in later years
+# Create data versions
+We create 3 versions of the data below; known attacks, conservative subset, and expansive subset, based on the inclusion criteria of the universe of cases. For each subset of the data, we create 2 dataframes, one with known values, and a second with imputed values for missing covariates. The covariates with missing data are noted here and are relevant for inclusion of control variables. In most cases, missing covariates are for later years in the dataset (post-2012 or post-2016). In a few cases, there are countries where certain covariates are not known, like missing GDP data for Kosovo and Luxembourg from the World Bank data.
 ```{r}
+# Identify missingness
 naniar::gg_miss_var(df)
 ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
+
+# Created imputed version
+aout <- df %>%
+  dplyr::select(-c(cabbrev1, ccode1, cname2, cabbrev2, ccode2)) %>%
+  Amelia::amelia(m = 10,
+                 ts = "year",
+                 cs = "cname1",
+                 polytime = 1,
+                 interecs = TRUE,
+                 p2s = 1)
+
+# Plot imputation values for the variables with missing data
+plot(aout)
+
+Amelia::overimpute(aout, var = "cinc1")
+Amelia::overimpute(aout, var = "cinc2")
+Amelia::overimpute(aout, var = "cinc_ratio")
+Amelia::overimpute(aout, var = "polity1")
+Amelia::overimpute(aout, var = "polity2")
+Amelia::overimpute(aout, var = "polity_intaxn")
+Amelia::overimpute(aout, var = "gdp2_2010const")
+```
+
+## Data 1: Known attacks
+This includes only country-years where there was a known Russian attack. As a result, there are no values of 0 for the DV. This sample includes non-European states like the US, Canada, Saudi Arabia, and Syria
+```{r}
+# No imputed values
+df_known <- df %>%
+  dplyr::filter(intensity > 0)
+
+# Imputed values
+
+```
+
+## Data 2: Conservative subset
+This includes European countries that could have been targets of an attack per our 3 criteria; 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
+```{r}
+# No imputed values
+df_conserv <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+# Imputed values
+
+```
+
+## Data 3: Expansive subset
+Same as the conservative subset, but also adds a fourth criteria of European states that were targets of a Russian attack from 1994-2018. This adds Spain, Germany, Austria, and Malta
+```{r}
+# No imputed values
+df_expansive <- df %>%
+  dplyr::filter(relevant_expansive == 1)
+
+# Imputed values
+
 ```
 
 # MLE with ordered probit
 Using state-clustered standard errors
 ```{r, eval = FALSE}
-m2 <- oglmx::oglmx(intensity ~ 
+m1 <- oglmx::oglmx(intensity ~ 
                      capdistkm_rus +
                      NATOmem_MEM +
                      nuclear1,
@@ -60,9 +111,6 @@ m2 <- oglmx::oglmx(intensity ~
                    link = "probit")
 
 summary(m2)
-
-oglmx::margins.oglmx(m2,
-                     ascontinuous = TRUE)
 ```
 
 # Cumulative results
