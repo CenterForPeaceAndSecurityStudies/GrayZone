@@ -509,11 +509,13 @@ ipe_ccode2 <- ipe %>%
 df <- dplyr::left_join(df, ipe_ccode2)
 ```
 
-## Fix edge cases
+# Fix edge cases
 Fix things like duplicates, spelling errors, etc.
 ```{r}
 df <- df %>%
   dplyr::distinct()
+
+df$intensity <- as.factor(df$intensity)
 ```
 
 # Data Summary
