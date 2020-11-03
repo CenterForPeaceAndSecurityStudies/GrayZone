@@ -163,7 +163,7 @@ full <- dplyr::left_join(full, cyber)
 
 full <- full %>%
   dplyr::mutate(relevant_conserv = continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1)) %>%
-  dplyr::mutate(relevant_expansive = continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1)) %>%
+  dplyr::mutate(relevant_expansive = (disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1)) %>%
   dplyr::select(stateabb, country_code_cow, year, relevant_conserv, relevant_expansive)
 
 full$relevant_conserv[full$relevant_conserv == "TRUE"] <- "1"
@@ -263,7 +263,8 @@ df <- df %>%
   dplyr::select(year, cname1, cabbrev1, ccode1, cname2, cabbrev2, ccode2, relevant_conserv, relevant_expansive, intensity)
 ```
 
-## Distance from US
+## Distance
+### From US
 This is an independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the cshapes package.
 ```{r}
 # Capital distance
@@ -271,8 +272,8 @@ df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header 
 
 df_dist <- df_dist %>%
   dplyr::filter(numb == 2) %>%
-  dplyr::select(numa, kmdist) %>%
-  dplyr::rename(capdistkm_us = kmdist, ccode1 = numa)
+  dplyr::select(ida, numa, kmdist) %>%
+  dplyr::rename(capdistkm_us = kmdist, ccode1 = numa, cabbrev1 = ida)
 
 df <- dplyr::left_join(df, df_dist)
 
@@ -305,7 +306,7 @@ df$mindistkm_us[df$cabbrev1 == "KOS"] <- 6571.540
 df$mindistkm_us[df$cabbrev1 == "SAU"] <- 8457.862
 ```
 
-## Distance from Russia
+### From Russia
 We code distance from Russia to control for Russian resolve using the same data as above.
 ```{r}
 # Capital distance
@@ -313,8 +314,8 @@ df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header 
 
 df_dist <- df_dist %>%
   dplyr::filter(numb == 365) %>%
-  dplyr::select(numa, kmdist) %>%
-  dplyr::rename(capdistkm_rus = kmdist, ccode1 = numa)
+  dplyr::select(ida, numa, kmdist) %>%
+  dplyr::rename(capdistkm_rus = kmdist, ccode1 = numa, cabbrev1 = ida)
 
 df <- dplyr::left_join(df, df_dist)
 
@@ -354,7 +355,7 @@ df$capdistkm_rus <- round(df$capdistkm_rus)
 df$mindistkm_rus <- round(df$mindistkm_rus)
 ```
 
-## Recent distances
+### Recent years
 For both countries and both measures, we do not have minimum distance data for 2017 and 2018. We impute the values from 2016 into each of those, with the assumption that land borders for European states have not changed since 2016
 ```{r}
 naniar::vis_miss(df)
@@ -438,17 +439,22 @@ df$cinc_ratio <- df$cinc2/(df$cinc1+df$cinc2)
 ```
 
 ## Regime type
-We code polity scores to control for whether or not both sides are democracies. In alignment with Gartzke and Jo 2009, they are re-scales from -10-10 to 0-20 so allow for a multiplicative variable
+We code polity scores to control for whether or not both sides are democracies. In alignment with Gartzke and Jo 2009, they are re-scales from -10-10 to 0-20 so allow for a multiplicative variable. We also convert each to a dummy variable for democracy if polity is greater than 6
 ```{r}
-polity <- psData::PolityGet(vars = 'polity2', OutCountryID = 'cown')
+polity <- readxl::read_xls(paste0(here::here(), "/inst/extdata/p5v2018.xls"))
+
 polity$polity2_scaled <- polity$polity2 + 10
 
-polity_ccode1 <- polity %>% dplyr::select(cown, year, polity2_scaled) %>%
-  dplyr::rename(ccode1 = cown, polity1 = polity2_scaled)
+polity_ccode1 <- polity %>% dplyr::select(ccode, year, polity2_scaled, polity2) %>%
+  dplyr::mutate(demo1 = ifelse(polity2 >= 6, 1, 0)) %>%
+  dplyr::rename(ccode1 = ccode, polity1 = polity2_scaled) %>%
+  dplyr::select(-polity2)
 df <- dplyr::left_join(df, polity_ccode1)
 
-polity_ccode2 <- polity %>% dplyr::select(cown, year, polity2_scaled) %>%
-  dplyr::rename(ccode2 = cown, polity2 = polity2_scaled)
+polity_ccode2 <- polity %>% dplyr::select(ccode, year, polity2_scaled, polity2) %>%
+  dplyr::mutate(demo2 = ifelse(polity2 > 6, 1, 0)) %>%
+  dplyr::select(-polity2) %>%
+  dplyr::rename(ccode2 = ccode, polity2 = polity2_scaled)
 df <- dplyr::left_join(df, polity_ccode2)
 
 df$polity_intaxn <- df$polity1 * df$polity2
@@ -482,10 +488,10 @@ df$nuclear1[df$cname1 == "France" |
               df$cname1 == "United States"] <- 1
 ```
 
-## GDP
-We code GDP of Russia and the target state using the World Bank's World Development Indicator (WDI).
+## GDP and population
+We code GDP and GDP per capita of Russia and the target state using the World Bank's World Development Indicator (WDI).
 ```{r}
-ipe <- WDI::WDI(indicator = 'NY.GDP.MKTP.KD',
+ipe <- WDI::WDI(indicator = c('NY.GDP.PCAP.KD', 'NY.GDP.MKTP.KD', 'SP.POP.TOTL'),
                 country = "all",
                 start = 1994,
                 end = 2018)
@@ -494,8 +500,12 @@ ipe <- WDI::WDI(indicator = 'NY.GDP.MKTP.KD',
 ipe$ccode1 <- countrycode::countrycode(ipe$iso2c, "iso2c", "cown")
 
 ipe_ccode1 <- ipe %>%
-  dplyr::rename(gdp1_2010const = "NY.GDP.MKTP.KD") %>%
-  dplyr::select(year, ccode1, gdp1_2010const)
+  dplyr::rename(gdppc1_2010const = "NY.GDP.PCAP.KD", gdp1_2010const = "NY.GDP.MKTP.KD", pop1 = "SP.POP.TOTL") %>%
+  dplyr::select(year, ccode1, gdppc1_2010const, gdp1_2010const, pop1)
+
+# World Bank has Yugoslavia coded as Serbia and Kosovo has no COW code, so we fix those before merging
+ipe$ccode1[ipe$country == "Serbia"] <- 345
+ipe$ccode1[ipe$country == "Kosovo"] <- 347
 
 df <- dplyr::left_join(df, ipe_ccode1)
 
@@ -503,19 +513,119 @@ df <- dplyr::left_join(df, ipe_ccode1)
 ipe$ccode2 <- countrycode::countrycode(ipe$iso2c, "iso2c", "cown")
 
 ipe_ccode2 <- ipe %>%
-  dplyr::rename(gdp2_2010const = "NY.GDP.MKTP.KD") %>%
-  dplyr::select(year, ccode2, gdp2_2010const)
+  dplyr::rename(gdppc2_2010const = "NY.GDP.PCAP.KD", gdp2_2010const = "NY.GDP.MKTP.KD", pop2 = "SP.POP.TOTL") %>%
+  dplyr::select(year, ccode2, gdppc2_2010const, gdp2_2010const, pop2)
 
 df <- dplyr::left_join(df, ipe_ccode2)
+```
+
+## Country age
+We calculate how long a country has existed, since newness may proxy for state instability or other conditions that make intervention by a great power more likely. We use COW data for the years a country existed. Although that only goes as far back as 1816, it should be sufficient given the effect of this variable is not linear
+```{r}
+# Load COW data of country-years in the international system
+age <- read.csv(paste0(here::here(), "/inst/extdata/system2016.csv")) %>%
+  dplyr::select(-version)
+
+# Find earliest year for each country
+age <- age %>%
+  dplyr::group_by(ccode) %>%
+  dplyr::top_n(-1) %>%
+  dplyr::select(-stateabb) %>%
+  dplyr::rename(startyr = year, ccode1 = ccode)
+
+# Merge
+df <- dplyr::left_join(df, age)
+
+# Create new var for country age
+df <- df %>%
+  dplyr::mutate(age1 = (year - startyr)) %>%
+  dplyr::select(-startyr)
+```
+
+## ELF
+We take a measure of ethno-linguistic fractionalization (ELF) from the Historical Index of Ethnic Fractionalizatin (HEIF) dataset that covers 1945-2013. The index measures the probability that2 randomly drawn individuals are not from the same ethnic group
+```{r}
+elf <- read.csv(paste0(here::here(), "/inst/extdata/HIEF_data.csv"))
+
+# Match COW codes
+elf$ccode1 <- countrycode::countrycode(elf$Country, "country.name", "cown")
+
+# Rename vars
+elf <- elf %>%
+  dplyr::rename(year = Year, elf = EFindex) %>%
+  dplyr::select(-Country)
+
+# Merge
+df <- dplyr::left_join(df, elf)
 ```
 
 # Fix edge cases
 Fix things like duplicates, spelling errors, etc.
 ```{r}
-df <- df %>%
+# Make DV factor
+df$intensity <- as.factor(df$intensity)
+
+# Re-add continent info
+continent <- democracyData::country_year_coder(df, 
+                                  code_col = ccode1,
+                                  date_col = year, 
+                                  code_type = "cown", 
+                                  match_type = "code only",
+                                  to_system = "cow", 
+                                  include_in_output = c("official_continent")) %>%
+  dplyr::rename(continent = official_continent) %>%
+  dplyr::select(year, cabbrev1, ccode1, continent)
+
+continent$continent[df$cabbrev1 == "YUG" | df$cabbrev1 == "KOS" | df$cabbrev1 == "GRG"] <- "Europe"
+
+continent <- continent %>%
   dplyr::distinct()
 
-df$intensity <- as.factor(df$intensity)
+df <- dplyr::left_join(df, continent)
+
+# Drop microstates
+df$gwcode <- countrycode::countrycode(df$ccode1, "cown", "gwn")
+
+df <- df %>%
+  dplyr::mutate(ccode1 = gwcode) %>%
+  dplyr::select(-gwcode) %>%
+  dplyr::filter(!is.na(ccode1))
+
+# Log distance and GDP measures
+# Add 1.01 to account for values of 0 in distance
+df$lncapdistkm_us <- log(df$capdistkm_us + 1.01)
+df$lnmindistkm_us <- log(df$mindistkm_us + 1.01)
+df$lncapdistkm_rus <- log(df$capdistkm_rus + 1.01)
+df$lnmindistkm_rus <- log(df$mindistkm_rus + 1.01)
+
+# Log gdp measures
+df$lngdp1_2010const <- log(df$gdp1_2010const)
+df$lngdp2_2010const <- log(df$gdp2_2010const)
+df$lngdppc1_2010const <- log(df$gdppc1_2010const)
+df$lngdppc2_2010const <- log(df$gdppc2_2010const)
+
+DT::datatable(plyr::count(df, "cname1"))
+DT::datatable(plyr::count(df, "year"))
+
+# Reorder df
+df <- df %>%
+  dplyr::select(year,
+                cname1, cabbrev1, ccode1,
+                cname2, cabbrev2, ccode2,
+                continent, relevant_expansive, relevant_conserv,
+                intensity,
+                capdistkm_us, mindistkm_us, capdistkm_rus, mindistkm_rus,
+                lncapdistkm_us, lnmindistkm_us, lncapdistkm_rus, lnmindistkm_rus,
+                NATOmem_MEM, NATOdur_MEM,
+                cinc1, cinc2, cinc_ratio,
+                nuclear1,
+                gdp1_2010const, lngdp1_2010const, gdp2_2010const, lngdp2_2010const,
+                gdppc1_2010const, lngdppc1_2010const, gdppc2_2010const, lngdppc2_2010const,
+                pop,
+                elf,
+                age1,
+                demo1, demo2, polity1, polity2, polity_intaxn,
+                civilwar)
 ```
 
 # Data Summary
