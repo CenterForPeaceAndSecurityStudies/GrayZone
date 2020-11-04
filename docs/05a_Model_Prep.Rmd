@@ -443,7 +443,7 @@ cinc_ccode2 <- cinc %>% dplyr::select(ccode, year, cinc) %>%
 
 df <- dplyr::left_join(df, cinc_ccode2)
 
-df$cinc_ratio <- df$cinc2/(df$cinc1+df$cinc2)
+df$cinc_ratio <- df$cinc1/(df$cinc1+df$cinc2)
 ```
 
 ## Regime type
