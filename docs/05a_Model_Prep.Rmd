@@ -132,6 +132,8 @@ contig <- contig %>%
   dplyr::rename(country_code_cow = state2no) %>%
   dplyr::filter(contig == "TRUE")
 
+contig$year <- as.integer(contig$year)
+
 # In DCID, REI, or new intervention data
 cyber <- df
 
@@ -296,7 +298,6 @@ df_dist <- df_dist %>%
   dplyr::select(ccode1, mindist, year) %>%
   round(df_dist$mindist) %>%
   dplyr::rename(mindistkm_us = mindist)
-
 df <- dplyr::left_join(df, df_dist)
 
 ## Fix edge cases. These values exist for other years, so we just paste them in for the years that are missing
@@ -646,6 +647,10 @@ df$lngdp2_2010const <- log(df$gdp2_2010const)
 df$lngdppc1_2010const <- log(df$gdppc1_2010const)
 df$lngdppc2_2010const <- log(df$gdppc2_2010const)
 
+# Log population measures
+df$lnpop1 <- log(df$pop1 + 1.01)
+df$lnpop2 <- log(df$pop2 + 1.01)
+
 DT::datatable(plyr::count(df, "cname1"))
 DT::datatable(plyr::count(df, "year"))
 
@@ -663,7 +668,7 @@ df <- df %>%
                 nuclear1,
                 gdp1_2010const, lngdp1_2010const, gdp2_2010const, lngdp2_2010const,
                 gdppc1_2010const, lngdppc1_2010const, gdppc2_2010const, lngdppc2_2010const,
-                pop1, pop2,
+                pop1, lnpop1, pop2, lnpop2, 
                 elf,
                 age1,
                 demo1, demo2, polity1, polity2, polity_intaxn,

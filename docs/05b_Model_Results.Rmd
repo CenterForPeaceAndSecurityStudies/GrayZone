@@ -24,22 +24,91 @@ library(ggplot2)
 # Load data
 Load the newly created data with all relevant covariates
 ```{r}
-df <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
+df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
 ```
 
-# Data prep
-## Summary
-Basic summary statistics of the data and what it includes
+# Create samples
+## Data 2: Relevant targets
+Only includes states that meet at least one of the following criteria: 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
+```{r}
+# Main df
+df <- df_full %>%
+  dplyr::filter(continent == "Europe")
+
+# Relevant European states
+df_conserv <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+```
+
+## Data 3: Known targets
+Only include states that were known targets of an attack from 1994-2018
+```{r}
+
+```
+
+# Summary stats
 ```{r}
 DT::datatable(df)
 funModeling::plot_num(df)
 
 df %>%
-  dplyr::select(intensity, capdistkm_us, mindistkm_us, capdistkm_rus, mindistkm_rus, NATOmem_MEM) %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus) %>%
   dplyr::mutate(intensity = as.numeric(intensity)) %>%
   GGally::ggpairs()
 ```
 
+## DV: Intensity
+```{r}
+df_full %>%
+  dplyr::filter(!intensity == 0) %>%
+  dplyr::select(intensity) %>%
+  dplyr::group_by(intensity) %>%
+  dplyr::summarise(count = dplyr::n()) %>%
+  dplyr::mutate(intensity = dplyr::recode_factor(intensity,
+                                                 "1" = "1 Info ops",
+                                                 "2" = "2 Cyber Disrup.",
+                                                 "3" = "3 Paramil.",
+                                                 "4" = "4 Mil (Air/sea)",
+                                                 "5" = "5 Mil (Gro)")) %>%
+  ggplot(aes(x = intensity,
+             y = count)
+         ) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = count),
+            size = 3.5,
+            vjust = -0.5) +
+  lims(y = c(0, 41)) +
+  labs(title = "Intensity of Russia Interventions (1994 - 2018)",
+       x = "",
+       y = "Number of Country-years"
+       ) +
+  theme_bw() +
+  theme(panel.grid = element_blank(), 
+        text = element_text(size = 14)
+        )
+```
+
+## EV: NATO and distance
+```{r}
+# NATO
+
+
+# Minimum distance from Russia
+
+```
+
+## Controls
+
+
+## Full summary
+```{r}
+df_full %>%
+  dplyr::select(year, intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, ln_pop1, civilwar, demo1, nuclear1, cinc_ratio)
+
+```
+
+# Data prep
 ## Imputing missing values
 We create 2 sets of the data, one with known values, and a second with imputed values for missing covariates. The covariates with missing data are noted here and are relevant for inclusion of control variables. In most cases, missing covariates are for later years in the dataset (post-2012 or post-2016). In a few cases, there are countries where certain covariates are not known, like missing GDP data for Kosovo and Luxembourg from the World Bank data.
 ```{r}
@@ -108,7 +177,51 @@ robustse <- function(x, coef = c("logit", "odd.ratio", "probs")) {
 }
 ```
 
-# Data subsetting
+# Model 1
+global baseline "natomem_mem lnmindistkm_rus  i.year"
+
+```{r}
+m1a <- MASS::polr(intensity ~ 
+                   NATOmem_MEM +
+                   lncapdistkm_us +
+                   demo1 +
+                   civilwar +
+                   nuclear1,
+                 data = df_euro,
+                 method = "probit",
+                 Hess = TRUE)
+
+```
+
+# Model 2
+global controls1 "natomem_mem lnmindistkm_rus gdppc1_2010const ln_pop1 civilwar demo1 nuclear1 i.year"
+
+```{r}
+
+```
+
+# Model 3
+global controls2 "natomem_mem lnmindistkm_rus cinc_ratio_e demo1_e nuclear1 civilwar i.year"
+
+```{r}
+
+```
+
+# Marginal effects
+
+# Alternate specifications
+## Extrapolate missingness
+
+## Zero inflated ordered probit
+
+## Alternate samples
+### Relevant states
+
+### Known targets
+
+
+
+# ***Archive
 We create 4 versions of the data below based on the inclusion criteria for the universe of cases. In all cases, the unit of analysis is the country-year
 1. Full data - includes all countries in the newly created data on Russian interventions and all European states
 2. Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
@@ -117,14 +230,6 @@ We create 4 versions of the data below based on the inclusion criteria for the u
 
 ## Data 1: European states
 This includes all years (1994-2018) of European states
-
-### Subset and impute
-```{r}
-# No imputed values
-df_euro <- df %>%
-  dplyr::filter(continent == "Europe")
-```
-
 ### Models
 #### M1a: NATO + US cap distance
 ```{r}
@@ -286,530 +391,6 @@ texreg::screenreg(list(m1a, m1b, m1c, m1d),
   ci.force.level = 0.95
 )
 ```
-## Data 2: Relevant targets
-Only includes states that meet at least one of the following criteria: 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
-
-### Subset and impute
-```{r}
-# No imputed values
-df_conserv <- df %>%
-  dplyr::filter(relevant_conserv == 1)
-
-# Imputed values
-
-```
-
-### Models
-#### M2a: NATO + US cap distance
-```{r}
-m2a <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_conserv,
-                  method = "probit",
-                  Hess = TRUE)
-
-m2a
-summary(m2a)
-
-# Robust standard errors
-robustse(m2a, coef = "logit")
-
-# P values
-m2a_coef <- data.frame(coef(summary(m2a)))
-m2a_coef$pval <- round((pnorm(abs(m2a_coef$t.value), lower.tail = FALSE) * 2), 2)
-m2a_coef
-
-# Odds ratios
-m2a_or <- exp(coef(m2a))
-m2a_or
-
-# Predicted probabilities
-m2a_pred <- predict(m2a, type = "probs")
-summary(m2a_pred)
-
-# Marginal effects
-m2a_me <- erer::ocME(m2a)
-m2a_me$out
-```
-
-
-#### M2b: NATO + US min distance
-```{r}
-m2b <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lnmindistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_conserv,
-                  method = "probit",
-                  Hess = TRUE)
-
-m2b
-summary(m2b)
-
-# Robust standard errors
-robustse(m2b, coef = "logit")
-
-# P values
-m2b_coef <- data.frame(coef(summary(m2b)))
-m2b_coef$pval <- round((pnorm(abs(m2b_coef$t.value), lower.tail = FALSE) * 2), 2)
-m2b_coef
-
-# Odds ratios
-m2b_or <- exp(coef(m2b))
-m2b_or
-
-# Predicted probabilities
-m2b_pred <- predict(m2b, type = "probs")
-summary(m2b_pred)
-
-# Marginal effects
-m2b_me <- erer::ocME(m2b)
-m2b_me$out
-```
-
-#### M2c: NATO + Russia cap distance
-```{r}
-m2c <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_rus +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_conserv,
-                  method = "probit",
-                  Hess = TRUE)
-
-m2c
-summary(m2c)
-
-# Robust standard errors
-robustse(m2c, coef = "logit")
-
-# P values
-m2c_coef <- data.frame(coef(summary(m2c)))
-m2c_coef$pval <- round((pnorm(abs(m2c_coef$t.value), lower.tail = FALSE) * 2), 2)
-m2c_coef
-
-# Odds ratios
-m2c_or <- exp(coef(m2c))
-m2c_or
-
-# Predicted probabilities
-m2c_pred <- predict(m2c, type = "probs")
-summary(m2c_pred)
-
-# Marginal effects
-m2c_me <- erer::ocME(m2c)
-m2c_me$out
-```
-
-#### M2d: NATO + Russia min distance
-```{r}
-m2d <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lnmindistkm_rus +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_conserv,
-                  method = "probit",
-                  Hess = TRUE)
-
-m2d
-summary(m2d)
-
-# Robust standard errors
-robustse(m2d, coef = "logit")
-
-# P values
-m2d_coef <- data.frame(coef(summary(m2d)))
-m2d_coef$pval <- round((pnorm(abs(m2d_coef$t.value), lower.tail = FALSE) * 2), 2)
-m2d_coef
-
-# Odds ratios
-m2d_or <- exp(coef(m2d))
-m2d_or
-
-# Predicted probabilities
-m2d_pred <- predict(m2d, type = "probs")
-summary(m2d_pred)
-
-# Marginal effects
-m2d_me <- erer::ocME(m2d)
-m2d_me$out
-```
-
-### Results
-```{r}
-texreg::texreg(list(m2a, m2b, m2c, m2d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95,
-  file = "../paper/model2.tex"
-)
-
-texreg::screenreg(list(m2a, m2b, m2c, m2d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95
-)
-```
-
-## Data 3: Expansive subset
-Includes all country-years of all states that meet the above 3 criteria, plus all country-years of states that were targets of a Russian attack post-1993.
-
-### Subset and impute
-```{r}
-# No imputed values
-df_expansive <- df %>%
-  dplyr::filter(relevant_expansive == 1) %>%
-  dplyr::select(-c(relevant_expansive, relevant_conserv))
-
-# Imputed values
-
-```
-
-### Models
-#### M3a: NATO + US cap distance
-```{r}
-m3a <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_expansive,
-                  method = "probit",
-                  Hess = TRUE)
-
-m3a
-summary(m3a)
-
-# Robust standard errors
-robustse(m3a, coef = "logit")
-
-# P values
-m3a_coef <- data.frame(coef(summary(m3a)))
-m3a_coef$pval <- round((pnorm(abs(m3a_coef$t.value), lower.tail = FALSE) * 2), 2)
-m3a_coef
-
-# Odds ratios
-m3a_or <- exp(coef(m3a))
-m3a_or
-
-# Predicted probabilities
-m3a_pred <- predict(m3a, type = "probs")
-summary(m3a_pred)
-
-# Marginal effects
-m3a_me <- erer::ocME(m3a)
-m3a_me$out
-```
-
-
-#### M3b: NATO + US min distance
-```{r}
-m3b <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_expansive,
-                  method = "probit",
-                  Hess = TRUE)
-
-m3b
-summary(m3b)
-
-# Robust standard errors
-robustse(m3b, coef = "logit")
-
-# P values
-m3b_coef <- data.frame(coef(summary(m3b)))
-m3b_coef$pval <- round((pnorm(abs(m3b_coef$t.value), lower.tail = FALSE) * 2), 2)
-m3b_coef
-
-# Odds ratios
-m3b_or <- exp(coef(m3b))
-m3b_or
-
-# Predicted probabilities
-m3b_pred <- predict(m3b, type = "probs")
-summary(m3b_pred)
-
-# Marginal effects
-m3b_me <- erer::ocME(m3b)
-m3b_me$out
-```
-
-#### M3c: NATO + Russia cap distance
-```{r}
-m3c <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_expansive,
-                  method = "probit",
-                  Hess = TRUE)
-
-m3c
-summary(m3c)
-
-# Robust standard errors
-robustse(m3c, coef = "logit")
-
-# P values
-m3c_coef <- data.frame(coef(summary(m3c)))
-m3c_coef$pval <- round((pnorm(abs(m3c_coef$t.value), lower.tail = FALSE) * 2), 2)
-m3c_coef
-
-# Odds ratios
-m3c_or <- exp(coef(m3c))
-m3c_or
-
-# Predicted probabilities
-m3c_pred <- predict(m3c, type = "probs")
-summary(m3c_pred)
-
-# Marginal effects
-m3c_me <- erer::ocME(m3c)
-m3c_me$out
-```
-
-#### M3d: NATO + Russia min distance
-```{r}
-m3d <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_expansive,
-                  method = "probit",
-                  Hess = TRUE)
-
-m3d
-summary(m3d)
-
-# Robust standard errors
-robustse(m3d, coef = "logit")
-
-# P values
-m3d_coef <- data.frame(coef(summary(m3d)))
-m3d_coef$pval <- round((pnorm(abs(m3d_coef$t.value), lower.tail = FALSE) * 2), 2)
-m3d_coef
-
-# Odds ratios
-m3d_or <- exp(coef(m3d))
-m3d_or
-
-# Predicted probabilities
-m3d_pred <- predict(m3d, type = "probs")
-summary(m3d_pred)
-
-# Marginal effects
-m3d_me <- erer::ocME(m3d)
-m3d_me$out
-```
-
-### Results
-```{r}
-texreg::texreg(list(m3a, m3b, m3c, m3d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95,
-  file = "../paper/model1.tex"
-)
-
-texreg::screenreg(list(m3a, m3b, m3c, m3d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95
-)
-```
-
-## Data 4: Known attacks
-This includes only country-years where there was a known Russian attack. As a result, there are no values of 0 for the DV. This sample includes non-European states like the US, Canada, Saudi Arabia, and Syria
-
-### Subset and impute
-```{r}
-# No imputed values
-df_known <- df %>%
-  dplyr::filter(!intensity == 0)
-
-# Imputed values
-
-```
-
-### Models
-#### M4a: NATO + US cap distance
-```{r}
-m4a <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_known,
-                  method = "probit",
-                  Hess = TRUE)
-
-m4a
-summary(m4a)
-
-# Robust standard errors
-robustse(m4a, coef = "logit")
-
-# P values
-m4a_coef <- data.frame(coef(summary(m4a)))
-m4a_coef$pval <- round((pnorm(abs(m4a_coef$t.value), lower.tail = FALSE) * 2), 2)
-m4a_coef
-
-# Odds ratios
-m4a_or <- exp(coef(m4a))
-m4a_or
-
-# Predicted probabilities
-m4a_pred <- predict(m4a, type = "probs")
-summary(m4a_pred)
-
-# Marginal effects
-m4a_me <- erer::ocME(m4a)
-m4a_me$out
-```
-
-#### M4b: NATO + US min distance
-```{r}
-m4b <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_known,
-                  method = "probit",
-                  Hess = TRUE)
-
-m4b
-summary(m4b)
-
-# Robust standard errors
-robustse(m4b, coef = "logit")
-
-# P values
-m4b_coef <- data.frame(coef(summary(m4b)))
-m4b_coef$pval <- round((pnorm(abs(m4b_coef$t.value), lower.tail = FALSE) * 2), 2)
-m4b_coef
-
-# Odds ratios
-m4b_or <- exp(coef(m4b))
-m4b_or
-
-# Predicted probabilities
-m4b_pred <- predict(m4b, type = "probs")
-summary(m4b_pred)
-
-# Marginal effects
-m4b_me <- erer::ocME(m4b)
-m4b_me$out
-```
-
-#### M4c: NATO + Russia cap distance
-```{r}
-m4c <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_known,
-                  method = "probit",
-                  Hess = TRUE)
-
-m4c
-summary(m4c)
-
-# Robust standard errors
-robustse(m4c, coef = "logit")
-
-# P values
-m4c_coef <- data.frame(coef(summary(m4c)))
-m4c_coef$pval <- round((pnorm(abs(m4c_coef$t.value), lower.tail = FALSE) * 2), 2)
-m4c_coef
-
-# Odds ratios
-m4c_or <- exp(coef(m4c))
-m4c_or
-
-# Predicted probabilities
-m4c_pred <- predict(m4c, type = "probs")
-summary(m4c_pred)
-
-# Marginal effects
-m4c_me <- erer::ocME(m4c)
-m4c_me$out
-```
-
-#### M4d: NATO + Russia min distance
-```{r}
-m4d <- MASS::polr(intensity ~ 
-                    NATOmem_MEM +
-                    lncapdistkm_us +
-                    demo1 +
-                    civilwar +
-                    nuclear1,
-                  data = df_known,
-                  method = "probit",
-                  Hess = TRUE)
-
-m4d
-summary(m4d)
-
-# Robust standard errors
-robustse(m4d, coef = "logit")
-
-# P values
-m4d_coef <- data.frame(coef(summary(m4d)))
-m4d_coef$pval <- round((pnorm(abs(m4d_coef$t.value), lower.tail = FALSE) * 2), 2)
-m4d_coef
-
-# Odds ratios
-m4d_or <- exp(coef(m4d))
-m4d_or
-
-# Predicted probabilities
-m4d_pred <- predict(m4d, type = "probs")
-summary(m4d_pred)
-
-# Marginal effects
-m4d_me <- erer::ocME(m4d)
-m4d_me$out
-```
-
-### Results
-```{r}
-texreg::texreg(list(m4a, m4b, m4c, m4d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95,
-  file = "../paper/model1.tex"
-)
-
-texreg::screenreg(list(m4a, m4b, m4c, m4d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95
-)
-```
 
 # Cumulative results
 ## Table
@@ -832,7 +413,6 @@ texreg::screenreg(list(m1a, m1b, m1c, m1d),
   ci.force = TRUE,
   ci.force.level = 0.95
 )
-```
 ```
 
 ## Figure
