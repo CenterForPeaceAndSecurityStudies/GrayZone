@@ -32,17 +32,28 @@ df <- df_full %>%
 ```
 
 # Summary stats
+Summary stats of the data used in the models
 ```{r}
-DT::datatable(df)
-funModeling::plot_num(df)
+# Subset to variables used in the model
+df_vars <- df %>%
+  dplyr::select(year, cabbrev1, intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), round, 2))
 
-df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus) %>%
-  dplyr::mutate(intensity = as.numeric(intensity)) %>%
-  GGally::ggpairs()
+# General summary stats
+DT::datatable(df_vars)
+funModeling::plot_num(df_vars)
+
+qwraps2::summary_table(df_vars)
 ```
 
-## DV: Intensity
+Show missing data
+```{r}
+# Missing data
+naniar::gg_miss_var(df_vars)
+ExPanDaR::prepare_missing_values_graph(df_vars, ts_id = "year")
+```
+
+DV: Intensity
 ```{r}
 df_full %>%
   dplyr::filter(!intensity == 0) %>%
@@ -73,20 +84,13 @@ df_full %>%
         )
 ```
 
-## EV: NATO and distance
+Show bivariate correlations between DV and EV
 ```{r}
-table(df$intensity, df$NATOmem_MEM)
-```
-
-## Controls
-
-
-## Full summary
-```{r}
-df_full %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
-  gtsummary::tbl_summary()
-
+# DV and EV correlation
+df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus) %>%
+  dplyr::mutate(intensity = as.numeric(intensity)) %>%
+  GGally::ggpairs()
 ```
 
 # Model 1
@@ -147,10 +151,44 @@ plot(rms::nomogram(m2, fun = plogis))
 
 # Model 3
 For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
-
-We have to extrapolate variables for post-2012 since that is the last year that data for CINC scores is available. With the data imputed, now we can run the model
 ```{r}
-# Prep imputaiton model
+# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
+df_m3 <- df
+
+df_m3$year <- as.integer(df_m3$year) + 1993
+
+df_m3 <- df_m3 %>%
+  dplyr::filter(year < 2013)
+
+df_m3$year <- as.factor(df_m3$year)
+
+# Model
+m3 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 cinc_ratio +
+                 demo1 +
+                 civilwar +
+                 nuclear1 +
+                 year,
+               data = df_m3,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+rms::robcov(m3, df_m3$cabbrev1)
+
+# Show results
+ggstatsplot::ggcoefstats(m3)
+plot(rms::nomogram(m3, fun = plogis))
+```
+
+# Marginal effects
+
+# Alternate specifications
+## Imputed control variables
+```{r}
+# Prep imputation model
 d <- rms::datadist(df)
 options(datadist = "d")
 
@@ -195,12 +233,8 @@ summary(m3)
 rms::robcov(m3, df$cabbrev1)
 
 plot(rms::nomogram(m3, fun = plogis))
-
 ```
 
-# Marginal effects
-
-# Alternate specifications
 ## Zero inflated ordered probit
 ```{r, eval = FALSE}
 #This program estimates the ZIOP loglikelihood function

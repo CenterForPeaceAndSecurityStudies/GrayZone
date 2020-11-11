@@ -681,15 +681,6 @@ df %>%
   DT::datatable()
 ```
 
-# Data summary
-That leaves us with a dataset where the unit of analysis is the country-year, the universe of cases is country-years that were the targets of Russian intervention from 1994-2017, and the dependent variable is the means of Russian intervention
-```{r}
-DT::datatable(df)
-naniar::gg_miss_var(df)
-ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
-funModeling::plot_num(df)
-```
-
 # Save data
 Save the final version of the data that is now prepped for modeling
 ```{r}
