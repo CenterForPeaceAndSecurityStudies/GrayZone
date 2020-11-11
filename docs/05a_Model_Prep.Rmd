@@ -608,23 +608,21 @@ Fix things like duplicates, spelling errors, etc.
 # Make DV factor
 df$intensity <- as.factor(df$intensity)
 
+# Fix other var types
+df$year <- as.factor(df$year)
+df$NATOmem_MEM <- factor(df$NATOmem_MEM, level = c("0", "1"), ordered = FALSE)
+df$nuclear1 <- factor(df$nuclear1, level = c("0", "1"), ordered = FALSE)
+df$demo1 <- factor(df$demo1, level = c("0", "1"), ordered = FALSE)
+df$demo2 <- factor(df$demo2, level = c("0", "1"), ordered = FALSE)
+df$civilwar <- factor(df$civilwar, level = c("0", "1"), ordered = FALSE)
+
 # Re-add continent info
-continent <- democracyData::country_year_coder(df, 
-                                  code_col = ccode1,
-                                  date_col = year, 
-                                  code_type = "cown", 
-                                  match_type = "code only",
-                                  to_system = "cow", 
-                                  include_in_output = c("official_continent")) %>%
-  dplyr::rename(continent = official_continent) %>%
-  dplyr::select(year, cabbrev1, ccode1, continent)
-
-continent$continent[continent$cabbrev1 == "YUG" | continent$cabbrev1 == "KOS" | continent$cabbrev1 == "GRG"] <- "Europe"
-
-continent <- continent %>%
-  dplyr::distinct()
-
-df <- dplyr::left_join(df, continent)
+df$continent <- countrycode::countrycode(df$ccode1, 'cown', 'continent')
+df$continent[df$ccode1 == "372"] <- "Europe" # Georgia
+df$continent[df$ccode1 == "347"] <- "Europe" # Kosovo
+df$continent[df$ccode1 == "640"] <- "Europe" # Turkey
+df$continent[df$ccode1 == "345"] <- "Europe" # Yugoslavia
+df$continent[df$ccode1 == "315" | df$ccode1 == "316"] <- "Europe" # Czech Republic
 
 # Drop microstates
 df$gwcode <- countrycode::countrycode(df$ccode1, "cown", "gwn")

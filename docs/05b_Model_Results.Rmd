@@ -91,11 +91,7 @@ df_full %>%
 
 ## EV: NATO and distance
 ```{r}
-# NATO
-
-
-# Minimum distance from Russia
-
+table(df$intensity, df$NATOmem_MEM)
 ```
 
 ## Controls
@@ -104,19 +100,61 @@ df_full %>%
 ## Full summary
 ```{r}
 df_full %>%
-  dplyr::select(year, intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, ln_pop1, civilwar, demo1, nuclear1, cinc_ratio)
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
+  gtsummary::tbl_summary()
 
 ```
 
-# Data prep
-## Imputing missing values
-We create 2 sets of the data, one with known values, and a second with imputed values for missing covariates. The covariates with missing data are noted here and are relevant for inclusion of control variables. In most cases, missing covariates are for later years in the dataset (post-2012 or post-2016). In a few cases, there are countries where certain covariates are not known, like missing GDP data for Kosovo and Luxembourg from the World Bank data.
-```{r}
-# Identify missingness
-naniar::gg_miss_var(df)
-visdat::vis_miss(df)
-ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
+# Model 1
+From oglmx package: "Inclusion of fixed effects in non-linear models such as probit, logit and their ordered equivalents can lead to biased estimates due to the incidental parameters problem recognised by Neyman and Scott (1948). Further development of the package will add methods to reduce this bias, for example that suggested by Carro (2007) and adapted to the ordered outcome case with two types of fixed effects in Carro and Traferri (2014)."
 
+Carro JM (2007). “Estimating dynamic panel data discrete choice models with fixed effects.” Journal of Econometrics, 140(2), 503–528. ISSN 03044076. doi:10.1016/j.jeconom. 2006.07.023.
+Carro JM, Traferri A (2014). “State Dependence and Heterogeneity in Health Using a BiasCorrected Fixed-Effects Estimator.” Journal of Applied Econometrics, 29, 181–207. ISSN 01451707. doi:10.1002/jae.
+Neyman J, Scott EL (1948). “Consistent Estimates Based on Partially Consistent Observations.” Econometrica, 16(1), 1–32.
+
+For the baseline model we just look at the relationship between the intensity of Russia intervention and whether the target is a NATO member as well as logged minimum distance from Russia. These are our two independent variables of interest. We use year fixed effects and cluster standard errors at the country level.
+```{r}
+m1 <- rms::lrm(intensity ~
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 year,
+               data = df,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+rms::robcov(m1, df$cabbrev1)
+
+ggstatsplot::ggcoefstats(m1)
+```
+
+# Model 2
+Independent variables are NATO membership and logged minimum distance from Russia. Controls include GDP per capita, logged population, active civil war, democracy, and nuclear status. We use year fixed effects.
+```{r}
+m2 <- rms::lrm(intensity ~ 
+                   NATOmem_MEM +
+                   lnmindistkm_rus +
+                   gdppc1_2010const +
+                   lnpop1 +
+                   civilwar +
+                   demo1 +
+                   nuclear1 +
+                   year,
+                data = df,
+                x = TRUE,
+                y = TRUE)
+
+## country-clustered standard errors
+rms::robcov(m2, df$cabbrev1)
+
+ggstatsplot::ggcoefstats(m2)
+```
+
+# Model 3
+For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
+
+We have to extrapolate variables for post-2012 since that is the last year that data for CINC scores is available.
+```{r}
 # Created imputed version
 df_imp <- df
 
@@ -138,73 +176,60 @@ predM[ , c("cabbrev1", "ccode1",
            "lncapdistkm_us", "lnmindistkm_us", "lncapdistkm_rus", "lnmindistkm_rus",
            "NATOmem_MEM", "NATOdur_MEM", 
            "nuclear1", 
-           "demo2")] <- 0
+           "demo2",
+           "age1")] <- 0
 
 # Create 5 imputed datasets
 imp2 <- mice::mice(df_imp, 
                    maxit = 5,
                    predictorMatrix = predM,
-                   method = meth)
+                   method = 'cart',
+                   seed = 500)
+
+mice::densityplot(imp2)
+
+# Run regression on the 5 imputed datasets
+fit <- with(imp2, rms::lrm(intensity ~ 
+                   NATOmem_MEM +
+                   lnmindistkm_rus +
+                   cinc_ratio +
+                   demo1 +
+                   civilwar +
+                   nuclear1 +
+                   year,
+               x = TRUE,
+               y = TRUE))
+
+summary(fit)
+
+est <- mice::pool(fit)
 
 # Convert datasets to long
 df_imp_long <- mice::complete(imp2,
-                              action = "long",
-                              include = TRUE)
+                              action = "all",
+                              include = FALSE)
+
+
 ```
 
-## Robust standard errors
-We use the following function to computer robust standard errors
+With the data imputed, now we can run the model
 ```{r}
-# Robust standard errors
-robustse <- function(x, coef = c("logit", "odd.ratio", "probs")) {
-    sandwich1 <- function(object, ...) sandwich::sandwich(object) *
-                                       nobs(object) / (nobs(object) - 1)
-    # Function calculates SE's
-    mod1 <- lmtest::coeftest(x, vcov = sandwich1) 
-    # apply the function over the variance-covariance matrix
-    
-    if (coef == "logit") {
-    return(mod1) # return logit with robust SE's
-    } else if (coef == "odd.ratio") {
-    mod1[, 1] <- exp(mod1[, 1]) # return odd ratios with robust SE's
-    mod1[, 2] <- mod1[, 1] * mod1[, 2]
-    return(mod1)
-    } else {
-    mod1[, 1] <- (mod1[, 1]/4) # return probabilites with robust SE's
-    mod1[, 2] <- mod1[, 2]/4
-    return(mod1)
-    }
-}
-```
-
-# Model 1
-global baseline "natomem_mem lnmindistkm_rus  i.year"
-
-```{r}
-m1a <- MASS::polr(intensity ~ 
+m3 <- rms::lrm(intensity ~ 
                    NATOmem_MEM +
-                   lncapdistkm_us +
+                   lnmindistkm_rus +
+                   cinc_ratio +
                    demo1 +
                    civilwar +
-                   nuclear1,
-                 data = df_euro,
-                 method = "probit",
-                 Hess = TRUE)
+                   nuclear1 +
+                   year,
+               data = df_imp_long,
+               x = TRUE,
+               y = TRUE)
 
-```
+## Country-clustered standard errors
+rms::robcov(m3, df_imp_long$cabbrev1)
 
-# Model 2
-global controls1 "natomem_mem lnmindistkm_rus gdppc1_2010const ln_pop1 civilwar demo1 nuclear1 i.year"
-
-```{r}
-
-```
-
-# Model 3
-global controls2 "natomem_mem lnmindistkm_rus cinc_ratio_e demo1_e nuclear1 civilwar i.year"
-
-```{r}
-
+ggstatsplot::ggcoefstats(m3)
 ```
 
 # Marginal effects
@@ -213,6 +238,69 @@ global controls2 "natomem_mem lnmindistkm_rus cinc_ratio_e demo1_e nuclear1 civi
 ## Extrapolate missingness
 
 ## Zero inflated ordered probit
+```{r}
+#This program estimates the ZIOP loglikelihood function
+
+ZIOP<- function(est,Y,X,Z,data) {					      
+	n=nrow(data)							      					  
+	llik <- matrix(0, nrow=n, ncol = 1)
+	y.cat<-nlevels(as.factor(Y))
+	y0<-sort(unique(Y))
+	V<-matrix(NA,nrow(data),y.cat)
+	for(k in 1:y.cat){
+		V[,k]<-Y==y0[k]
+		}
+	tau<-rep(1,max(Y))
+	for (i in 1:max(Y)){
+		tau[i]<-ifelse(i==1,est[i],tau[i-1]+exp(est[i]))
+		}
+	gamma<-est[(y.cat):(y.cat+ncol(Z)-1)]
+	beta<-est[(y.cat+ncol(Z)):length(est)]
+	ZG<-Z%*%gamma
+	XB<-X%*%beta
+	
+	cprobs<-matrix(nrow=length(XB),ncol=y.cat)
+	probs<-matrix(nrow=n,ncol=y.cat)
+	     
+	for(j in 1:(y.cat-1)){
+		
+		cprobs[,j]<-pnorm(tau[j]-XB)
+		
+		}
+	
+	probs[,y.cat]<-(1-cprobs[,(y.cat-1)])*pnorm(ZG) 
+	probs[,1]<-(cprobs[,1])*pnorm(ZG)+(1-pnorm(ZG))	
+	
+	for(j in 2:(y.cat-1)){			
+		
+		probs[,j]<-(cprobs[,j]-cprobs[,(j-1)])*(pnorm(ZG))
+		
+		}
+	
+	llik<--1*sum( log(probs[V]) )
+	
+	return(llik)
+	
+	}
+
+
+
+#set starting parameters
+est<-rbind(.1,.1,.1,.1,.1,.1,.1,.1)
+
+#set data, Y, X, and Z
+data<-dataset
+Y<-dataset$y
+X<-cbind(dataset$x1,dataset$x2)
+Z<-cbind(1, dataset$x1, dataset$x2)
+
+#optimize
+output.ZIOP<-nlm(f=ZIOP,  p=est, Y=Y,X=X,Z=Z ,iterlim=500, data=dataset, hessian=TRUE)
+print(output.ZIOP)
+vcv<-solve(output.ZIOP$hessian)
+vcv 
+
+```
 
 ## Alternate samples
 ### Relevant states
@@ -228,27 +316,9 @@ We create 4 versions of the data below based on the inclusion criteria for the u
 3. Conservative subset - same as expansive, but does not includes states that were targets post-1993
 4. Known attacks - includes only country-years that were targets of a Russian intervention after 1994
 
-## Data 1: European states
+# Data 1: European states
 This includes all years (1994-2018) of European states
-### Models
-#### M1a: NATO + US cap distance
 ```{r}
-m1a <- MASS::polr(intensity ~ 
-                   NATOmem_MEM +
-                   lncapdistkm_us +
-                   demo1 +
-                   civilwar +
-                   nuclear1,
-                 data = df_euro,
-                 method = "probit",
-                 Hess = TRUE)
-
-m1a
-summary(m1a)
-
-# Robust standard errors
-robustse(m1a, coef = "logit")
-
 # P values
 m1a_coef <- data.frame(coef(summary(m1a)))
 m1a_coef$pval <- round((pnorm(abs(m1a_coef$t.value), lower.tail = FALSE) * 2), 2)
@@ -267,116 +337,6 @@ m1a_me <- erer::ocME(m1a)
 m1a_me$out
 ```
 
-
-#### M1b: NATO + US min distance
-```{r}
-m1b <- MASS::polr(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_us +
-                   demo1 +
-                   civilwar +
-                   nuclear1,
-                 data = df_euro,
-                 method = "probit",
-                 Hess = TRUE)
-
-m1b
-summary(m1b)
-
-# Robust standard errors
-robustse(m1b, coef = "logit")
-
-# P values
-m1b_coef <- data.frame(coef(summary(m1b)))
-m1b_coef$pval <- round((pnorm(abs(m1b_coef$t.value), lower.tail = FALSE) * 2), 2)
-m1b_coef
-
-# Odds ratios
-m1b_or <- exp(coef(m1b))
-m1b_or
-
-# Predicted probabilities
-m1b_pred <- predict(m1b, type = "probs")
-summary(m1b_pred)
-
-# Marginal effects
-m1b_me <- erer::ocME(m1b)
-m1b_me$out
-```
-
-#### M1c: NATO + Russia cap distance
-```{r}
-m1c <- MASS::polr(intensity ~ 
-                   NATOmem_MEM +
-                   lncapdistkm_rus +
-                   demo1 +
-                   civilwar +
-                   nuclear1,
-                 data = df_euro,
-                 method = "probit",
-                 Hess = TRUE)
-
-m1c
-summary(m1c)
-
-# Robust standard errors
-robustse(m1c, coef = "logit")
-
-# P values
-m1c_coef <- data.frame(coef(summary(m1c)))
-m1c_coef$pval <- round((pnorm(abs(m1c_coef$t.value), lower.tail = FALSE) * 2), 2)
-m1c_coef
-
-# Odds ratios
-m1c_or <- exp(coef(m1c))
-m1c_or
-
-# Predicted probabilities
-m1c_pred <- predict(m1c, type = "probs")
-summary(m1c_pred)
-
-# Marginal effects
-m1c_me <- erer::ocME(m1c)
-m1c_me$out
-```
-
-#### M1d: NATO + Russia min distance
-```{r}
-m1d <- MASS::polr(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   demo1 +
-                   civilwar +
-                   nuclear1,
-                 data = df_euro,
-                 method = "probit",
-                 Hess = TRUE)
-
-m1d
-summary(m1d)
-
-# Robust standard errors
-robustse(m1d, coef = "logit")
-
-# P values
-m1d_coef <- data.frame(coef(summary(m1d)))
-m1d_coef$pval <- round((pnorm(abs(m1d_coef$t.value), lower.tail = FALSE) * 2), 2)
-m1d_coef
-
-# Odds ratios
-m1d_or <- exp(coef(m1d))
-m1d_or
-
-# Predicted probabilities
-m1d_pred <- predict(m1d, type = "probs")
-summary(m1d_pred)
-
-# Marginal effects
-m1d_me <- erer::ocME(m1d)
-m1d_me$out
-```
-
-### Results
 ```{r}
 texreg::texreg(list(m1a, m1b, m1c, m1d),
   digits = 3,
@@ -393,7 +353,6 @@ texreg::screenreg(list(m1a, m1b, m1c, m1d),
 ```
 
 # Cumulative results
-## Table
 ```{r, eval = FALSE}
 ### Results
 ```{r}
