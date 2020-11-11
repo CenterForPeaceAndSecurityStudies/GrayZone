@@ -25,26 +25,10 @@ library(ggplot2)
 Load the newly created data with all relevant covariates
 ```{r}
 df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
-```
 
-# Create samples
-## Data 2: Relevant targets
-Only includes states that meet at least one of the following criteria: 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
-```{r}
-# Main df
+# Limit sample to just European states
 df <- df_full %>%
   dplyr::filter(continent == "Europe")
-
-# Relevant European states
-df_conserv <- df %>%
-  dplyr::filter(relevant_conserv == 1)
-
-```
-
-## Data 3: Known targets
-Only include states that were known targets of an attack from 1994-2018
-```{r}
-
 ```
 
 # Summary stats
@@ -114,6 +98,10 @@ Neyman J, Scott EL (1948). “Consistent Estimates Based on Partially Consistent
 
 For the baseline model we just look at the relationship between the intensity of Russia intervention and whether the target is a NATO member as well as logged minimum distance from Russia. These are our two independent variables of interest. We use year fixed effects and cluster standard errors at the country level.
 ```{r}
+d <- rms::datadist(df)
+options(datadist = "d")
+
+
 m1 <- rms::lrm(intensity ~
                  NATOmem_MEM +
                  lnmindistkm_rus +
@@ -125,12 +113,17 @@ m1 <- rms::lrm(intensity ~
 ## country-clustered standard errors
 rms::robcov(m1, df$cabbrev1)
 
+# Show results
 ggstatsplot::ggcoefstats(m1)
+plot(rms::nomogram(m1, fun = plogis))
 ```
 
 # Model 2
 Independent variables are NATO membership and logged minimum distance from Russia. Controls include GDP per capita, logged population, active civil war, democracy, and nuclear status. We use year fixed effects.
 ```{r}
+d <- rms::datadist(df)
+options(datadist = "d")
+
 m2 <- rms::lrm(intensity ~ 
                    NATOmem_MEM +
                    lnmindistkm_rus +
@@ -147,101 +140,72 @@ m2 <- rms::lrm(intensity ~
 ## country-clustered standard errors
 rms::robcov(m2, df$cabbrev1)
 
+# Show results
 ggstatsplot::ggcoefstats(m2)
+plot(rms::nomogram(m2, fun = plogis))
 ```
 
 # Model 3
 For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
 
-We have to extrapolate variables for post-2012 since that is the last year that data for CINC scores is available.
+We have to extrapolate variables for post-2012 since that is the last year that data for CINC scores is available. With the data imputed, now we can run the model
 ```{r}
-# Created imputed version
-df_imp <- df
+# Prep imputaiton model
+d <- rms::datadist(df)
+options(datadist = "d")
 
-# Run MICE with 0 iterations
-imp <- mice::mice(df_imp, maxit = 0)
+# Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
+m3_imp <- Hmisc::aregImpute(~ cinc1 + 
+                              cinc2 +
+                              gdp1_2010const +
+                              gdppc1_2010const +
+                              pop1 +
+                              elf +
+                              polity1 +
+                              NATOmem_MEM +
+                              lnmindistkm_rus +
+                              cinc_ratio +
+                              demo1 +
+                              civilwar +
+                              nuclear1,
+                            nk = 0,
+                            tlinear = TRUE, 
+                            data = df,
+                            n.impute = 10, 
+                            pr = FALSE)
 
-# Extract predictor matrix and methods of imputation
-predM <- imp$predictorMatrix
-meth <- imp$method
+# Fit the outcome model following multiple imputation
+m3 <- Hmisc::fit.mult.impute(intensity ~ 
+                               NATOmem_MEM +
+                               lnmindistkm_rus +
+                               cinc_ratio +
+                               demo1 +
+                               civilwar +
+                               nuclear1 +
+                               year,
+                             fitter = rms::lrm, 
+                             xtrans = m3_imp,
+                             data = df,
+                             x = TRUE,
+                             y = TRUE)
 
-# Set values of variables to leave out as 0
-predM[ , c("cabbrev1", "ccode1", 
-           "cname2", "cabbrev2", "ccode2", 
-           "continent", 
-           "relevant_expansive",
-           "relevant_conserv",
-           "intensity",
-           "capdistkm_us", "mindistkm_us", "capdistkm_rus", "mindistkm_rus",
-           "lncapdistkm_us", "lnmindistkm_us", "lncapdistkm_rus", "lnmindistkm_rus",
-           "NATOmem_MEM", "NATOdur_MEM", 
-           "nuclear1", 
-           "demo2",
-           "age1")] <- 0
-
-# Create 5 imputed datasets
-imp2 <- mice::mice(df_imp, 
-                   maxit = 5,
-                   predictorMatrix = predM,
-                   method = 'cart',
-                   seed = 500)
-
-mice::densityplot(imp2)
-
-# Run regression on the 5 imputed datasets
-fit <- with(imp2, rms::lrm(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   cinc_ratio +
-                   demo1 +
-                   civilwar +
-                   nuclear1 +
-                   year,
-               x = TRUE,
-               y = TRUE))
-
-summary(fit)
-
-est <- mice::pool(fit)
-
-# Convert datasets to long
-df_imp_long <- mice::complete(imp2,
-                              action = "all",
-                              include = FALSE)
-
-
-```
-
-With the data imputed, now we can run the model
-```{r}
-m3 <- rms::lrm(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   cinc_ratio +
-                   demo1 +
-                   civilwar +
-                   nuclear1 +
-                   year,
-               data = df_imp_long,
-               x = TRUE,
-               y = TRUE)
+summary(m3)
 
 ## Country-clustered standard errors
-rms::robcov(m3, df_imp_long$cabbrev1)
+rms::robcov(m3, df$cabbrev1)
 
-ggstatsplot::ggcoefstats(m3)
+plot(rms::nomogram(m3, fun = plogis))
+
 ```
 
 # Marginal effects
 
 # Alternate specifications
-## Extrapolate missingness
-
 ## Zero inflated ordered probit
-```{r}
+```{r, eval = FALSE}
 #This program estimates the ZIOP loglikelihood function
 
-ZIOP<- function(est,Y,X,Z,data) {					      
+ZIOP <- function(est,Y,X,Z,data) {					      
 	n=nrow(data)							      					  
 	llik <- matrix(0, nrow=n, ncol = 1)
 	y.cat<-nlevels(as.factor(Y))
@@ -303,22 +267,25 @@ vcv
 ```
 
 ## Alternate samples
-### Relevant states
-
-### Known targets
-
-
-
-# ***Archive
-We create 4 versions of the data below based on the inclusion criteria for the universe of cases. In all cases, the unit of analysis is the country-year
 1. Full data - includes all countries in the newly created data on Russian interventions and all European states
 2. Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
 3. Conservative subset - same as expansive, but does not includes states that were targets post-1993
 4. Known attacks - includes only country-years that were targets of a Russian intervention after 1994
 
-# Data 1: European states
-This includes all years (1994-2018) of European states
+### Relevant states
+Only includes states that meet at least one of the following criteria: 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
 ```{r}
+# Relevant European states
+df_conserv <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+```
+
+### Known targets
+
+# ***Archive
+We create 4 versions of the data below based on the inclusion criteria for the universe of cases. In all cases, the unit of analysis is the 
+This includes all years (1994-2018) of European states
+```{r, eval = FALSE}
 # P values
 m1a_coef <- data.frame(coef(summary(m1a)))
 m1a_coef$pval <- round((pnorm(abs(m1a_coef$t.value), lower.tail = FALSE) * 2), 2)
@@ -337,7 +304,8 @@ m1a_me <- erer::ocME(m1a)
 m1a_me$out
 ```
 
-```{r}
+Table of regression results
+```{r, eval = FALSE}
 texreg::texreg(list(m1a, m1b, m1c, m1d),
   digits = 3,
   ci.force = TRUE,
@@ -352,10 +320,9 @@ texreg::screenreg(list(m1a, m1b, m1c, m1d),
 )
 ```
 
-# Cumulative results
+Cumulative results table
 ```{r, eval = FALSE}
 ### Results
-```{r}
 texreg::texreg(list(m1a, m1b, m1c, m1d),
   custom.model.names = c("Europe", "Europe", "Europe", "Europe",
                          "Relevant", "Relevant", "Relevant", "Relevant",
@@ -374,7 +341,7 @@ texreg::screenreg(list(m1a, m1b, m1c, m1d),
 )
 ```
 
-## Figure
+Cumulative results figure
 ```{r, eval = FALSE}
 dw1 <- dotwhisker::dwplot(m1a, dot_args = list(size = 2.5),
     whisker_args = list(size = 1.5), 
@@ -408,4 +375,58 @@ dw1 <- dotwhisker::dwplot(m1a, dot_args = list(size = 2.5),
         legend.justification = c(0, 0), 
         legend.background = element_rect(colour="grey80"),
         legend.title = element_blank())
+```
+
+MICE imputation
+```{r, eval = FALSE}
+# Run MICE with 0 iterations
+imp <- mice::mice(df, maxit = 0)
+
+# Extract predictor matrix and methods of imputation
+predM <- imp$predictorMatrix
+meth <- imp$method
+
+# Set values of variables to leave out as 0
+predM[ , c("cabbrev1", "ccode1", 
+           "cname2", "cabbrev2", "ccode2", 
+           "continent", 
+           "relevant_expansive",
+           "relevant_conserv",
+           "intensity",
+           "capdistkm_us", "mindistkm_us", "capdistkm_rus", "mindistkm_rus",
+           "lncapdistkm_us", "lnmindistkm_us", "lncapdistkm_rus", "lnmindistkm_rus",
+           "NATOmem_MEM", "NATOdur_MEM", 
+           "nuclear1", 
+           "demo2",
+           "age1")] <- 0
+
+# Create 5 imputed datasets
+imp2 <- mice::mice(df, 
+                   maxit = 5,
+                   predictorMatrix = predM,
+                   method = 'cart',
+                   seed = 500)
+
+# See distribution of imputed values relative to baseline data
+mice::densityplot(imp2)
+
+# Run regression on the 5 imputed datasets
+fit <- with(imp2, rms::lrm(intensity ~ 
+                             NATOmem_MEM +
+                             lnmindistkm_rus +
+                             cinc_ratio +
+                             demo1 +
+                             civilwar +
+                             nuclear1 +
+                             year,
+                           x = TRUE,
+                           y = TRUE))
+
+# summary(mice::pool(fit))
+
+
+# Convert datasets to long
+df_imp_long <- mice::complete(imp2,
+                              action = "all",
+                              include = FALSE)
 ```
