@@ -141,7 +141,7 @@ ggstatsplot::ggcoefstats(m1,
 ```
 
 ## Model 2
-Independent variables are NATO membership and logged minimum distance from Russia. Controls include GDP per capita, logged population, active civil war, democracy, and nuclear status. We use year fixed effects.
+Independent variables are NATO membership and logged minimum distance from Russia. Controls include GDP per capita, logged population, democracy, and nuclear status. We use year fixed effects.
 ```{r}
 d <- rms::datadist(df)
 options(datadist = "d")
@@ -151,7 +151,6 @@ m2 <- rms::lrm(intensity ~
                    lnmindistkm_rus +
                    gdppc1_2010const +
                    lnpop1 +
-                   civilwar +
                    demo1 +
                    nuclear1 +
                    year,
@@ -260,24 +259,18 @@ Replicate model 2
 d <- rms::datadist(df_conserv)
 options(datadist = "d")
 
-# Problems comes from having both civil war and year in the model
-
-
 # Model
 m5 <- rms::lrm(intensity ~ 
                  NATOmem_MEM +
                  lnmindistkm_rus +
                  gdppc1_2010const +
                  lnpop1 +
-                 civilwar +
                  demo1 +
                  nuclear1 +
                  year,
                data = df_conserv,
                x = TRUE,
                y = TRUE)
-
-table(df_conserv$civilwar, df_conserv$year)
 
 ## country-clustered standard errors
 m5 <- rms::robcov(m5, df_conserv$cabbrev1)
@@ -336,7 +329,23 @@ ggstatsplot::ggcoefstats(m6,
 
 # Compiled results
 ```{r}
-texreg::screenreg(list(m1, m2, m3, m4, m6))
+models <- list(m1, m2, m3, m4, m5, m6)
+
+texreg::screenreg(models,
+                stars = c(0.01, 0.05, 0.1, 0.15),
+                symbol = "\\dagger",
+                omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Distance from Russia (minimum, log)",
+                                     "GDP per capita (constant 2010 USD)",
+                                     "Population (log)",
+                                     "Democracy",
+                                     "Nuclear status",
+                                     "CINC Ratio",
+                                     "Civil War"),
+                custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"), 
+                                       "Controls" = c("No", "Yes", "Yes", "No", "Yes", "Yes")),
+                custom.header = list("Full sample" = 1:3, "Relevant European states sample" = 4:6))
 ```
 
 # Marginal effects
