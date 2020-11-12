@@ -8,6 +8,9 @@ output:
     theme: flatly
     code_download: true
     toc: yes
+    number_sections: yes
+    toc_float:
+      collapsed: yes
   html_notebook:
     toc: yes
     toc_float: yes
@@ -36,21 +39,34 @@ Summary stats of the data used in the models
 ```{r}
 # Subset to variables used in the model
 df_vars <- df %>%
-  dplyr::select(year, cabbrev1, intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
-  dplyr::mutate(dplyr::across(where(is.numeric), round, 2))
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
+  dplyr::mutate_if(is.factor, as.character) %>%
+  dplyr::mutate_if(is.character, as.numeric)
 
 # General summary stats
 DT::datatable(df_vars)
 funModeling::plot_num(df_vars)
 
-qwraps2::summary_table(df_vars)
+gtsummary::tbl_summary(df_vars,
+                       missing_text = "(Missing)",
+                       label = list(intensity ~ "Intensity", NATOmem_MEM ~ "NATO member", lnmindistkm_rus ~ "Distance from Russia (minimum, log)", lnpop1 ~ "Population (log)", civilwar ~ "Active civil war", demo1 ~ "Democracy", nuclear1 ~ "Nuclear state", cinc_ratio ~ "CINC Ratio")) %>%
+  gtsummary::add_n() %>%
+  gtsummary::bold_labels()
+
+stargazer::stargazer(df_vars, 
+                     title = "Covariate Summary Statistics",
+                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "GDP per capita (2010 const. USD)", "Population (log)", "Active civil war", "Democracy", "Nuclear state", "CINC Ratio"),
+                     digits = 1,
+                     notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
+                     type = "text")
 ```
 
 Show missing data
 ```{r}
 # Missing data
 naniar::gg_miss_var(df_vars)
-ExPanDaR::prepare_missing_values_graph(df_vars, ts_id = "year")
+ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
 ```
 
 DV: Intensity
@@ -93,19 +109,15 @@ df %>%
   GGally::ggpairs()
 ```
 
-# Model 1
-From oglmx package: "Inclusion of fixed effects in non-linear models such as probit, logit and their ordered equivalents can lead to biased estimates due to the incidental parameters problem recognised by Neyman and Scott (1948). Further development of the package will add methods to reduce this bias, for example that suggested by Carro (2007) and adapted to the ordered outcome case with two types of fixed effects in Carro and Traferri (2014)."
-
-Carro JM (2007). “Estimating dynamic panel data discrete choice models with fixed effects.” Journal of Econometrics, 140(2), 503–528. ISSN 03044076. doi:10.1016/j.jeconom. 2006.07.023.
-Carro JM, Traferri A (2014). “State Dependence and Heterogeneity in Health Using a BiasCorrected Fixed-Effects Estimator.” Journal of Applied Econometrics, 29, 181–207. ISSN 01451707. doi:10.1002/jae.
-Neyman J, Scott EL (1948). “Consistent Estimates Based on Partially Consistent Observations.” Econometrica, 16(1), 1–32.
-
+# European sample
+## Model 1
 For the baseline model we just look at the relationship between the intensity of Russia intervention and whether the target is a NATO member as well as logged minimum distance from Russia. These are our two independent variables of interest. We use year fixed effects and cluster standard errors at the country level.
 ```{r}
+# Prep matrix inversion option for model
 d <- rms::datadist(df)
 options(datadist = "d")
 
-
+# Model
 m1 <- rms::lrm(intensity ~
                  NATOmem_MEM +
                  lnmindistkm_rus +
@@ -115,14 +127,20 @@ m1 <- rms::lrm(intensity ~
                y = TRUE)
 
 ## country-clustered standard errors
-rms::robcov(m1, df$cabbrev1)
+m1 <- rms::robcov(m1, df$cabbrev1)
 
 # Show results
-ggstatsplot::ggcoefstats(m1)
-plot(rms::nomogram(m1, fun = plogis))
+texreg::screenreg(m1)
+
+ggstatsplot::ggcoefstats(m1,
+                         title = "Model 1",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
 ```
 
-# Model 2
+## Model 2
 Independent variables are NATO membership and logged minimum distance from Russia. Controls include GDP per capita, logged population, active civil war, democracy, and nuclear status. We use year fixed effects.
 ```{r}
 d <- rms::datadist(df)
@@ -142,14 +160,20 @@ m2 <- rms::lrm(intensity ~
                 y = TRUE)
 
 ## country-clustered standard errors
-rms::robcov(m2, df$cabbrev1)
+m2 <- rms::robcov(m2, df$cabbrev1)
 
 # Show results
-ggstatsplot::ggcoefstats(m2)
-plot(rms::nomogram(m2, fun = plogis))
+texreg::screenreg(m2)
+
+ggstatsplot::ggcoefstats(m2,
+                         title = "Model 2",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
 ```
 
-# Model 3
+## Model 3
 For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
 ```{r}
 # Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
@@ -176,11 +200,143 @@ m3 <- rms::lrm(intensity ~
                y = TRUE)
 
 ## country-clustered standard errors
-rms::robcov(m3, df_m3$cabbrev1)
+m3 <- rms::robcov(m3, df_m3$cabbrev1)
 
 # Show results
-ggstatsplot::ggcoefstats(m3)
-plot(rms::nomogram(m3, fun = plogis))
+texreg::screenreg(m3)
+
+ggstatsplot::ggcoefstats(m3,
+                         title = "Model 3",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+```
+
+# Relevant states sample
+We run the same models as above on a different sample. Here, we limit sample to European states that meet any 3 of the following criteria: \\
+1. **History of conflict** -- European states that have had a MID or ICB incident with Russia/the Soviet Union from 1945-1994. \\
+2. **Former Soviet Union/Warsaw Pact** -- European states that were formerly members of either the Soviet Union or Warsaw Pact. \\
+3. **Contiguity** -- European states that are contiguous with Russia.
+
+```{r}
+df_conserv <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+```
+
+## Model 4
+Replicate model 1 with the new sample
+```{r}
+# Prep matrix inversion option for model
+d <- rms::datadist(df_conserv)
+options(datadist = "d")
+
+# Model
+m4 <- rms::lrm(intensity ~
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 year,
+               data = df_conserv,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m4 <- rms::robcov(m4, df_conserv$cabbrev1)
+
+# Show results
+texreg::screenreg(m4)
+
+ggstatsplot::ggcoefstats(m4,
+                         title = "Model 4",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+```
+
+## Model 5
+Replicate model 2
+```{r}
+d <- rms::datadist(df_conserv)
+options(datadist = "d")
+
+# Problems comes from having both civil war and year in the model
+
+
+# Model
+m5 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 gdppc1_2010const +
+                 lnpop1 +
+                 civilwar +
+                 demo1 +
+                 nuclear1 +
+                 year,
+               data = df_conserv,
+               x = TRUE,
+               y = TRUE)
+
+table(df_conserv$civilwar, df_conserv$year)
+
+## country-clustered standard errors
+m5 <- rms::robcov(m5, df_conserv$cabbrev1)
+
+# Show results
+texreg::screenreg(m5)
+
+ggstatsplot::ggcoefstats(m5,
+                         title = "Model 2",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+```
+
+## Model 6
+Replicate model 3 on the new sample
+```{r}
+# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
+df_m6 <- df_conserv
+
+df_m6$year <- as.integer(df_m6$year) + 1993
+
+df_m6 <- df_m6 %>%
+  dplyr::filter(year < 2013)
+
+df_m6$year <- as.factor(df_m6$year)
+
+# Model
+m6 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 cinc_ratio +
+                 demo1 +
+                 civilwar +
+                 nuclear1 +
+                 year,
+               data = df_m6,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m6 <- rms::robcov(m6, df_m6$cabbrev1)
+
+# Show results
+texreg::screenreg(m6)
+
+ggstatsplot::ggcoefstats(m6,
+                         title = "Model 6",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+```
+
+# Compiled results
+```{r}
+texreg::screenreg(list(m1, m2, m3, m4, m6))
 ```
 
 # Marginal effects
@@ -213,7 +369,7 @@ m3_imp <- Hmisc::aregImpute(~ cinc1 +
                             pr = FALSE)
 
 # Fit the outcome model following multiple imputation
-m3 <- Hmisc::fit.mult.impute(intensity ~ 
+m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                NATOmem_MEM +
                                lnmindistkm_rus +
                                cinc_ratio +
@@ -227,12 +383,12 @@ m3 <- Hmisc::fit.mult.impute(intensity ~
                              x = TRUE,
                              y = TRUE)
 
-summary(m3)
+summary(m3_imp)
 
 ## Country-clustered standard errors
-rms::robcov(m3, df$cabbrev1)
+rms::robcov(m3_imp, df$cabbrev1)
 
-plot(rms::nomogram(m3, fun = plogis))
+plot(rms::nomogram(m3_imp, fun = plogis))
 ```
 
 ## Zero inflated ordered probit
@@ -301,18 +457,10 @@ vcv
 ```
 
 ## Alternate samples
-1. Full data - includes all countries in the newly created data on Russian interventions and all European states
-2. Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
-3. Conservative subset - same as expansive, but does not includes states that were targets post-1993
-4. Known attacks - includes only country-years that were targets of a Russian intervention after 1994
+Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
+Known attacks - includes only country-years that were targets of a Russian intervention after 1994
 
-### Relevant states
-Only includes states that meet at least one of the following criteria: 1) MID/ICB history with Russia/Soviet Union from 1945-1993, 2) Former Warsaw Pact or Former Soviet Union (FSU) state, 3) contiguity with Russia
-```{r}
-# Relevant European states
-df_conserv <- df %>%
-  dplyr::filter(relevant_conserv == 1)
-```
+### Expansive sample
 
 ### Known targets
 
