@@ -138,6 +138,9 @@ ggstatsplot::ggcoefstats(m1,
                          only.significant = TRUE,
                          palette = "category20c_d3",
                          )
+
+ggeffects::ggpredict(m1) %>%
+  plot()
 ```
 
 ## Model 2
@@ -170,6 +173,9 @@ ggstatsplot::ggcoefstats(m2,
                          only.significant = TRUE,
                          palette = "category20c_d3",
                          )
+
+ggeffects::ggpredict(m2) %>%
+  plot()
 ```
 
 ## Model 3
@@ -210,6 +216,9 @@ ggstatsplot::ggcoefstats(m3,
                          only.significant = TRUE,
                          palette = "category20c_d3",
                          )
+
+ggeffects::ggpredict(m3) %>%
+  plot()
 ```
 
 # Relevant states sample
@@ -251,6 +260,9 @@ ggstatsplot::ggcoefstats(m4,
                          only.significant = TRUE,
                          palette = "category20c_d3",
                          )
+
+ggeffects::ggpredict(m4) %>%
+  plot()
 ```
 
 ## Model 5
@@ -284,6 +296,9 @@ ggstatsplot::ggcoefstats(m5,
                          only.significant = TRUE,
                          palette = "category20c_d3",
                          )
+
+ggeffects::ggpredict(m5) %>%
+  plot()
 ```
 
 ## Model 6
@@ -325,19 +340,23 @@ ggstatsplot::ggcoefstats(m6,
                          palette = "category20c_d3",
                          )
 
+ggeffects::ggpredict(m6) %>%
+  plot()
 ```
 
 # Compiled results
 ```{r}
+# Make list of models
 models <- list(m1, m2, m3, m4, m5, m6)
 
-texreg::screenreg(models,
+# HTML version for markdown
+texreg::htmlreg(models,
                 stars = c(0.01, 0.05, 0.1, 0.15),
                 symbol = "\\dagger",
                 omit.coef = "(y)",
                custom.coef.names = c("NATO member",
-                                     "Distance from Russia (minimum, log)",
-                                     "GDP per capita (constant 2010 USD)",
+                                     "Min. distance from Russia (log)",
+                                     "GDP per capita (constant 2010 \\$)",
                                      "Population (log)",
                                      "Democracy",
                                      "Nuclear status",
@@ -345,20 +364,42 @@ texreg::screenreg(models,
                                      "Civil War"),
                 custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"), 
                                        "Controls" = c("No", "Yes", "Yes", "No", "Yes", "Yes")),
-                custom.header = list("Full sample" = 1:3, "Relevant European states sample" = 4:6))
+                custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
+
+# Tex version for manuscript
+texreg::texreg(models,
+                stars = c(0.01, 0.05, 0.1, 0.15),
+                symbol = "\\dagger",
+                omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Min. distance from Russia (log)",
+                                     "GDP per capita (constant 2010 \\$)",
+                                     "Population (log)",
+                                     "Democracy",
+                                     "Nuclear status",
+                                     "CINC Ratio",
+                                     "Civil War"),
+                custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")),
+                custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               label = "table:model",
+               caption = "All models are ordinal probits with year fixed effects and standard errors clustered at the country level. Coefficients have been standardized for easier comparison",
+               float.pos = "h",
+               file = paste0(here::here(), "/paper/figures/","model.tex")
+               )
 ```
 
 # Marginal effects
 
 # Alternate specifications
 ## Imputed control variables
+Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012 or 2015. We impute values into those control variable columns to avoid losing those observations and display the results below. 
 ```{r}
 # Prep imputation model
 d <- rms::datadist(df)
 options(datadist = "d")
 
 # Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
-m3_imp <- Hmisc::aregImpute(~ cinc1 + 
+df_imp <- Hmisc::aregImpute(~ cinc1 + 
                               cinc2 +
                               gdp1_2010const +
                               gdppc1_2010const +
@@ -377,7 +418,22 @@ m3_imp <- Hmisc::aregImpute(~ cinc1 +
                             n.impute = 10, 
                             pr = FALSE)
 
-# Fit the outcome model following multiple imputation
+# Imputed model 1
+m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                               NATOmem_MEM +
+                               lnmindistkm_rus +
+                               cinc_ratio +
+                               demo1 +
+                               civilwar +
+                               nuclear1 +
+                               year,
+                             fitter = rms::lrm, 
+                             xtrans = m3_imp,
+                             data = df,
+                             x = TRUE,
+                             y = TRUE)
+
+# Ipmuted model 3
 m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                NATOmem_MEM +
                                lnmindistkm_rus +
@@ -396,8 +452,6 @@ summary(m3_imp)
 
 ## Country-clustered standard errors
 rms::robcov(m3_imp, df$cabbrev1)
-
-plot(rms::nomogram(m3_imp, fun = plogis))
 ```
 
 ## Zero inflated ordered probit
