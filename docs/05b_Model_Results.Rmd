@@ -7,6 +7,7 @@ output:
   html_document:
     theme: flatly
     code_download: true
+    code_folding: hide
     toc: yes
     number_sections: yes
     toc_float:
@@ -19,7 +20,7 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+knitr::opts_chunk$set(warning = FALSE, error = FALSE)
 library(magrittr)
 library(ggplot2)
 ```
@@ -145,9 +146,12 @@ ggeffects::ggpredict(m3) %>%
 ```
 
 # Relevant states sample
-We run the same models as above on a different sample. Here, we limit sample to European states that meet any 3 of the following criteria: \\
-1. **History of conflict** -- European states that have had a MID or ICB incident with Russia/the Soviet Union from 1945-1994. \\
-2. **Former Soviet Union/Warsaw Pact** -- European states that were formerly members of either the Soviet Union or Warsaw Pact. \\
+We run the same models as above on a different sample. Here, we limit sample to European states that meet any 3 of the following criteria:
+
+1. **History of conflict** -- European states that have had a MID or ICB incident with Russia/the Soviet Union from 1945-1994.
+
+2. **Former Soviet Union/Warsaw Pact** -- European states that were formerly members of either the Soviet Union or Warsaw Pact.
+
 3. **Contiguity** -- European states that are contiguous with Russia.
 
 ```{r}

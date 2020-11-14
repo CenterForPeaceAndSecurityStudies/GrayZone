@@ -27,15 +27,16 @@ editor_options:
 header-includes: 
   - \usepackage{tikz}
   - \usepackage{pgfplots}
+bibliography: GrayZone.json
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE)
 library(magrittr)
 library(ggplot2)
 ```
 
-This appendix provides supplemental information about the dataset of Russian gray zone campaigns introduced in the accompanying paper "After Deterrence: Explaining Conflict Short of War"
+This appendix accompanies the paper "After Deterrence: Explaining Conflict Short of War". It provides supplemental information concerning proofs for the formal model, the dataset of Russian gray zone campaigns introduced in the paper, and robustness checks and alternate specifications for the statistical model.
 
 # Formal Model
 ## Formal statement of assumptions
@@ -569,13 +570,16 @@ gtsummary::tbl_summary(df_vars,
                        label = list(intensity ~ "Intensity", NATOmem_MEM ~ "NATO member", lnmindistkm_rus ~ "Distance from Russia (minimum, log)", lnpop1 ~ "Population (log)", civilwar ~ "Active civil war", demo1 ~ "Democracy", nuclear1 ~ "Nuclear state", cinc_ratio ~ "CINC Ratio")) %>%
   gtsummary::add_n() %>%
   gtsummary::bold_labels()
+```
 
+```{r, results = 'asis'}
 stargazer::stargazer(df_vars, 
                      title = "Covariate Summary Statistics",
                      covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "GDP per capita (2010 const. USD)", "Population (log)", "Active civil war", "Democracy", "Nuclear state", "CINC Ratio"),
                      digits = 1,
                      notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
-                     type = "text")
+                     header = FALSE,
+                     type = "latex")
 ```
 
 The distribution of our dependent variable, intensity, is shown below for the full sample (including non-European states)
@@ -621,11 +625,15 @@ df %>%
   GGally::ggpairs()
 ```
 
+## Case Study: US 2016
+A U.S. intelligence assessment released soon after the 2016 election concluded with "high confidence" that "Russian President Vladimir Putin ordered an influence campaign in 2016 aimed at the US presidential election. Russia’s goals were to undermine public faith in the US democratic process, denigrate Secretary Clinton, and harm her electability and potential presidency. We further assess Putin and the Russian Government developed a clear preference for President-elect Trump" [@officeofthedirectorofnationalintelligence_assessingrussianactivities_2017]. Moscow’s influence operations might thus be described as unrestrained, even brazen, and thus motivated entirely by efficiency calculations. Yet the choice to pursue this course of action in the first place was very much constrained by the implicit deterrence posture of the United States. Russia could safely assume that the most powerful military in the world would retaliate for armed attacks against U.S. vital interests. While the United States had not designated its electoral process as "critical infrastructure" to explicitly signal that cyber interference was proscribed, Russia still had to consider the potential for American retaliation. Russia thus sought opportunities to impose costs and seek benefits while minimizing the risk of escalation. It found them through covert manipulation of democratic discourse. Indeed, Russia's electoral interference has gone essentially unpunished by the United States to date, aside from the expulsion of some Russian intelligence officers and the application of some additional sanctions to an already heavy regime put in place after Ukraine. Of course, if Trump’s victory in 2016 or any of his administration's subsequent policies can ever be credited to active measures by the Russian Federation, even in part, it would amount to one of the most consequential intelligence coups in history. It is just as likely, however, that the Russian campaign simply added noise to one of the most chaotic campaigns in U.S. presidential history [@gelman_19thingswe_2017]. Russian information operations appear to be a low-cost gamble to influence an over-determined outcome.
+
 # Alternate model specifications
 We run a set of alternate model specifications as robustness checks. Those results are shown below.
 
 ## Imputed control variables
-Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here
+Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here:
+
 ```{r}
 naniar::gg_miss_var(df_vars)
 ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
@@ -673,7 +681,7 @@ m2_imp <- Hmisc::fit.mult.impute(intensity ~
                                  x = TRUE,
                                  y = TRUE)
 
-rms::robcov(m2_imp, df$cabbrev1)
+m2_imp <- rms::robcov(m2_imp, df$cabbrev1)
 
 # Imputed model 3
 m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
@@ -689,34 +697,90 @@ m3_imp <- Hmisc::fit.mult.impute(intensity ~
                                  x = TRUE,
                                  y = TRUE)
 
-rms::robcov(m3_imp, df$cabbrev1)
+m3_imp <- rms::robcov(m3_imp, df$cabbrev1)
+
+# Subset sample
+df_conserv <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+d <- rms::datadist(df_conserv)
+options(datadist = "d")
+
+# Impute for subsample has to be done separately due to the different n. We remove civilwar because there are less than 5 observations with value 1 which creates unbalanced imputation estimates
+df_imp_conserv <- Hmisc::aregImpute(~ cinc1 + 
+                              cinc2 +
+                              gdp1_2010const +
+                              gdppc1_2010const +
+                              pop1 +
+                              elf +
+                              polity1 +
+                              NATOmem_MEM +
+                              lnmindistkm_rus +
+                              cinc_ratio +
+                              demo1 +
+                              nuclear1,
+                            nk = 0,
+                            tlinear = TRUE, 
+                            data = df_conserv,
+                            n.impute = 10, 
+                            pr = FALSE)
 
 # Imputed model 5
+m5_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus +
+                                   demo1 +
+                                   nuclear1 +
+                                   lnpop1 +
+                                   gdppc1_2010const +
+                                   year,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp_conserv,
+                                 data = df_conserv,
+                                 x = TRUE,
+                                 y = TRUE)
 
-# Imputed model 6
+m5_imp <- rms::robcov(m5_imp, df_conserv$cabbrev1)
 
+# Imputed model 6. We remove civil war from here because 
+m6_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus +
+                                   demo1 +
+                                   nuclear1 +
+                                   cinc_ratio +
+                                   year,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp_conserv,
+                                 data = df_conserv,
+                                 x = TRUE,
+                                 y = TRUE)
 
-## Country-clustered standard errors
+m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
+```
 
-# Make list of models
-models <- list(m2_imp, m3_imp, m5_imp, m6_imp)
+We here show models results for the newly imputed model 2:
 
-# HTML version for markdown
-texreg::screenreg(models,
-                stars = c(0.01, 0.05, 0.1, 0.15),
-                symbol = "\\dagger",
-                omit.coef = "(y)",
-              custom.coef.names = c("NATO member",
-                                     "Russia min. distance",
-                                     "Democracy",
-                                     "Nuclear status",
-                                     "Population",
-                                     "GDP per capita",
-                                     "CINC ratio"),
-                custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"), 
-                                       "Controls" = c("No", "Yes", "Yes", "No", "Yes", "Yes")),
-                custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
+```{r}
+summary(m2_imp)
+```
 
+And model 3
+
+```{r}
+summary(m3_imp)
+```
+
+And model 5
+
+```{r}
+summary(m5_imp)
+```
+
+And model 6
+
+```{r}
+summary(m6_imp)
 ```
 
 ## Zero inflated ordered probit
@@ -786,8 +850,11 @@ vcv
 
 ## Alternate samples
 Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
+
 Known attacks - includes only country-years that were targets of a Russian intervention after 1994
 
 ### Expansive sample
 
 ### Known targets
+
+# References
