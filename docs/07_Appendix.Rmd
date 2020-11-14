@@ -31,6 +31,8 @@ header-includes:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(ggplot2)
 ```
 
 This appendix provides supplemental information about the dataset of Russian gray zone campaigns introduced in the accompanying paper "After Deterrence: Explaining Conflict Short of War"
@@ -51,133 +53,133 @@ Second, we express the assumption that if C's resolve increases, C becomes more 
 
 ### Equilibrium Intuition
 Outside of gray zone conflict, C will prefer the status quo to initially going to war when 
-\begin{align*}
-\theta\rho_{0}\geq & \theta\rho_{W}-\kappa_{C}
-\end{align*}
+  \begin{align*}
+  \theta\rho_{0}\geq & \theta\rho_{W}-\kappa_{C}
+  \end{align*}
 or 
-\begin{align*}
-\theta\leq & \frac{\kappa_{C}}{\rho_{W}-\rho_{0}}.
-\end{align*}
+  \begin{align*}
+  \theta\leq & \frac{\kappa_{C}}{\rho_{W}-\rho_{0}}.
+  \end{align*}
+
 Here I discuss the intuition of the equilibrium in the paper. Assume for now that C is optimally selecting a $g_{C}^{*}$ such that the game ends in gray zone conflict (in other words assume that $w_{R}^{*}=0$ and $g_{C}^{*}\geq0$). Also assume that D selects an optimal $g_{D}^{*}$ such that $g_{D}^{*}\leq g_{C}^{*}$ (this will be borne out by Assumption 1). D selects $g_{D}^{*}$ characterized by 
-\begin{align*}
-g_{D}^{*}\in & argmax_{g_{D}\geq0}\left\{ 1-\rho_{0}-g_{C}+g_{D}-\beta_{D}g_{D}^{2}\right\} .
-\end{align*}
+  \begin{align*}
+  g_{D}^{*}\in & argmax_{g_{D}\geq0}\left\{ 1-\rho_{0}-g_{C}+g_{D}-\beta_{D}g_{D}^{2}\right\}.
+  \end{align*}
 I take first-order conditions with respect to $g_{D}$ and solve the expression above to identify the optimal level of D's gray zone response $g_{D}^{*}$. This unique value is 
-\begin{align*}
-g_{D}^{*}= & \frac{1}{2\beta_{D}}.
-\end{align*}
-Using the expression for $g_{D}^{*}$, D's utility in terms of the selected $g_{C}^{*}$ is $U_{D}=1-\rho_{0}-g_{C}^{*}+\frac{1}{4\beta_{D}}$. \\
- \\
- 
- I can then begin considering C's utility. There are two things to consider. First, it could be that C will select an optimal $g_{C}^{*}$ that is constrained by D's willingness to go to war. Essentially, if $g_{C}>\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, then D's utility from war is greater than D's utility from gray zone conflict; thus, if C wants to remain in gray zone conflict and will be constrained by D's deterrent threat, C will select $\hat{g_{C}}$, where $\hat{g_{C}}$ is the greatest $g_{C}$ that would make D indifferent between gray zone conflict and war, or 
-\begin{align*}
-\hat{g_{C}} & =\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}.
-\end{align*}
+  \begin{align*}
+  g_{D}^{*}= & \frac{1}{2\beta_{D}}.
+  \end{align*}
+
+Using the expression for $g_{D}^{*}$, D's utility in terms of the selected $g_{C}^{*}$ is $U_{D}=1-\rho_{0}-g_{C}^{*}+\frac{1}{4\beta_{D}}$.
+
+I can then begin considering C's utility. There are two things to consider. First, it could be that C will select an optimal $g_{C}^{*}$ that is constrained by D's willingness to go to war. Essentially, if $g_{C}>\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, then D's utility from war is greater than D's utility from gray zone conflict; thus, if C wants to remain in gray zone conflict and will be constrained by D's deterrent threat, C will select $\hat{g_{C}}$, where $\hat{g_{C}}$ is the greatest $g_{C}$ that would make D indifferent between gray zone conflict and war, or
+  \begin{align*}
+  \hat{g_{C}} & =\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}.
+  \end{align*}
 Second C may select an optimal $g_{C}^{*}$ that is constrained by their own internal costs. When this is the case, C will select $\check{g_{C}}$, defined by the optimization 
-\begin{align*}
-\check{g_{C}}\in & argmax_{g_{C}\geq0}\left\{ \theta\left(\rho_{0}+g_{C}-\frac{1}{2\beta_{D}}\right)-\beta_{C}g_{C}\right\} ,
-\end{align*}
+  \begin{align*}
+  \check{g_{C}}\in & argmax_{g_{C}\geq0}\left\{ \theta\left(\rho_{0}+g_{C}-\frac{1}{2\beta_{D}}\right)-\beta_{C}g_{C}\right\},
+  \end{align*}
 which yields 
-\begin{align*}
-\check{g_{C}} & =\frac{\theta}{2\beta_{C}}.
-\end{align*}
-Before discussing the true behavior, I want to highlight two things that do not happen. First, note that C will never select an $g_{C}$ that provokes D to go to war in the final stage, because this is strictly worse than initially going to war. Second, note that C will never select into gray zone conflict (i.e. set $w_{R}=0$ and $g_{C}^{*}>0$) if $g_{D}^{*}$ as defined above is greater than $g_{C}^{*}$ because C could do strictly better not paying the costs of war and selecting into the status quo ($g_{C}^{*}=0$).\\
+  \begin{align*}
+  \check{g_{C}} & =\frac{\theta}{2\beta_{C}}.
+  \end{align*}
+Before discussing the true behavior, I want to highlight two things that do not happen. First, note that C will never select an $g_{C}$ that provokes D to go to war in the final stage, because this is strictly worse than initially going to war. Second, note that C will never select into gray zone conflict (i.e. set $w_{R}=0$ and $g_{C}^{*}>0$) if $g_{D}^{*}$ as defined above is greater than $g_{C}^{*}$ because C could do strictly better not paying the costs of war and selecting into the status quo ($g_{C}^{*}=0$).
 
-\\
- With this is place, I can say that if C optimally selects into gray zone conflict, C will select $g_{C}^{*}=\tilde{g_{C}}$, where 
-\begin{align*}
-\tilde{g_{C}}= & min\left\{ \hat{g_{C}},\check{g_{C}}\right\} .
-\end{align*}
-I've characterized what happens withing gray zone conflict. I now need to describe how the game optimally plays out across the possibility of selecting into the status quo, war (at the onset; $w_{A}=1$), or gray zone conflict. Because C moves first, this is ultimately C's choice. I can calculate C's decision within the two cases of gray zone conflict:\\
- \\
+With this is place, I can say that if C optimally selects into gray zone conflict, C will select $g_{C}^{*}=\tilde{g_{C}}$, where 
+  \begin{align*}
+  \tilde{g_{C}}= & min\left\{ \hat{g_{C}},\check{g_{C}}\right\} .
+  \end{align*}
+I've characterized what happens withing gray zone conflict. I now need to describe how the game optimally plays out across the possibility of selecting into the status quo, war (at the onset; $w_{A}=1$), or gray zone conflict. Because C moves first, this is ultimately C's choice. I can calculate C's decision within the two cases of gray zone conflict:
+
 First, I consider the case when $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This condition implies that the selected gray zone conflict will be constrained by D's deterrent threat and not C's internal costs. So, if C selects into gray zone conflict, C will select $g_{C}^{*}=\hat{g_{C}}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. I can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when 
-\begin{align*}
-\theta\rho_{0}\geq & \theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
-\end{align*}
+  \begin{align*}
+  \theta\rho_{0}\geq & \theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
+  \end{align*}
 or 
-\begin{align*}
-\theta\leq & \frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}.
-\end{align*}
-Note that the above derivation relies on $\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}>0$, lest the inequality sign would flip. This is assumed by Assumption 1.\\
- \\
+  \begin{align*}
+  \theta\leq & \frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}.
+  \end{align*}
+Note that the above derivation relies on $\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}>0$, lest the inequality sign would flip. This is assumed by Assumption 1.
  
- Next, C prefers war to gray zone conflict when
+Next, C prefers war to gray zone conflict when
+  \begin{align*}
+  \theta\rho_{W}-\kappa_{C}> & \theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
+  \end{align*}
+or 
+  \begin{align*}
+  \theta> & \frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}.
+  \end{align*}
+Note that the above derivation relies on $\frac{1}{4\beta_{D}}-\kappa_{D}>0$, lest the inequality sign would flip. this is assumed by Assumption 2.
 
-\begin{align*}
-\theta\rho_{W}-\kappa_{C}> & \theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
-\end{align*}
+Next, I assume $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This condition implies that the selected gray zone conflict will be constrained by C's internal costs and not D's deterrent threat. So, if C selects into gray zone conflict, C will select $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$. I can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when
+  \begin{align*}
+  \theta\rho_{0}\geq & \theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}
+  \end{align*}
 or 
-\begin{align*}
-\theta> & \frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}.
-\end{align*}
-Note that the above derivation relies on $\frac{1}{4\beta_{D}}-\kappa_{D}>0$, lest the inequality sign would flip. this is assumed by Assumption 2. \\
- \\
- Next, I assume $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This condition implies that the selected gray zone conflict will be constrained by C's internal costs and not D's deterrent threat. So, if C selects into gray zone conflict, C will select $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$. I can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when 
- 
-\begin{align*}
-\theta\rho_{0}\geq & \theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}
-\end{align*}
-or 
-\begin{align*}
-0\geq & \theta\left(\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}\right).
-\end{align*}
+  \begin{align*}
+  0\geq & \theta\left(\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}\right).
+  \end{align*}
+
 Next, C prefers war to gray zone conflict when 
-\begin{align*}
-\theta\rho_{W}-\kappa_{C}> & \theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}
-\end{align*}
+  \begin{align*}
+  \theta\rho_{W}-\kappa_{C}> & \theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}
+  \end{align*}
 or 
-\begin{align*}
-\theta> & \frac{\kappa_{C}}{\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}}.
-\end{align*}
-Note that the above derivation relies on $\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}>0$, lest the inequality sign would flip. This is implied by Assumption 2. \\
-\\
+  \begin{align*}
+  \theta> & \frac{\kappa_{C}}{\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}}.
+  \end{align*}
+Note that the above derivation relies on $\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}>0$, lest the inequality sign would flip. This is implied by Assumption 2.
+
 With all of this defined, we can characterize C's strategy in terms of $\theta$; as $\theta$ increases, C prefers more degrees of conflict (i.e. larger $g_{C}^{*}$'s or war) to get what they want.
 
 ### Equilibrium Behavior
-Proposition 1A and the text below contains a more complete discussion on the equilibrium behavior characterized in Proposition 1. \\
- \\
- \textbf{\textit{Proposition 1A:}}\textit{ In equilibrium, the game will play out in the following manner.}\\
- \\
- \textit{Case 1, $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
-\begin{itemize}
-\item \textit{1.A. If $\theta\leq\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. Payoffs are $U_{D}=1-\rho_{0}$ and $U_{C}=\theta\rho_{0}.$} 
-\item \textit{1.B. If $\theta>\frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C selects $w_{R}^{*}=1$, and payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\rho_{W}-\kappa_{A}$.} 
-\item \textit{1.C. Otherwise, the game end in gray zone conflict where }C's\textit{ limited challenge is constrained by D's deterrent threat. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. Payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}.$} 
-\end{itemize}
+Proposition 1A and the text below contains a more complete discussion on the equilibrium behavior characterized in Proposition 1.
+
+\textbf{\textit{Proposition 1A:}}\textit{ In equilibrium, the game will play out in the following manner.}
+
+\textit{Case 1, $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
+  \begin{itemize}
+  \item \textit{1.A. If $\theta\leq\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. Payoffs are $U_{D}=1-\rho_{0}$ and $U_{C}=\theta\rho_{0}.$} 
+  \item \textit{1.B. If $\theta>\frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C selects $w_{R}^{*}=1$, and payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\rho_{W}-\kappa_{A}$.} 
+  \item \textit{1.C. Otherwise, the game end in gray zone conflict where }C's\textit{ limited challenge is constrained by D's deterrent threat. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. Payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}.$} 
+  \end{itemize}
+
 \textit{Case 2, $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
-\begin{itemize}
-\item \textit{2.A. If $\theta\leq\frac{2\beta_{C}}{\beta_{D}}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. Payoffs are $U_{D}=1-\rho_{0}$ and $U_{C}=\theta\rho_{0}.$} 
-\item \textit{2.B. If $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C sets $w_{R}^{*}=1$. Payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\rho_{W}-\kappa_{A}$.} 
-\item \textit{2.C. Otherwise, the game will end in gray zone conflict where }C's\textit{ limited challenge is constrained by }C's\textit{ internal efficiency. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\frac{\theta}{2\beta_{C}}$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. Payoffs are $U_{D}=1-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{4\beta_{D}},$ and $U_{C}=\theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}.$} 
-\end{itemize}
+  \begin{itemize}
+  \item \textit{2.A. If $\theta\leq\frac{2\beta_{C}}{\beta_{D}}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. Payoffs are $U_{D}=1-\rho_{0}$ and $U_{C}=\theta\rho_{0}.$} 
+  \item \textit{2.B. If $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\beta_{D}}}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C sets $w_{R}^{*}=1$. Payoffs are $U_{D}=1-\rho_{W}-\kappa_{D}$ and $U_{C}=\theta\rho_{W}-\kappa_{A}$.} 
+  \item \textit{2.C. Otherwise, the game will end in gray zone conflict where }C's\textit{ limited challenge is constrained by }C's\textit{ internal efficiency. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\frac{\theta}{2\beta_{C}}$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. Payoffs are $U_{D}=1-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{4\beta_{D}},$ and $U_{C}=\theta\rho_{0}+\frac{\theta^{2}}{4\beta_{C}}-\frac{\theta}{2\beta_{D}}.$} 
+  \end{itemize}
+
 Working backwards, D will declare war for all $g_{C}>\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. If $g_{C}\leq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, D will select $g_{D}=min\left\{ \frac{1}{2\beta_{D}},g_{C}\right\}$. When $g_{D}=\frac{1}{2\beta_{D}}$, D is selecting their optimal level of gray zone response based on their internal optimization. When $g_{D}=g_{C}$, it implies that D would be willing to select a greater gray zone response, but does not need to, essentially driving the political impact of C's limited challenges back to zero (at cost).
 
 ## Observation 1 Discussion
-Assume for now the parameters are such that the Case 1.C. conditions hold, and consider what happens when $\kappa_{D}$ decreases. Because here C selects the greatest level of limited challenges that will not provoke D to war, C's selected $g_{C}^{*}$ is a decreasing function of $\kappa_{D}$; therefore, because $g_{D}^{*}$ is fixed, the final extent of gray zone conflict will be less. Of course, the analysis does not stop there. Improvements in D's willingness to go to war constrain how useful gray zone conflict is to R, and, within case 1.C., C's utility is decreasing in $-\kappa_{D}$.\footnote{This follows from $\frac{d}{d\kappa_{D}}U_{D}=\theta-2\beta_{C}\left[\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right]>0$, as determined by the conditions for Case 1 to hold.} Thus, if $\kappa_{D}$ becomes small enough, C will leave gray zone conflict and instead select into either accepting the status quo (entering into case 1A) or going to war (entering into Case 1B). Additionally, it is worthwhile noting that as $\kappa_{D}$ decreases, the condition that selects into Case 1 (over Case 2) has more slack, implying that improvements in D's willingness to go to war will keep D in within Case 1.\\
- \\
- Now assume the parameters are such that the Case 2.C. conditions hold, and consider what happens when $\kappa_{D}$ decreases. Note that this will not change the selected $g_{C}^{*}$ here, but it could break the inequality $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$ that determines whether the equilibrium is defined in Case 1 or Case 2. thus, for a small enough $\kappa_{D}$, the conditions for Case 2 will break and the conditions for Case 1 will hold. When this happens, either the selected $g_{C}^{*}$ is increasing in $\kappa_{D}$ (Case 1.C.) or gray zone conflict is not selected (Case 1.A. or 1.B.).
+Assume for now the parameters are such that the Case 1.C. conditions hold, and consider what happens when $\kappa_{D}$ decreases. Because here C selects the greatest level of limited challenges that will not provoke D to war, C's selected $g_{C}^{*}$ is a decreasing function of $\kappa_{D}$; therefore, because $g_{D}^{*}$ is fixed, the final extent of gray zone conflict will be less. Of course, the analysis does not stop there. Improvements in D's willingness to go to war constrain how useful gray zone conflict is to R, and, within case 1.C., C's utility is decreasing in $-\kappa_{D}$.\footnote{This follows from $\frac{d}{d\kappa_{D}}U_{D}=\theta-2\beta_{C}\left[\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right]>0$, as determined by the conditions for Case 1 to hold.} Thus, if $\kappa_{D}$ becomes small enough, C will leave gray zone conflict and instead select into either accepting the status quo (entering into case 1A) or going to war (entering into Case 1B). Additionally, it is worthwhile noting that as $\kappa_{D}$ decreases, the condition that selects into Case 1 (over Case 2) has more slack, implying that improvements in D's willingness to go to war will keep D in within Case 1.
+
+Now assume the parameters are such that the Case 2.C. conditions hold, and consider what happens when $\kappa_{D}$ decreases. Note that this will not change the selected $g_{C}^{*}$ here, but it could break the inequality $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$ that determines whether the equilibrium is defined in Case 1 or Case 2. thus, for a small enough $\kappa_{D}$, the conditions for Case 2 will break and the conditions for Case 1 will hold. When this happens, either the selected $g_{C}^{*}$ is increasing in $\kappa_{D}$ (Case 1.C.) or gray zone conflict is not selected (Case 1.A. or 1.B.).
  
 ## Extension 1: Endogenous $\beta_{D}$
+In the model in the paper, I treated D's gray zone efficiency $\beta_{D}$ as exogenous. In some special cases or under some conditions, this may be too strong an assumption. In this section, I characterize an equilibrium for the game when D can have complete flexibility in selecting some $\beta_{D}\geq\underline{\beta_{D}}>0$, where $\beta_{D}$ cannot equal zero lest D's costs from their gray zone response will be undefined.\footnote{For ease, I will assume that all parameters imply that the selected equilibrium is such that the selected $\beta_{D}^{*}$ is strictly greater than $\underline{\beta_{D}}$.} The key take away from this extension is that if $\beta_{D}$ is endogenous (and its selection costless), then D's selection of $\beta_{D}^{*}$ will be arbitrated by two properties. As the first property, it matters whether C prefers war to the status quo (formally, if C is type $\theta>\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$), or C prefers the status quo to war ($\theta\leq\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$). When C prefers the status quo to war, then D is in a position where D can, by selecting a low enough $\beta_{D}$, influence C to stop undertaking limited challenges and select into the status quo. Intuitively, when D is very good at gray zone conflict, D would select a high $g_{D}^{*}$, which makes gray zone conflict less productive for C. But, when C prefers war to the status quo, then D could pressure C to stop undertaking limited challenges, but this will result in C going to war with D.
 
-In the model in the paper, I treated D's gray zone efficiency $\beta_{D}$ as exogenous. In some special cases or under some conditions, this may be too strong an assumption. In this section, I characterize an equilibrium for the game when D can have complete flexibility in selecting some $\beta_{D}\geq\underline{\beta_{D}}>0$, where $\beta_{D}$ cannot equal zero lest D's costs from their gray zone response will be undefined.\footnote{For ease, I will assume that all parameters imply that the selected equilibrium is such that the selected $\beta_{D}^{*}$ is strictly greater than $\underline{\beta_{D}}$.} The key take away from this extension is that if $\beta_{D}$ is endogenous (and its selection costless), then D's selection of $\beta_{D}^{*}$ will be arbitrated by two properties. As the first property, it matters whether C prefers war to the status quo (formally, if C is type $\theta>\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$), or C prefers the status quo to war ($\theta\leq\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$). When C prefers the status quo to war, then D is in a position where D can, by selecting a low enough $\beta_{D}$, influence C to stop undertaking limited challenges and select into the status quo. Intuitively, when D is very good at gray zone conflict, D would select a high $g_{D}^{*}$, which makes gray zone conflict less productive for C. But, when C prefers war to the status quo, then D could pressure C to stop undertaking limited challenges, but this will result in C going to war with D.\\
- \\
-As the second property, D's decision will also be arbitrated by whether D can select a gray zone efficiency $\beta_{D}^{*}$ that pushes C into a level of gray zone conflict where the deterrent threat does not bind. Recall that if C optimally conducts gray zone conflict, C selects $g_{C}^{*}=min\{\hat{g_{C}},\check{g_{C}}\}$, implying that C will either select an optimal $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$ based on their own internal cost-benefit analysis, or select an optimal $g_{C}^{*}=\hat{g_{C}}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$ tailored to make D indifferent between war and gray zone conflict (where the deterrent threat binds), with C ultimately choosing the smaller of the two. This means that if D can select a small enough $\beta_{D}$ so that $\check{g_{C}}<\hat{g_{C}}$, then C will selecting a level of limited challenge that is below the point that would make D indifferent between war and gray zone conflict, thus granting D some surplus. \\
- \\
- The above two properties interact. Based on Assumptions 1 and 2, D will always prefer the status quo to gray zone conflict where the deterrent threat doesn't bind, and gray zone conflict where the deterrent threat doesn't bind to gray zone conflict where the deterrent threat does bind or war. Proposition A identifies how D selects $\beta_{D}^{*}$ in one possible equilibrium. Note that this is not the only possible equilibrium.\footnote{Consider the equilibrium space for the range of $\theta$ where the selected $\beta_{D}$ will either push C into war or gray zone conflict where the deterrent threat binds. In the figure below, this is the far right region of the graph. Here D can select any $\beta_{D}$ and it will grant D the same final expected utility of their wartime utility.}\\
- \\
- \textbf{\textit{Proposition A.}}\textit{ As one equilibrium, in the game with endogenous $\beta_{D}$, D will select the following levels of $\beta_{D}^{*}$:}\\
- \\
- \textit{Case 1: $\theta\leq\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$:} 
-\begin{itemize}
-\item \textit{1.A. I define $\tilde{\beta_{D}}$ as $\theta=\frac{2\beta_{C}}{\tilde{\beta_{D}}}$ . So long that $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\tilde{\beta_{D}}}$, then D selects $\beta_{D}^{*}=\tilde{\beta_{D}}$. The game will proceed as defined in Proposition 1, Case 2.A., where the final outcome is the status quo.} 
-\item \textit{1.B. Otherwise, D selects $\beta_{D}^{*}=\hat{\beta_{D}}$, here $\hat{\beta_{D}}$ is defined implicitly as $\theta=\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\hat{\beta_{D}}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\hat{\beta_{D}}}\right)}$ (also note from earlier assumptions $\hat{\beta}_{D}>0$). The game will proceed as defined in Proposition 1, Case 1.A., where the final out come is the status quo.} 
-\end{itemize}
+As the second property, D's decision will also be arbitrated by whether D can select a gray zone efficiency $\beta_{D}^{*}$ that pushes C into a level of gray zone conflict where the deterrent threat does not bind. Recall that if C optimally conducts gray zone conflict, C selects $g_{C}^{*}=min\{\hat{g_{C}},\check{g_{C}}\}$, implying that C will either select an optimal $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$ based on their own internal cost-benefit analysis, or select an optimal $g_{C}^{*}=\hat{g_{C}}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$ tailored to make D indifferent between war and gray zone conflict (where the deterrent threat binds), with C ultimately choosing the smaller of the two. This means that if D can select a small enough $\beta_{D}$ so that $\check{g_{C}}<\hat{g_{C}}$, then C will selecting a level of limited challenge that is below the point that would make D indifferent between war and gray zone conflict, thus granting D some surplus.
+
+The above two properties interact. Based on Assumptions 1 and 2, D will always prefer the status quo to gray zone conflict where the deterrent threat doesn't bind, and gray zone conflict where the deterrent threat doesn't bind to gray zone conflict where the deterrent threat does bind or war. Proposition A identifies how D selects $\beta_{D}^{*}$ in one possible equilibrium. Note that this is not the only possible equilibrium.\footnote{Consider the equilibrium space for the range of $\theta$ where the selected $\beta_{D}$ will either push C into war or gray zone conflict where the deterrent threat binds. In the figure below, this is the far right region of the graph. Here D can select any $\beta_{D}$ and it will grant D the same final expected utility of their wartime utility.}
+
+\textbf{\textit{Proposition A.}}\textit{ As one equilibrium, in the game with endogenous $\beta_{D}$, D will select the following levels of $\beta_{D}^{*}$:}
+ 
+\textit{Case 1: $\theta\leq\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$:} 
+  \begin{itemize}
+  \item \textit{1.A. I define $\tilde{\beta_{D}}$ as $\theta=\frac{2\beta_{C}}{\tilde{\beta_{D}}}$ . So long that $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\tilde{\beta_{D}}}$, then D selects $\beta_{D}^{*}=\tilde{\beta_{D}}$. The game will proceed as defined in Proposition 1, Case 2.A., where the final outcome is the status quo.} 
+  \item \textit{1.B. Otherwise, D selects $\beta_{D}^{*}=\hat{\beta_{D}}$, here $\hat{\beta_{D}}$ is defined implicitly as $\theta=\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\hat{\beta_{D}}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\hat{\beta_{D}}}\right)}$ (also note from earlier assumptions $\hat{\beta}_{D}>0$). The game will proceed as defined in Proposition 1, Case 1.A., where the final out come is the status quo.} 
+  \end{itemize}
+
 \textit{Case 2: $\theta>\frac{\kappa_{D}}{\rho_{W}-\rho_{0}}$} 
-\begin{itemize}
-\item \textit{2.A. I define $\check{\beta_{D}}$ implicitly as $\theta=\frac{\kappa_{C}}{\left(\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\check{\beta_{D}}}\right)}$. So long that $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\check{\beta_{D}}}$, then D selects $\beta_{D}^{*}=\check{\beta_{D}}$. The game will proceed as defined in Proposition 1, Case 2.C., where the final outcome is gray zone conflict where C is not bound by D's deterrent threat.} 
-\item \textit{2.B. Otherwise, D selects $\beta_{D}^{*}=\dot{\beta_{D}}$, here $\dot{\beta_{D}}$ is defined implicitly as $\theta=\frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\dot{\beta_{D}}}\right)^{2}}{-\kappa_{D}+\frac{1}{4\dot{\beta_{D}}}}$. The game will proceed as defined in Proposition 1, Case 1.C., where the final outcome is gray zone conflict where is not bound by D's deterrent threat.} 
-\end{itemize}
-As one example of how this one equilibrium plays out, I adapt Figure 4 in the text. Now the solid black lines denote the selected levels of $\beta_{D}^{*}$ (with $1/\beta_{D}$ plotted so that greater y-axis values represent greater gray zone efficiencies for D), and the dotted lines separate equilibrium spaces. \\
+  \begin{itemize}
+  \item \textit{2.A. I define $\check{\beta_{D}}$ implicitly as $\theta=\frac{\kappa_{C}}{\left(\rho_{W}-\rho_{0}-\frac{\theta}{4\beta_{C}}+\frac{1}{2\check{\beta_{D}}}\right)}$. So long that $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\check{\beta_{D}}}$, then D selects $\beta_{D}^{*}=\check{\beta_{D}}$. The game will proceed as defined in Proposition 1, Case 2.C., where the final outcome is gray zone conflict where C is not bound by D's deterrent threat.} 
+  \item \textit{2.B. Otherwise, D selects $\beta_{D}^{*}=\dot{\beta_{D}}$, here $\dot{\beta_{D}}$ is defined implicitly as $\theta=\frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\dot{\beta_{D}}}\right)^{2}}{-\kappa_{D}+\frac{1}{4\dot{\beta_{D}}}}$. The game will proceed as defined in Proposition 1, Case 1.C., where the final outcome is gray zone conflict where is not bound by D's deterrent threat.} 
+  \end{itemize}
+As one example of how this one equilibrium plays out, I adapt Figure 4 in the text. Now the solid black lines denote the selected levels of $\beta_{D}^{*}$ (with $1/\beta_{D}$ plotted so that greater y-axis values represent greater gray zone efficiencies for D), and the dotted lines separate equilibrium spaces.
 
 \begin{figure}
 \begin{tikzpicture} 
@@ -401,14 +403,8 @@ title={Equilibrium Behavior: C's Resolve and D's Gray Zone Efficiency},
 1.365253968	0.652	\\
 };
 
-
- 
 %   \node at (1.3,0.502)  [circle,scale=0.7,minimum size=0.5pt,draw,fill=black!100] {};
-  %  \node at (1.3,0.65)  [circle,scale=0.7,draw,fill=black!0] {};
-
-
-            
-
+%   \node at (1.3,0.65)  [circle,scale=0.7,draw,fill=black!0] {};
 
 \end{axis}
 \end{tikzpicture}\vspace{0.8cm}
@@ -417,123 +413,111 @@ title={Equilibrium Behavior: C's Resolve and D's Gray Zone Efficiency},
 \caption*{C's resolve $\theta$ and the inverse D's gray zone efficiency $\frac{1}{\beta_{D}}$ are plotted. The dotted lines separate different kinds of equilibrium play, and the dark black lines denote D's optimal selected $\beta_{D}$. The parameters are $\rho_{0}=0$, $\rho_{W}=0.5$, $\beta_{C}=1$, $\kappa_{C}=0.53$, and $\kappa_{D}=0.1$.}
 \end{figure}
 
-Moving left to right, for $\theta$ between $1.285$ and $\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, D's optimal $\beta_{D}^{*}$ is described in Proposition A Case 1.A. As the outcome, C will optimally select into the status quo. For this selected $\beta_{D}^{*}$, C knows that C would face enough of a challenge in gray zone conflict to make competing there too costly. Thus within this region, D could select a low enough $\beta_{D}^{*}$ to compel C to forgo limited challenges and conflict, and stick to the status quo.\\
- \\
- Moving right, for $\theta$ between $\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$ and $\ensuremath{2\beta_{C}(\rho_{W}-\ensuremath{\rho_{0}}+\kappa_{D}}+\frac{1}{4\check{\beta_{D}}})$, D's optimal $\beta_{D}^{*}$ is described in Proposition A Case 2.A. As the outcome, C will optimally select into gray zone conflict, but will be constrained by C's internal costs. For this selected $\beta_{D}^{*}$, D wants to challenge C in gray zone conflict (which a lower $\beta_{D}^{*}$ accomplishes), but does not want to push C into forgoing gray zone conflict, because within this region C prefers war to accepting the status quo. Thus here, D selects the $\beta_{D}^{*}$ where C selects into gray zone conflict and is not bound by the deterrent threat, because this gives D some surplus beyond what war or C selecting gray zone conflict and being bound by the deterrent threat produces.\\
- \\
- Finally, for $\theta$ between $\ensuremath{2\beta_{C}(\rho_{W}-\ensuremath{\rho_{0}}+\kappa_{D}}+\frac{1}{4\check{\beta_{D}}})$ and $1.4$, D's optimal $\beta_{D}^{*}$ is described in Case 2.B. As the outcome, C will optimally select into gray zone conflict, and will be constrained by D's deterrent threat. Essentially here, D is in a bad situation. If D modifies $\beta_{D}^{*},$either C will adapt by selecting the new $g_{C}^{*}$ that makes D indifferent between war and gray zone conflict, or will go to war over the issue. Within this region, it does not matter what $\beta_{D}^{*}$ is selected, because C will always select an action that gives D their wartime utility.
+Moving left to right, for $\theta$ between $1.285$ and $\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, D's optimal $\beta_{D}^{*}$ is described in Proposition A Case 1.A. As the outcome, C will optimally select into the status quo. For this selected $\beta_{D}^{*}$, C knows that C would face enough of a challenge in gray zone conflict to make competing there too costly. Thus within this region, D could select a low enough $\beta_{D}^{*}$ to compel C to forgo limited challenges and conflict, and stick to the status quo.
+
+Moving right, for $\theta$ between $\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$ and $\ensuremath{2\beta_{C}(\rho_{W}-\ensuremath{\rho_{0}}+\kappa_{D}}+\frac{1}{4\check{\beta_{D}}})$, D's optimal $\beta_{D}^{*}$ is described in Proposition A Case 2.A. As the outcome, C will optimally select into gray zone conflict, but will be constrained by C's internal costs. For this selected $\beta_{D}^{*}$, D wants to challenge C in gray zone conflict (which a lower $\beta_{D}^{*}$ accomplishes), but does not want to push C into forgoing gray zone conflict, because within this region C prefers war to accepting the status quo. Thus here, D selects the $\beta_{D}^{*}$ where C selects into gray zone conflict and is not bound by the deterrent threat, because this gives D some surplus beyond what war or C selecting gray zone conflict and being bound by the deterrent threat produces.
+
+Finally, for $\theta$ between $\ensuremath{2\beta_{C}(\rho_{W}-\ensuremath{\rho_{0}}+\kappa_{D}}+\frac{1}{4\check{\beta_{D}}})$ and $1.4$, D's optimal $\beta_{D}^{*}$ is described in Case 2.B. As the outcome, C will optimally select into gray zone conflict, and will be constrained by D's deterrent threat. Essentially here, D is in a bad situation. If D modifies $\beta_{D}^{*},$either C will adapt by selecting the new $g_{C}^{*}$ that makes D indifferent between war and gray zone conflict, or will go to war over the issue. Within this region, it does not matter what $\beta_{D}^{*}$ is selected, because C will always select an action that gives D their wartime utility.
 
 ## Extension 2: Probabilistic Escalation to War
+A useful feature of the model above is that everything that occurs is deterministic. It is only if a state wants to go to war or wants to enter gray zone conflict does it actually happen. However, this may not perfectly represent reality. Perhaps in some cases, one state behaving aggressively in lower-levels of conflict can create an incident that necessitates an escalation to higher levels of conflict. To speak to this issue, we introduce the possibility of probabilistic escalation out of gray zone conflict. Our results are substantively similar, but this change shifts some equilibrium properties. Intuitively, now gray zone conflict can probabilistically lead to C's worst outcome: where C invests in limited challenges, war happens, and C must pay the costs of limited challenges with the costs of war. Strategically, because here gray zone conflict is overall worse for R, C will be more willing to accept the status quo or go to war.
 
-A useful feature of the model above is that everything that occurs is deterministic. It is only if a state wants to go to war or wants to enter gray zone conflict does it actually happen. However, this may not perfectly represent reality. Perhaps in some cases, one state behaving aggressively in lower-levels of conflict can create an incident that necessitates an escalation to higher levels of conflict. To speak to this issue, we introduce the possibility of probabilistic escalation out of gray zone conflict. Our results are substantively similar, but this change shifts some equilibrium properties. Intuitively, now gray zone conflict can probabilistically lead to C's worst outcome: where C invests in limited challenges, war happens, and C must pay the costs of limited challenges with the costs of war. Strategically, because here gray zone conflict is overall worse for R, C will be more willing to accept the status quo or go to war.\\
- \\
- There are many possible ways to model this. For ease, we choose (in our opinion) the simplest way, which is that selecting $g_{C}>0$ introduces a $1-\zeta\in(0,1)$ likelihood of an escalation to war. Thus, when C selects $g_{C}>0$, C's new expected utility is 
-\begin{align*}
-U_{C}= & \theta\left(\zeta P(g_{C},g_{D})+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}g_{C}.
-\end{align*}
-To offer some intuition, $g_{D}^{*}$, $\hat{g_{C}}$, $\check{g_{C}}$, and $\tilde{g_{C}}$ remain the same as it was in the model in the text (as defined in Proposition 1). However, the cut-points that distinguish C's decision to enter into the status quo, gray zone conflict, or war change slightly; overall, the key take-away is that considering probabilistic escalation makes gray zone conflict less appealing relative to the status quo and war.\\
- \\
-I express equilibrium behavior in Proposition B. Then below, I derive the new cut-points, Additionally in the derivations, I discuss how the new cut-points imply that gray zone conflict is less appealing and fewer types $\theta$ will select into it relative to the game without a probabilistic likelihood of escalation to war from gray zone conflict. \\
- \\
- \textbf{\textit{Proposition B:}}\textit{ In equilibrium, the game with a $1-\zeta$ chance of escalation out of gray zone conflict to war will play out in the following manner.}\\
- \\
- \textit{Case 1, $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
-\begin{itemize}
-\item \textit{1.A. If $\theta\leq\frac{(1-\zeta)\kappa_{C}+\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{(1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. } 
-\item \textit{1.B. If $\theta>\frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C selects $w_{R}^{*}=1$.} 
-\item \textit{1.C. Otherwise, the game end in gray zone conflict where }C's\textit{ limited challenge is constrained by D's deterrent threat. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, and (assuming the game does not probabilistically escalate to war) D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. } 
-\end{itemize}
+There are many possible ways to model this. For ease, we choose (in our opinion) the simplest way, which is that selecting $g_{C}>0$ introduces a $1-\zeta\in(0,1)$ likelihood of an escalation to war. Thus, when C selects $g_{C}>0$, C's new expected utility is 
+  \begin{align*}
+  U_{C}= & \theta\left(\zeta P(g_{C},g_{D})+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}g_{C}.
+  \end{align*}
+To offer some intuition, $g_{D}^{*}$, $\hat{g_{C}}$, $\check{g_{C}}$, and $\tilde{g_{C}}$ remain the same as it was in the model in the text (as defined in Proposition 1). However, the cut-points that distinguish C's decision to enter into the status quo, gray zone conflict, or war change slightly; overall, the key take-away is that considering probabilistic escalation makes gray zone conflict less appealing relative to the status quo and war.
+
+I express equilibrium behavior in Proposition B. Then below, I derive the new cut-points, Additionally in the derivations, I discuss how the new cut-points imply that gray zone conflict is less appealing and fewer types $\theta$ will select into it relative to the game without a probabilistic likelihood of escalation to war from gray zone conflict.
+
+\textbf{\textit{Proposition B:}}\textit{ In equilibrium, the game with a $1-\zeta$ chance of escalation out of gray zone conflict to war will play out in the following manner.}
+
+\textit{Case 1, $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
+  \begin{itemize}
+  \item \textit{1.A. If $\theta\leq\frac{(1-\zeta)\kappa_{C}+\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{(1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. } 
+  \item \textit{1.B. If $\theta>\frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C selects $w_{R}^{*}=1$.} 
+  \item \textit{1.C. Otherwise, the game end in gray zone conflict where }C's\textit{ limited challenge is constrained by D's deterrent threat. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, and (assuming the game does not probabilistically escalate to war) D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. } 
+  \end{itemize}
+
 \textit{Case 2, $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$:} 
-\begin{itemize}
-\item \textit{2.A. If $(1-\zeta)\kappa_{C}\geq\theta\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. } 
-\item \textit{2.B. If $\theta>\frac{\zeta\kappa_{C}}{\left(\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}\right)}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C sets $w_{R}^{*}=1$.}\footnote{\textit{While the right-hand-side of this condition is also increasing in $\theta$, by Assumption 2, the left-hand-side increases faster with increases in $\theta$.}}\textit{ } 
-\item \textit{2.C. Otherwise, the game will end in gray zone conflict where }C's\textit{ limited challenge is constrained by }C's\textit{ internal efficiency. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\frac{\theta}{2\beta_{C}}$, and (assuming the game does not probabilistically escalate to war) D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. } 
-\end{itemize}
+  \begin{itemize}
+  \item \textit{2.A. If $(1-\zeta)\kappa_{C}\geq\theta\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)$ and $\theta\leq\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C accepts the status quo. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=0$, and D selects $w_{D}^{*}=0$ and $g_{D}^{*}=0$. } 
+  \item \textit{2.B. If $\theta>\frac{\zeta\kappa_{C}}{\left(\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}\right)}$ and $\theta>\frac{\kappa_{C}}{\rho_{W}-\rho_{0}}$, then C declares war. C sets $w_{R}^{*}=1$.}\footnote{\textit{While the right-hand-side of this condition is also increasing in $\theta$, by Assumption 2, the left-hand-side increases faster with increases in $\theta$.}}\textit{ } 
+  \item \textit{2.C. Otherwise, the game will end in gray zone conflict where }C's\textit{ limited challenge is constrained by }C's\textit{ internal efficiency. C selects $w_{R}^{*}=0$ and $g_{C}^{*}=\frac{\theta}{2\beta_{C}}$, and (assuming the game does not probabilistically escalate to war) D selects $w_{D}^{*}=0$ and $g_{D}^{*}=\frac{1}{2\beta_{D}}$. } 
+  \end{itemize}
 
 ### Equilibrium Intuition
 First, we consider the case when $\frac{\theta}{2\beta_{C}}\geq\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This implies that C will select $g_{C}^{*}=\hat{g_{C}}=\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. We can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when 
-\begin{align*}
-\theta\rho_{0}\geq & \theta\left(\zeta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
-\end{align*}
-or 
-\begin{align*}
-\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}+\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}\geq & \theta.
-\end{align*}
-Note that the inequality sign does not flip because, by Assumption 1, $\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}>0$. I am able to say that $\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}>\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ because $\zeta\in(0,1)$. Furthermore, this constraint (on when the status quo is preferred to gray zone conflict) matters only when C prefers the status quo to war, or when $\theta\rho_{0}-\theta\rho_{W}+\kappa_{C}\geq0$; this condition implies $\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}\geq0$, which means $\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}+\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}>\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$, which in turn implies that there are more C's with some resolve $\theta$ that will select into the status quo in the game here relative to the game in the text without probabilistic escalation.\\
- \\
- Next, C prefers war to gray zone conflict when
+  \begin{align*}
+  \theta\rho_{0}\geq & \theta\left(\zeta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
+  \end{align*}
+  or 
+  \begin{align*}
+  \frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}+\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}\geq & \theta.
+  \end{align*}
+Note that the inequality sign does not flip because, by Assumption 1, $\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}>0$. I am able to say that $\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}>\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$ because $\zeta\in(0,1)$. Furthermore, this constraint (on when the status quo is preferred to gray zone conflict) matters only when C prefers the status quo to war, or when $\theta\rho_{0}-\theta\rho_{W}+\kappa_{C}\geq0$; this condition implies $\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}\geq0$, which means $\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}+\frac{(1-\zeta)(\theta\rho_{0}-\theta\rho_{W}+\kappa_{C})}{\zeta\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}>\frac{\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\left(\rho_{W}-\rho_{0}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)}$, which in turn implies that there are more C's with some resolve $\theta$ that will select into the status quo in the game here relative to the game in the text without probabilistic escalation.
 
-\begin{align*}
-\theta\rho_{W}-\kappa_{C}> & \theta\left(\zeta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
-\end{align*}
+Next, C prefers war to gray zone conflict when
+  \begin{align*}
+  \theta\rho_{W}-\kappa_{C}> & \theta\left(\zeta\left(\rho_{W}+\kappa_{D}-\frac{1}{4\beta_{D}}\right)+(1-\zeta)\rho_{W}\right)-(1-\zeta)\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}
+  \end{align*}
 or 
-\begin{align*}
-\theta> & \frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}.
-\end{align*}
-Note that based on Assumption 2 (as is written: that $\frac{1}{4\beta_{D}}-\kappa_{D}>0$), the above sign does not flip. I can say that $\zeta\kappa_{C}-\zeta\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}>\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}$. This implies that {\footnotesize{}
-\begin{align*}
-\frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}=\frac{\zeta\kappa_{C}-\zeta\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)} & >\frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}.
-\end{align*}
-}In other words, there are more C's with some resolve $\theta$ that will select into war in the game here relative to the game without probabilistic escalation.\\
- \\
- Next, I assume $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This condition implies that the selected gray zone conflict will be constrained by C's internal costs and not D's deterrent threat. So, if C selects into gray zone conflict, C will select $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$. I can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when 
-\begin{align*}
-\theta\rho_{0}\geq & \theta\left(\zeta\left(\rho_{0}+\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)+(1-\zeta)\left(\rho_{W}\right)\right)-(1-\zeta)\kappa_{C}-\frac{\theta^{2}}{4\beta_{C}}
-\end{align*}
+  \begin{align*}
+  \theta> & \frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}.
+  \end{align*}
+
+Note that based on Assumption 2 (as is written: that $\frac{1}{4\beta_{D}}-\kappa_{D}>0$), the above sign does not flip. I can say that $\zeta\kappa_{C}-\zeta\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}>\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}$. This implies that
+  \begin{align*}
+  \frac{\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\frac{1}{4\beta_{D}}-\kappa_{D}}=\frac{\zeta\kappa_{C}-\zeta\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)} & >\frac{\zeta\kappa_{C}-\beta_{C}\left(\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}\right)^{2}}{\zeta\left(\frac{1}{4\beta_{D}}-\kappa_{D}\right)}.
+  \end{align*}
+
+In other words, there are more C's with some resolve $\theta$ that will select into war in the game here relative to the game without probabilistic escalation.
+
+Next, I assume $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$. This condition implies that the selected gray zone conflict will be constrained by C's internal costs and not D's deterrent threat. So, if C selects into gray zone conflict, C will select $g_{C}^{*}=\check{g_{C}}=\frac{\theta}{2\beta_{C}}$. I can then express C's behavior in terms of $\theta$. C prefers the status quo to gray zone conflict when 
+  \begin{align*}
+  \theta\rho_{0}\geq & \theta\left(\zeta\left(\rho_{0}+\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)+(1-\zeta)\left(\rho_{W}\right)\right)-(1-\zeta)\kappa_{C}-\frac{\theta^{2}}{4\beta_{C}}
+  \end{align*}
+  or 
+  \begin{align*}
+  (1-\zeta)\kappa_{C}\geq & \theta\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right).
+  \end{align*}
+
+To speak to this inequality, we will need to consider a few different cases here.
+
+First, it could be possible that $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)\leq0$. When this is the case, then C would never want to select into gray zone conflict as doing so would always be strictly worse for R.
+
+Next, consider when $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)>0$ and $(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})>0$. In this case, C's wartime payoff $\theta\rho_{W}-\kappa_{C}$ is greater than C's status quo payoff, meaning that C would never select into the status quo over selecting into war, meaning this constraint would never be activated.
+
+Finally, consider when $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)>0$ and $(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})<0$. I can re-write the above as 
+  \begin{align*}
+  0\geq & \theta\left(\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)+(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})
+  \end{align*}
+Where note that $\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}=\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}-\frac{\theta}{4\beta_{C}}>\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}$, where the inequality holds by Assumption 1. Altogether, this means that $\text{\ensuremath{\theta\left(\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}\right)}}>\theta\left(\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)+(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})$. This implies that there are more C's with some resolve $\theta$ that will select into the status quo in the game here relative to the game without probabilistic escalation.
+
+Finally, assuming $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, C prefers war to gray zone conflict when 
+  \begin{align*}
+  \theta\rho_{W}-\kappa_{C}> & \theta\left(\zeta\left(\rho_{0}+\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)+(1-\zeta)\left(\rho_{W}\right)\right)-(1-\zeta)\kappa_{C}-\frac{\theta^{2}}{4\beta_{C}}
+  \end{align*}
 or 
-\begin{align*}
-(1-\zeta)\kappa_{C}\geq & \theta\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right).
-\end{align*}
-To speak to this inequality, we will need to consider a few different cases here.\\
- \\
- First, it could be possible that $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)\leq0$. When this is the case, then C would never want to select into gray zone conflict as doing so would always be strictly worse for R.\\
- \\
- Next, consider when $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)>0$ and $(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})>0$. In this case, C's wartime payoff $\theta\rho_{W}-\kappa_{C}$ is greater than C's status quo payoff, meaning that C would never select into the status quo over selecting into war, meaning this constraint would never be activated.\\
- \\
- Finally, consider when $\left((1-\zeta)(\rho_{W}-\rho_{0})+\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)>0$ and $(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})<0$. I can re-write the above as 
-\begin{align*}
-0\geq & \theta\left(\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)+(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})
-\end{align*}
-Where note that $\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}=\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}-\frac{\theta}{4\beta_{C}}>\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}$, where the inequality holds by Assumption 1. Altogether, this means that $\text{\ensuremath{\theta\left(\frac{\theta}{4\beta_{C}}-\frac{1}{2\beta_{D}}\right)}}>\theta\left(\zeta\left(\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)-\frac{\theta}{4\beta_{C}}\right)+(1-\zeta)(\theta\rho_{W}-\theta\rho_{0}-\kappa_{C})$. This implies that there are more C's with some resolve $\theta$ that will select into the status quo in the game here relative to the game without probabilistic escalation.\\
- \\
- Finally, assuming $\frac{\theta}{2\beta_{C}}<\rho_{W}-\rho_{0}+\kappa_{D}+\frac{1}{4\beta_{D}}$, C prefers war to gray zone conflict when 
-\begin{align*}
-\theta\rho_{W}-\kappa_{C}> & \theta\left(\zeta\left(\rho_{0}+\frac{\theta}{2\beta_{C}}-\frac{1}{2\beta_{D}}\right)+(1-\zeta)\left(\rho_{W}\right)\right)-(1-\zeta)\kappa_{C}-\frac{\theta^{2}}{4\beta_{C}}
-\end{align*}
-or 
-\begin{align*}
-\theta> & \frac{\zeta\kappa_{C}}{\left(\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}\right)}.
-\end{align*}
-Note the inequality sign does not slip because $\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)>0$. Furthermore, by that condition, $\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}>\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\zeta\frac{\theta}{4\beta_{C}}$. Therefore $\frac{\kappa_{C}}{\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}}>\frac{\zeta\kappa_{C}}{\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}}$. This implies that there are more C's with some resolve $\theta$ that will select into war in the game here relative to the game without a random chance of escalation.\\
- \\
- Finally, note that D's strategies in this game are unchanged from the game without probabilistic escalation.
+  \begin{align*}
+  \theta> & \frac{\zeta\kappa_{C}}{\left(\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}\right)}.
+  \end{align*}
+Note the inequality sign does not slip because $\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)>0$. Furthermore, by that condition, $\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}>\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\zeta\frac{\theta}{4\beta_{C}}$. Therefore $\frac{\kappa_{C}}{\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}}>\frac{\zeta\kappa_{C}}{\zeta\left(\rho_{W}-\rho_{0}-\frac{\theta}{2\beta_{C}}+\frac{1}{2\beta_{D}}\right)+\frac{\theta}{4\beta_{C}}}$. This implies that there are more C's with some resolve $\theta$ that will select into war in the game here relative to the game without a random chance of escalation.
+
+Finally, note that D's strategies in this game are unchanged from the game without probabilistic escalation.
 
 # New data
 The universe of cases was created by first identifying cases of Russian foreign interventions from 3 prior datasets; ICB, DCID, and REI. Code replicating those findings is provided in the appropriate RMarkdown files. These cases were then supplemented with additional cases of Russian interference the authors were able to identify.
 
 ## Coverage of current datasets
 A comparison of what cases were covered in each individual dataset is provided here:
-```{r, echo = FALSE}
+
+```{r xtable, results = "asis", echo = FALSE}
 # Read dataset
 coverage <- readRDS(paste0(here::here(), '/data/coverage.rds'))
 
-# Create table
-coverage$Year <- as.factor(coverage$Year)
+# Create venn diagram
 col_keys = c("new", "icb", "dcid", "rei")
-
-table <- flextable::flextable(coverage)
-table <- flextable::theme_vanilla(table)
-table <- flextable::align(table, align = "center", part = "all")
-table <- flextable::colformat_num(table, col_keys, digits = 0)
-table <- flextable::color(table, i = ~ new < 1, j = ~ new, color = "white")
-table <- flextable::color(table, i = ~ icb < 1, j = ~ icb, color = "white")
-table <- flextable::color(table, i = ~ dcid < 1, j = ~ dcid, color = "white")
-table <- flextable::color(table, i = ~ rei < 1, j = ~ rei, color = "white")
-table
-```
-
-The overlap between cases is seen here:
-```{r, echo = FALSE}
 coverage_venn <- coverage[ , c('new', 'icb', 'dcid', 'rei')]
 gplots::venn(coverage_venn)
 ```
@@ -559,4 +543,251 @@ The following binary coding criteria were used for each case:
 
 The complete dataset is provided in the appropriate .csv file. It includes sources used for the codings as well as justifications and explanations where needed.
 
+## Summary statistics
+Although data was compiled on Russian intervention against all states from 1994-2018, the statistical analysis is limited to a sample from European states. In alignment with that, we present descriptive statistics of the sample used in the models provided in the main text
+
+```{r}
+df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
+
+# Limit sample to just European states
+df <- df_full %>%
+  dplyr::filter(continent == "Europe")
+
+# Subset to variables used in the model
+df_vars <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
+  dplyr::mutate_if(is.factor, as.character) %>%
+  dplyr::mutate_if(is.character, as.numeric)
+
+# General summary stats
+DT::datatable(df_vars)
+funModeling::plot_num(df_vars)
+
+gtsummary::tbl_summary(df_vars,
+                       missing_text = "(Missing)",
+                       label = list(intensity ~ "Intensity", NATOmem_MEM ~ "NATO member", lnmindistkm_rus ~ "Distance from Russia (minimum, log)", lnpop1 ~ "Population (log)", civilwar ~ "Active civil war", demo1 ~ "Democracy", nuclear1 ~ "Nuclear state", cinc_ratio ~ "CINC Ratio")) %>%
+  gtsummary::add_n() %>%
+  gtsummary::bold_labels()
+
+stargazer::stargazer(df_vars, 
+                     title = "Covariate Summary Statistics",
+                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "GDP per capita (2010 const. USD)", "Population (log)", "Active civil war", "Democracy", "Nuclear state", "CINC Ratio"),
+                     digits = 1,
+                     notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
+                     type = "text")
+```
+
+The distribution of our dependent variable, intensity, is shown below for the full sample (including non-European states)
+
+```{r}
+df_full %>%
+  dplyr::filter(!intensity == 0) %>%
+  dplyr::select(intensity) %>%
+  dplyr::group_by(intensity) %>%
+  dplyr::summarise(count = dplyr::n()) %>%
+  dplyr::mutate(intensity = dplyr::recode_factor(intensity,
+                                                 "1" = "1 Info ops",
+                                                 "2" = "2 Cyber Disrup.",
+                                                 "3" = "3 Paramil.",
+                                                 "4" = "4 Mil (Air/sea)",
+                                                 "5" = "5 Mil (Gro)")) %>%
+  ggplot(aes(x = intensity,
+             y = count)
+         ) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = count),
+            size = 3.5,
+            vjust = -0.5) +
+  lims(y = c(0, 41)) +
+  labs(title = "Intensity of Russia Interventions (1994 - 2018)",
+       x = "",
+       y = "Number of Country-years"
+       ) +
+  theme_bw() +
+  theme(panel.grid = element_blank(), 
+        text = element_text(size = 14)
+        )
+```
+
+The bivariate correlations between the DV and the two EVs are shown below
+
+```{r}
+# DV and EV correlation
+df %>%
+  dplyr::select(intensity, 
+                NATOmem_MEM, lnmindistkm_rus) %>%
+  dplyr::mutate(intensity = as.numeric(intensity)) %>%
+  GGally::ggpairs()
+```
+
 # Alternate model specifications
+We run a set of alternate model specifications as robustness checks. Those results are shown below.
+
+## Imputed control variables
+Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here
+```{r}
+naniar::gg_miss_var(df_vars)
+ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
+```
+
+We impute values into those control variable columns to avoid losing those observations and display the results below. We do not show results for models 1 and 4 in the original text since those had no missing values and are thus identical.
+
+```{r}
+# Prep imputation model
+d <- rms::datadist(df)
+options(datadist = "d")
+
+# Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
+df_imp <- Hmisc::aregImpute(~ cinc1 + 
+                              cinc2 +
+                              gdp1_2010const +
+                              gdppc1_2010const +
+                              pop1 +
+                              elf +
+                              polity1 +
+                              NATOmem_MEM +
+                              lnmindistkm_rus +
+                              cinc_ratio +
+                              demo1 +
+                              civilwar +
+                              nuclear1,
+                            nk = 0,
+                            tlinear = TRUE, 
+                            data = df,
+                            n.impute = 10, 
+                            pr = FALSE)
+
+# Imputed model 2
+m2_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus +
+                                   demo1 +
+                                   nuclear1 +
+                                   lnpop1 +
+                                   gdppc1_2010const +
+                                   year,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp,
+                                 data = df,
+                                 x = TRUE,
+                                 y = TRUE)
+
+rms::robcov(m2_imp, df$cabbrev1)
+
+# Imputed model 3
+m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus +
+                                   demo1 +
+                                   nuclear1 +
+                                   cinc_ratio +
+                                   year,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp,
+                                 data = df,
+                                 x = TRUE,
+                                 y = TRUE)
+
+rms::robcov(m3_imp, df$cabbrev1)
+
+# Imputed model 5
+
+# Imputed model 6
+
+
+## Country-clustered standard errors
+
+# Make list of models
+models <- list(m2_imp, m3_imp, m5_imp, m6_imp)
+
+# HTML version for markdown
+texreg::screenreg(models,
+                stars = c(0.01, 0.05, 0.1, 0.15),
+                symbol = "\\dagger",
+                omit.coef = "(y)",
+              custom.coef.names = c("NATO member",
+                                     "Russia min. distance",
+                                     "Democracy",
+                                     "Nuclear status",
+                                     "Population",
+                                     "GDP per capita",
+                                     "CINC ratio"),
+                custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"), 
+                                       "Controls" = c("No", "Yes", "Yes", "No", "Yes", "Yes")),
+                custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
+
+```
+
+## Zero inflated ordered probit
+```{r, eval = FALSE}
+#This program estimates the ZIOP loglikelihood function
+
+ZIOP <- function(est,Y,X,Z,data) {					      
+	n=nrow(data)							      					  
+	llik <- matrix(0, nrow=n, ncol = 1)
+	y.cat<-nlevels(as.factor(Y))
+	y0<-sort(unique(Y))
+	V<-matrix(NA,nrow(data),y.cat)
+	for(k in 1:y.cat){
+		V[,k]<-Y==y0[k]
+		}
+	tau<-rep(1,max(Y))
+	for (i in 1:max(Y)){
+		tau[i]<-ifelse(i==1,est[i],tau[i-1]+exp(est[i]))
+		}
+	gamma<-est[(y.cat):(y.cat+ncol(Z)-1)]
+	beta<-est[(y.cat+ncol(Z)):length(est)]
+	ZG<-Z%*%gamma
+	XB<-X%*%beta
+	
+	cprobs<-matrix(nrow=length(XB),ncol=y.cat)
+	probs<-matrix(nrow=n,ncol=y.cat)
+	     
+	for(j in 1:(y.cat-1)){
+		
+		cprobs[,j]<-pnorm(tau[j]-XB)
+		
+		}
+	
+	probs[,y.cat]<-(1-cprobs[,(y.cat-1)])*pnorm(ZG) 
+	probs[,1]<-(cprobs[,1])*pnorm(ZG)+(1-pnorm(ZG))	
+	
+	for(j in 2:(y.cat-1)){			
+		
+		probs[,j]<-(cprobs[,j]-cprobs[,(j-1)])*(pnorm(ZG))
+		
+		}
+	
+	llik<--1*sum( log(probs[V]) )
+	
+	return(llik)
+	
+	}
+
+
+
+#set starting parameters
+est<-rbind(.1,.1,.1,.1,.1,.1,.1,.1)
+
+#set data, Y, X, and Z
+data<-dataset
+Y<-dataset$y
+X<-cbind(dataset$x1,dataset$x2)
+Z<-cbind(1, dataset$x1, dataset$x2)
+
+#optimize
+output.ZIOP<-nlm(f=ZIOP,  p=est, Y=Y,X=X,Z=Z ,iterlim=500, data=dataset, hessian=TRUE)
+print(output.ZIOP)
+vcv<-solve(output.ZIOP$hessian)
+vcv 
+
+```
+
+## Alternate samples
+Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
+Known attacks - includes only country-years that were targets of a Russian intervention after 1994
+
+### Expansive sample
+
+### Known targets

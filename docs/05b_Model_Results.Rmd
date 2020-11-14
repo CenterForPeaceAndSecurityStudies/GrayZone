@@ -34,81 +34,6 @@ df <- df_full %>%
   dplyr::filter(continent == "Europe")
 ```
 
-# Summary stats
-Summary stats of the data used in the models
-```{r}
-# Subset to variables used in the model
-df_vars <- df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, gdppc1_2010const, lnpop1, civilwar, demo1, nuclear1, cinc_ratio) %>%
-  dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
-  dplyr::mutate_if(is.factor, as.character) %>%
-  dplyr::mutate_if(is.character, as.numeric)
-
-# General summary stats
-DT::datatable(df_vars)
-funModeling::plot_num(df_vars)
-
-gtsummary::tbl_summary(df_vars,
-                       missing_text = "(Missing)",
-                       label = list(intensity ~ "Intensity", NATOmem_MEM ~ "NATO member", lnmindistkm_rus ~ "Distance from Russia (minimum, log)", lnpop1 ~ "Population (log)", civilwar ~ "Active civil war", demo1 ~ "Democracy", nuclear1 ~ "Nuclear state", cinc_ratio ~ "CINC Ratio")) %>%
-  gtsummary::add_n() %>%
-  gtsummary::bold_labels()
-
-stargazer::stargazer(df_vars, 
-                     title = "Covariate Summary Statistics",
-                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "GDP per capita (2010 const. USD)", "Population (log)", "Active civil war", "Democracy", "Nuclear state", "CINC Ratio"),
-                     digits = 1,
-                     notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
-                     type = "text")
-```
-
-Show missing data
-```{r}
-# Missing data
-naniar::gg_miss_var(df_vars)
-ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
-```
-
-DV: Intensity
-```{r}
-df_full %>%
-  dplyr::filter(!intensity == 0) %>%
-  dplyr::select(intensity) %>%
-  dplyr::group_by(intensity) %>%
-  dplyr::summarise(count = dplyr::n()) %>%
-  dplyr::mutate(intensity = dplyr::recode_factor(intensity,
-                                                 "1" = "1 Info ops",
-                                                 "2" = "2 Cyber Disrup.",
-                                                 "3" = "3 Paramil.",
-                                                 "4" = "4 Mil (Air/sea)",
-                                                 "5" = "5 Mil (Gro)")) %>%
-  ggplot(aes(x = intensity,
-             y = count)
-         ) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = count),
-            size = 3.5,
-            vjust = -0.5) +
-  lims(y = c(0, 41)) +
-  labs(title = "Intensity of Russia Interventions (1994 - 2018)",
-       x = "",
-       y = "Number of Country-years"
-       ) +
-  theme_bw() +
-  theme(panel.grid = element_blank(), 
-        text = element_text(size = 14)
-        )
-```
-
-Show bivariate correlations between DV and EV
-```{r}
-# DV and EV correlation
-df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus) %>%
-  dplyr::mutate(intensity = as.numeric(intensity)) %>%
-  GGally::ggpairs()
-```
-
 # European sample
 ## Model 1
 For the baseline model we just look at the relationship between the intensity of Russia intervention and whether the target is a NATO member as well as logged minimum distance from Russia. These are our two independent variables of interest. We use year fixed effects and cluster standard errors at the country level.
@@ -150,13 +75,13 @@ d <- rms::datadist(df)
 options(datadist = "d")
 
 m2 <- rms::lrm(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   gdppc1_2010const +
-                   lnpop1 +
-                   demo1 +
-                   nuclear1 +
-                   year,
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 lnpop1 +
+                 gdppc1_2010const +
+                 year,
                 data = df,
                 x = TRUE,
                 y = TRUE)
@@ -187,18 +112,16 @@ df_m3 <- df
 df_m3$year <- as.integer(df_m3$year) + 1993
 
 df_m3 <- df_m3 %>%
-  dplyr::filter(year < 2013)
-
-df_m3$year <- as.factor(df_m3$year)
+  dplyr::filter(year < 2013) %>%
+  dplyr::mutate(year = as.factor(year))
 
 # Model
 m3 <- rms::lrm(intensity ~ 
                  NATOmem_MEM +
                  lnmindistkm_rus +
-                 cinc_ratio +
                  demo1 +
-                 civilwar +
                  nuclear1 +
+                 cinc_ratio +
                  year,
                data = df_m3,
                x = TRUE,
@@ -275,10 +198,10 @@ options(datadist = "d")
 m5 <- rms::lrm(intensity ~ 
                  NATOmem_MEM +
                  lnmindistkm_rus +
-                 gdppc1_2010const +
-                 lnpop1 +
                  demo1 +
                  nuclear1 +
+                 lnpop1 +
+                 gdppc1_2010const +
                  year,
                data = df_conserv,
                x = TRUE,
@@ -310,18 +233,16 @@ df_m6 <- df_conserv
 df_m6$year <- as.integer(df_m6$year) + 1993
 
 df_m6 <- df_m6 %>%
-  dplyr::filter(year < 2013)
-
-df_m6$year <- as.factor(df_m6$year)
+  dplyr::filter(year < 2013) %>%
+  dplyr::mutate(year = as.factor(year))
 
 # Model
 m6 <- rms::lrm(intensity ~ 
                  NATOmem_MEM +
                  lnmindistkm_rus +
-                 cinc_ratio +
                  demo1 +
-                 civilwar +
                  nuclear1 +
+                 cinc_ratio +
                  year,
                data = df_m6,
                x = TRUE,
@@ -350,18 +271,17 @@ ggeffects::ggpredict(m6) %>%
 models <- list(m1, m2, m3, m4, m5, m6)
 
 # HTML version for markdown
-texreg::htmlreg(models,
+texreg::screenreg(models,
                 stars = c(0.01, 0.05, 0.1, 0.15),
                 symbol = "\\dagger",
                 omit.coef = "(y)",
-               custom.coef.names = c("NATO member",
-                                     "Min. distance from Russia (log)",
-                                     "GDP per capita (constant 2010 \\$)",
-                                     "Population (log)",
+              custom.coef.names = c("NATO member",
+                                     "Russia min. distance",
                                      "Democracy",
                                      "Nuclear status",
-                                     "CINC Ratio",
-                                     "Civil War"),
+                                     "Population",
+                                     "GDP per capita",
+                                     "CINC ratio"),
                 custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"), 
                                        "Controls" = c("No", "Yes", "Yes", "No", "Yes", "Yes")),
                 custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
@@ -371,14 +291,13 @@ texreg::texreg(models,
                 stars = c(0.01, 0.05, 0.1, 0.15),
                 symbol = "\\dagger",
                 omit.coef = "(y)",
-               custom.coef.names = c("NATO member",
-                                     "Min. distance from Russia (log)",
-                                     "GDP per capita (constant 2010 \\$)",
-                                     "Population (log)",
+              custom.coef.names = c("NATO member",
+                                     "Russia min. distance",
                                      "Democracy",
                                      "Nuclear status",
-                                     "CINC Ratio",
-                                     "Civil War"),
+                                     "Population",
+                                     "GDP per capita",
+                                     "CINC ratio"),
                 custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")),
                 custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
                label = "table:model",
@@ -389,289 +308,3 @@ texreg::texreg(models,
 ```
 
 # Marginal effects
-
-# Alternate specifications
-## Imputed control variables
-Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012 or 2015. We impute values into those control variable columns to avoid losing those observations and display the results below. 
-```{r}
-# Prep imputation model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
-df_imp <- Hmisc::aregImpute(~ cinc1 + 
-                              cinc2 +
-                              gdp1_2010const +
-                              gdppc1_2010const +
-                              pop1 +
-                              elf +
-                              polity1 +
-                              NATOmem_MEM +
-                              lnmindistkm_rus +
-                              cinc_ratio +
-                              demo1 +
-                              civilwar +
-                              nuclear1,
-                            nk = 0,
-                            tlinear = TRUE, 
-                            data = df,
-                            n.impute = 10, 
-                            pr = FALSE)
-
-# Imputed model 1
-m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
-                               NATOmem_MEM +
-                               lnmindistkm_rus +
-                               cinc_ratio +
-                               demo1 +
-                               civilwar +
-                               nuclear1 +
-                               year,
-                             fitter = rms::lrm, 
-                             xtrans = m3_imp,
-                             data = df,
-                             x = TRUE,
-                             y = TRUE)
-
-# Ipmuted model 3
-m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
-                               NATOmem_MEM +
-                               lnmindistkm_rus +
-                               cinc_ratio +
-                               demo1 +
-                               civilwar +
-                               nuclear1 +
-                               year,
-                             fitter = rms::lrm, 
-                             xtrans = m3_imp,
-                             data = df,
-                             x = TRUE,
-                             y = TRUE)
-
-summary(m3_imp)
-
-## Country-clustered standard errors
-rms::robcov(m3_imp, df$cabbrev1)
-```
-
-## Zero inflated ordered probit
-```{r, eval = FALSE}
-#This program estimates the ZIOP loglikelihood function
-
-ZIOP <- function(est,Y,X,Z,data) {					      
-	n=nrow(data)							      					  
-	llik <- matrix(0, nrow=n, ncol = 1)
-	y.cat<-nlevels(as.factor(Y))
-	y0<-sort(unique(Y))
-	V<-matrix(NA,nrow(data),y.cat)
-	for(k in 1:y.cat){
-		V[,k]<-Y==y0[k]
-		}
-	tau<-rep(1,max(Y))
-	for (i in 1:max(Y)){
-		tau[i]<-ifelse(i==1,est[i],tau[i-1]+exp(est[i]))
-		}
-	gamma<-est[(y.cat):(y.cat+ncol(Z)-1)]
-	beta<-est[(y.cat+ncol(Z)):length(est)]
-	ZG<-Z%*%gamma
-	XB<-X%*%beta
-	
-	cprobs<-matrix(nrow=length(XB),ncol=y.cat)
-	probs<-matrix(nrow=n,ncol=y.cat)
-	     
-	for(j in 1:(y.cat-1)){
-		
-		cprobs[,j]<-pnorm(tau[j]-XB)
-		
-		}
-	
-	probs[,y.cat]<-(1-cprobs[,(y.cat-1)])*pnorm(ZG) 
-	probs[,1]<-(cprobs[,1])*pnorm(ZG)+(1-pnorm(ZG))	
-	
-	for(j in 2:(y.cat-1)){			
-		
-		probs[,j]<-(cprobs[,j]-cprobs[,(j-1)])*(pnorm(ZG))
-		
-		}
-	
-	llik<--1*sum( log(probs[V]) )
-	
-	return(llik)
-	
-	}
-
-
-
-#set starting parameters
-est<-rbind(.1,.1,.1,.1,.1,.1,.1,.1)
-
-#set data, Y, X, and Z
-data<-dataset
-Y<-dataset$y
-X<-cbind(dataset$x1,dataset$x2)
-Z<-cbind(1, dataset$x1, dataset$x2)
-
-#optimize
-output.ZIOP<-nlm(f=ZIOP,  p=est, Y=Y,X=X,Z=Z ,iterlim=500, data=dataset, hessian=TRUE)
-print(output.ZIOP)
-vcv<-solve(output.ZIOP$hessian)
-vcv 
-
-```
-
-## Alternate samples
-Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
-Known attacks - includes only country-years that were targets of a Russian intervention after 1994
-
-### Expansive sample
-
-### Known targets
-
-# ***Archive
-We create 4 versions of the data below based on the inclusion criteria for the universe of cases. In all cases, the unit of analysis is the 
-This includes all years (1994-2018) of European states
-```{r, eval = FALSE}
-# P values
-m1a_coef <- data.frame(coef(summary(m1a)))
-m1a_coef$pval <- round((pnorm(abs(m1a_coef$t.value), lower.tail = FALSE) * 2), 2)
-m1a_coef
-
-# Odds ratios
-m1a_or <- exp(coef(m1a))
-m1a_or
-
-# Predicted probabilities
-m1a_pred <- predict(m1a, type = "probs")
-summary(m1a_pred)
-
-# Marginal effects
-m1a_me <- erer::ocME(m1a)
-m1a_me$out
-```
-
-Table of regression results
-```{r, eval = FALSE}
-texreg::texreg(list(m1a, m1b, m1c, m1d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95,
-  file = "../paper/model1.tex"
-)
-
-texreg::screenreg(list(m1a, m1b, m1c, m1d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95
-)
-```
-
-Cumulative results table
-```{r, eval = FALSE}
-### Results
-texreg::texreg(list(m1a, m1b, m1c, m1d),
-  custom.model.names = c("Europe", "Europe", "Europe", "Europe",
-                         "Relevant", "Relevant", "Relevant", "Relevant",
-                         "Expansive", "Expansive", "Expansive", "Expansive",
-                         "Known", "Known", "Known", "Known"),  
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95,
-  file = "../paper/model1.tex"
-)
-
-texreg::screenreg(list(m1a, m1b, m1c, m1d),
-  digits = 3,
-  ci.force = TRUE,
-  ci.force.level = 0.95
-)
-```
-
-Cumulative results figure
-```{r, eval = FALSE}
-dw1 <- dotwhisker::dwplot(m1a, dot_args = list(size = 2.5),
-    whisker_args = list(size = 1.5), 
-    color = "black") %>%
-    relabel_predictors(c(
-       capdistkm_us = "Distance from DC",
-       capdistkm_rus = "Distance from Moscow",
-       NATOmem_MEM = "NATO membership",
-       cinc_ratio = "CINC ratio",
-       polity1 = "Polity score",
-       civilwar = "Civil war",
-       nuclear1 = "Nuclear power",
-       gdp1 = "GDP"
-        )) +
-    geom_vline(xintercept = 0) +
-    ggtitle("Coefficient Estimates") +
-        theme(plot.title = element_text(face="bold", hjust = -0.0),
-        legend.justification=c(0, 0), legend.position=c(0, 0),
-        legend.title = element_blank()) +
-    scale_colour_discrete(breaks=c(
-      "Model 1"
-      ),
-        labels = c(
-        "All Controls")) +
-    labs(x = "Intensity of Russian Intervention") + 
-    theme_bw() +
-    theme(text = element_text(size = 24),
-        axis.text.x = element_text(colour="black"), 
-        axis.text.y = element_text(colour="black"),
-        legend.position = c(0.8, 0.01),
-        legend.justification = c(0, 0), 
-        legend.background = element_rect(colour="grey80"),
-        legend.title = element_blank())
-```
-
-MICE imputation
-```{r, eval = FALSE}
-# Run MICE with 0 iterations
-imp <- mice::mice(df, maxit = 0)
-
-# Extract predictor matrix and methods of imputation
-predM <- imp$predictorMatrix
-meth <- imp$method
-
-# Set values of variables to leave out as 0
-predM[ , c("cabbrev1", "ccode1", 
-           "cname2", "cabbrev2", "ccode2", 
-           "continent", 
-           "relevant_expansive",
-           "relevant_conserv",
-           "intensity",
-           "capdistkm_us", "mindistkm_us", "capdistkm_rus", "mindistkm_rus",
-           "lncapdistkm_us", "lnmindistkm_us", "lncapdistkm_rus", "lnmindistkm_rus",
-           "NATOmem_MEM", "NATOdur_MEM", 
-           "nuclear1", 
-           "demo2",
-           "age1")] <- 0
-
-# Create 5 imputed datasets
-imp2 <- mice::mice(df, 
-                   maxit = 5,
-                   predictorMatrix = predM,
-                   method = 'cart',
-                   seed = 500)
-
-# See distribution of imputed values relative to baseline data
-mice::densityplot(imp2)
-
-# Run regression on the 5 imputed datasets
-fit <- with(imp2, rms::lrm(intensity ~ 
-                             NATOmem_MEM +
-                             lnmindistkm_rus +
-                             cinc_ratio +
-                             demo1 +
-                             civilwar +
-                             nuclear1 +
-                             year,
-                           x = TRUE,
-                           y = TRUE))
-
-# summary(mice::pool(fit))
-
-
-# Convert datasets to long
-df_imp_long <- mice::complete(imp2,
-                              action = "all",
-                              include = FALSE)
-```
