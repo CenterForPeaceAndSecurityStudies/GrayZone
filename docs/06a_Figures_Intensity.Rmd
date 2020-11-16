@@ -46,7 +46,7 @@ gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
 # Plotting
 ## Avergage severity of Russian attacks
 We now plot changes in the severity of Russian attacks over the time period in question. The severity will be coded as the highest severity in any given year.
-```{r}
+```{r, fig.width = 7.5, fig.height = 7.5}
 #plotting the severity of Russian attacks from 1994-2018.
 gac <- gac[c("target","year_start","resp_convmil_gro","resp_convmil_airsea",
             "resp_paramil","resp_cyberdisrup","resp_infoops")]
@@ -100,10 +100,10 @@ df <- as.data.frame(df)
 g <- ggplot(df, aes(years, severity_avg_annual)) +
   geom_bar(stat = "identity", width = 1, fill = "gray", color = "black") +
   geom_line(aes(y = numint/4)) +
-  labs(title = "Average intensity of Russian aggression (1994-2018)",
+  labs(title = "Russian Interventions (1994-2018)",
        subtitle = "", x = "Year", y = "Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(sec.axis = sec_axis(~.0:20, name = "Number of Russian Interventions"),
+  scale_y_continuous(sec.axis = sec_axis(~ . *4, name = "Number of Interventions"),
                      breaks = c(1:5), labels = c("1" = "1 Info ops",
                                                  "2" = "2 Cyber Disrup.",
                                                  "3" = "3 Paramil.",
@@ -115,16 +115,18 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
         panel.grid.minor.x = element_blank(),
         axis.ticks.x = element_line(),
         title = element_text(size = 18),
-        axis.text.x = element_text(size = 18, angle = 90,vjust = 0.5,
+        axis.text.x = element_text(size = 12, 
+                                   angle = 90, 
+                                   vjust = 0.5,
                                    hjust = 0.9),
-        axis.text.y = element_text(size = 14),
+        axis.text.y = element_text(size = 12),
         axis.title.x = element_text(size = 18),
         axis.title.y = element_text(size = 18)
         )
 
 g
 
-ggsave(paste0("average_intensity_russian_aggression.jpeg"),g,"jpeg", path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+ggsave(paste0("average_intensity_russian_aggression.png"), g ,"png", path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
 ```
 
 ## Maximum intensity
