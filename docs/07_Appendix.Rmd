@@ -513,7 +513,7 @@ The universe of cases was created by first identifying cases of Russian foreign 
 ## Coverage of current datasets
 A comparison of what cases were covered in each individual dataset is provided here:
 
-```{r xtable, results = "asis", echo = FALSE}
+```{r xtable, results = 'asis', echo = FALSE}
 # Read dataset
 coverage <- readRDS(paste0(here::here(), '/data/coverage.rds'))
 
@@ -665,8 +665,12 @@ df_imp <- Hmisc::aregImpute(~ cinc1 +
                             data = df,
                             n.impute = 10, 
                             pr = FALSE)
+```
 
-# Imputed model 2
+### Imputed model 2
+This model replicates model 2 in the main text, with control variables imputed:
+
+```{r, results = 'asis', echo = FALSE}
 m2_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
                                    lnmindistkm_rus +
@@ -679,11 +683,40 @@ m2_imp <- Hmisc::fit.mult.impute(intensity ~
                                  xtrans = df_imp,
                                  data = df,
                                  x = TRUE,
-                                 y = TRUE)
+                                 y = TRUE,
+                                 pr = FALSE)
 
 m2_imp <- rms::robcov(m2_imp, df$cabbrev1)
 
-# Imputed model 3
+plot(anova(m2_imp))
+
+m2_res <- summary(m2_imp, antilog = FALSE)
+m2_res <- as.data.frame(m2_res)
+m2_res <- m2_res %>%
+  dplyr::select("Effect", "S.E.", "Lower 0.95", "Upper 0.95") %>%
+  dplyr::slice(1:6) %>%
+  tibble::rownames_to_column() %>%
+  dplyr::mutate(rowname = dplyr::recode(rowname, 
+                'NATOmem_MEM - 0:1' = "NATO member", 
+                'lnmindistkm_rus' = "Russia min. distance", 
+                "demo1 - 0:1" = "Democracy",
+                "nuclear1 - 1:0" = "Non-nuclear power",
+                'lnpop1' = "Population",
+                "gdppc1_2010const" = "GDP per capita")) %>%
+  dplyr::rename(Variable = rowname)
+
+m2_tab <- xtable::xtable(m2_res,
+                         caption = "Model 2, imputed",
+                         align = "r|l|l|l|l|l|")
+print(m2_tab,
+      include.rownames = FALSE,
+      comment = FALSE)
+```
+
+### Imputed model 3
+This model replicates model 3 in the main text, with control variables imputed:
+
+```{r, results = 'asis', echo = FALSE}
 m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
                                    lnmindistkm_rus +
@@ -695,10 +728,38 @@ m3_imp <- Hmisc::fit.mult.impute(intensity ~
                                  xtrans = df_imp,
                                  data = df,
                                  x = TRUE,
-                                 y = TRUE)
+                                 y = TRUE,
+                                 pr = FALSE)
 
 m3_imp <- rms::robcov(m3_imp, df$cabbrev1)
 
+plot(anova(m3_imp))
+
+m3_res <- summary(m3_imp, antilog = FALSE)
+m3_res <- as.data.frame(m3_res)
+m3_res <- m3_res %>%
+  dplyr::select("Effect", "S.E.", "Lower 0.95", "Upper 0.95") %>%
+  dplyr::slice(1:5) %>%
+  tibble::rownames_to_column() %>%
+  dplyr::mutate(rowname = dplyr::recode(rowname, 
+                'NATOmem_MEM - 0:1' = "NATO member", 
+                'lnmindistkm_rus' = "Russia min. distance", 
+                "demo1 - 0:1" = "Democracy",
+                "nuclear1 - 1:0" = "Non-nuclear power",
+                'cinc_ratio' = "CINC ratio")) %>%
+  dplyr::rename(Variable = rowname)
+
+m3_tab <- xtable::xtable(m3_res,
+                         caption = "Model 3, imputed",
+                         align = "r|l|l|l|l|l|")
+print(m3_tab,
+      include.rownames = FALSE,
+      comment = FALSE)
+```
+
+We use the subset for models 5 and 6. Imputing for the subsample has to be done separately due to the different n. We remove civilwar because there are less than 5 observations with value 1 which creates unbalanced imputation estimates.
+
+```{r}
 # Subset sample
 df_conserv <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -706,7 +767,7 @@ df_conserv <- df %>%
 d <- rms::datadist(df_conserv)
 options(datadist = "d")
 
-# Impute for subsample has to be done separately due to the different n. We remove civilwar because there are less than 5 observations with value 1 which creates unbalanced imputation estimates
+# Impute
 df_imp_conserv <- Hmisc::aregImpute(~ cinc1 + 
                               cinc2 +
                               gdp1_2010const +
@@ -724,8 +785,12 @@ df_imp_conserv <- Hmisc::aregImpute(~ cinc1 +
                             data = df_conserv,
                             n.impute = 10, 
                             pr = FALSE)
+```
 
-# Imputed model 5
+### Imputed model 5
+This model replicates model 5 in the main text, with control variables imputed:
+
+```{r, results = 'asis'}
 m5_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
                                    lnmindistkm_rus +
@@ -738,11 +803,41 @@ m5_imp <- Hmisc::fit.mult.impute(intensity ~
                                  xtrans = df_imp_conserv,
                                  data = df_conserv,
                                  x = TRUE,
-                                 y = TRUE)
+                                 y = TRUE,
+                                 pr = FALSE)
 
 m5_imp <- rms::robcov(m5_imp, df_conserv$cabbrev1)
 
-# Imputed model 6. We remove civil war from here because 
+# plot(anova(m5_imp)) # breaks with singular matrix
+
+m5_res <- summary(m5_imp, antilog = FALSE)
+m5_res <- as.data.frame(m5_res)
+m5_res <- m5_res %>%
+  dplyr::select("Effect", "S.E.", "Lower 0.95", "Upper 0.95") %>%
+  dplyr::slice(1:6) %>%
+  tibble::rownames_to_column() %>%
+  dplyr::mutate(rowname = dplyr::recode(rowname, 
+                'NATOmem_MEM - 0:1' = "NATO member", 
+                'lnmindistkm_rus' = "Russia min. distance", 
+                "demo1 - 0:1" = "Democracy",
+                "nuclear1 - 1:0" = "Non-nuclear power",
+                'lnpop1' = "Population",
+                "gdppc1_2010const" = "GDP per capita")) %>%
+  dplyr::rename(Variable = rowname)
+
+m5_tab <- xtable::xtable(m5_res,
+                         caption = "Model 5, imputed",
+                         align = "r|l|l|l|l|l|")
+print(m5_tab,
+      include.rownames = FALSE,
+      comment = FALSE)
+```
+
+
+### Imputed model 6
+This model replicates model 6 in the main text, with control variables imputed. We remove civil war from here:
+
+```{r, results = 'asis'}
 m6_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
                                    lnmindistkm_rus +
@@ -754,36 +849,38 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
                                  xtrans = df_imp_conserv,
                                  data = df_conserv,
                                  x = TRUE,
-                                 y = TRUE)
+                                 y = TRUE,
+                                 pr = FALSE)
 
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
-```
 
-We here show models results for the newly imputed model 2:
+# plot(anova(m6_imp)) # beraks with singular matrix
 
-```{r}
-summary(m2_imp)
-```
+m6_res <- summary(m6_imp, antilog = FALSE)
+m6_res <- as.data.frame(m6_res)
+m6_res <- m6_res %>%
+  dplyr::select("Effect", "S.E.", "Lower 0.95", "Upper 0.95") %>%
+  dplyr::slice(1:5) %>%
+  tibble::rownames_to_column() %>%
+  dplyr::mutate(rowname = dplyr::recode(rowname, 
+                'NATOmem_MEM - 0:1' = "NATO member", 
+                'lnmindistkm_rus' = "Russia min. distance", 
+                "demo1 - 0:1" = "Democracy",
+                "nuclear1 - 1:0" = "Non-nuclear power",
+                'cinc_ratio' = "CINC ratio")) %>%
+  dplyr::rename(Variable = rowname)
 
-And model 3
-
-```{r}
-summary(m3_imp)
-```
-
-And model 5
-
-```{r}
-summary(m5_imp)
-```
-
-And model 6
-
-```{r}
-summary(m6_imp)
+m6_tab <- xtable::xtable(m6_res,
+                         caption = "Model 6, imputed",
+                         align = "r|l|l|l|l|l|")
+print(m6_tab,
+      include.rownames = FALSE,
+      comment = FALSE)
 ```
 
 ## Zero inflated ordered probit
+Test alternat model of zero-inflated ordered probit, since 95% of Europe country-years from 1994-2018 experienced no Russian attack.
+
 ```{r, eval = FALSE}
 #This program estimates the ZIOP loglikelihood function
 
@@ -849,12 +946,10 @@ vcv
 ```
 
 ## Alternate samples
-Expansive subset - includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
-
-Known attacks - includes only country-years that were targets of a Russian intervention after 1994
-
 ### Expansive sample
+Expansive subset includes all European states that meet the 3-prong criteria for potential target or are in the data as targets of an attack post-1994
 
 ### Known targets
+Known attacks  includes only country-years that were targets of a Russian intervention after 1994
 
 # References
