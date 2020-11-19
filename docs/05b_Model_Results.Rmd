@@ -4,11 +4,6 @@ author: J Andres Gannon, Erik Gartzke, Jon Lindsay, and Peter Schram, Center for
   and Security Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
-  html_notebook:
-    toc: yes
-    toc_float: yes
   html_document:
     theme: flatly
     code_download: yes
@@ -17,6 +12,11 @@ output:
     number_sections: yes
     toc_float:
       collapsed: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: inline
 ---
@@ -38,7 +38,9 @@ df <- df_full %>%
   dplyr::filter(continent == "Europe")
 ```
 
-# Fixed polr function
+# Fix functions
+
+## polr function
 We use the polr function from the MASS package to compute an ordered probit. The base version of the function in the R package contains an error that does not take the log of differences in the reposed zetas which results in an optimization error where vmmin is infinite. A fixed version of the function was created and is loaded below. For this reason, the polr function is not loaded from the MASS package, but instead from the function below. All secondary functions from the MASS package do work
 
 ```{r}
@@ -632,17 +634,44 @@ simulate.polr <- function(object, nsim = 1, seed = NULL, ...)
 }
 ```
 
+## stargazer function
+For odds ratios, stargazer recauclates the significance levels based on the new coefficients which it shouldn't. This is correct with a function here created by [cimentadaj](https://cimentadaj.github.io/blog/2016-08-22-producing-stargazer-tables-with-odds-ratios-and-standard-errors-in-r/producing-stargazer-tables-with-odds-ratios-and-standard-errors-in-r/)
+
+```{r}
+stargazer2 <- function(model, odd.ratio = F, ...) {
+  if(!("list" %in% class(model))) model <- list(model)
+    
+  if (odd.ratio) {
+    coefOR2 <- lapply(model, function(x) exp(coef(x)))
+    seOR2 <- lapply(model, function(x) exp(coef(x)) * summary(x)$coef[, 2])
+    p2 <- lapply(model, function(x) summary(x)$coefficients[, 4])
+    stargazer::stargazer(model, coef = coefOR2, se = seOR2, p = p2, ...)
+    
+  } else {
+    stargazer::stargazer(model, ...)
+  }
+}
+```
 
 # European sample
+Create year dummy columns for the year fixed effects
+
+```{r}
+df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
+  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
+```
+
 ## Model 1
 For the baseline model we just look at the relationship between the intensity of Russia intervention and whether the target is a NATO member as well as logged minimum distance from Russia. These are our two independent variables of interest. We use year fixed effects and cluster standard errors at the country level.
 
 ```{r}
-m1 <- polr(intensity ~
-             NATOmem_MEM +
-             lnmindistkm_rus +
-             year,
-           data = df,
+# Select model 1 variables
+df_m1 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m1 <- polr(intensity ~ .,
+           data = df_m1,
            method = "probit",
            Hess = TRUE)
 
@@ -650,13 +679,13 @@ m1 <- polr(intensity ~
 m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
 
 # Odds ratio
-m1_or <- exp(coef(m1))
-stargazer::stargazer(m1, 
-                     coef = list(m1_or),
-                     omit = "year",
-                     title = "Model 1 Odds Ratios",
-                     p.auto = FALSE,
-                     type = "text")
+m1_or <- stargazer2(m1, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 1 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model 1:
@@ -696,16 +725,13 @@ ggeffects::ggpredict(m1) %>%
 Independent variables are NATO membership and logged minimum distance from Russia. Controls include logged GDP per capita, logged population, democracy, and nuclear status. We use year fixed effects.
 
 ```{r}
+# Select model 2 variables
+df_m2 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, lnpop1, dplyr::starts_with("year_"))
+
 # Model
-m2 <- polr(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   demo1 +
-                   nuclear1 +
-                   lnpop1 +
-                   lngdppc1_2010const +
-                   year,
-                 data = df,
+m2 <- polr(intensity ~ .,
+                 data = df_m2,
                  method = "probit",
                  Hess = TRUE)
 
@@ -713,13 +739,13 @@ m2 <- polr(intensity ~
 m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
 
 # Odds ratio
-m2_or <- exp(coef(m2))
-stargazer::stargazer(m2, 
-                     coef = list(m2_or), 
-                     title = "Model 2 Odds Ratios",
-                     omit = "year",
-                     p.auto = FALSE,
-                     type = "text")
+m2_or <- stargazer2(m2, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 2 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model 2:
@@ -763,17 +789,13 @@ ggeffects::ggpredict(m2) %>%
 For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
 
 ```{r}
+# Select model 3 variables
+df_m3 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, cinc_ratio, dplyr::starts_with("year_"))
+
 # Model
-m3 <- polr(intensity ~ 
-             NATOmem_MEM +
-             lnmindistkm_rus +
-             demo1 +
-             nuclear1 +
-             lnpop1 +
-             lngdppc1_2010const +
-             cinc_ratio +
-             year,
-           data = df,
+m3 <- polr(intensity ~ .,
+           data = df_m3,
            method = "probit",
            Hess = TRUE)
 
@@ -781,13 +803,13 @@ m3 <- polr(intensity ~
 m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
 
 # Odds ratio
-m3_or <- exp(coef(m3))
-stargazer::stargazer(m3, 
-                     coef = list(m3_or),
-                     omit = "year",
-                     title = "Model 3 Odds Ratios",
-                     p.auto = FALSE,
-                     type = "text")
+m3_or <- stargazer2(m3, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 3 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model 3:
@@ -845,35 +867,34 @@ We run the same models as above on a different sample. Here, we limit sample to 
 
 3. **Contiguity** -- European states that are contiguous with Russia.
 
-```{r}
-df_conserv <- df %>%
-  dplyr::filter(relevant_conserv == 1)
-```
-
 ## Model 4
 Replicate model 1 with the new sample.
 
 ```{r}
+# Use same variables as model 1 but subset to 
+df_m4 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4vars <- df_m4 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
 # Model
-m4 <- polr(intensity ~
-             NATOmem_MEM +
-             lnmindistkm_rus +
-             year,
-           data = df_conserv,
+m4 <- polr(intensity ~ .,
+           data = df_m4vars,
            method = "probit",
            Hess = TRUE)
 
 # Country-clustered SE
-m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_conserv$cname1)))
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
 
 # Odds ratio
-m4_or <- exp(coef(m4))
-stargazer::stargazer(m4, 
-                     coef = list(m1_or), 
-                     omit = "year",
-                     title = "Model 4 Odds Ratios",
-                     p.auto = FALSE,
-                     type = "text")
+m4_or <- stargazer2(m4, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 4 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model:
@@ -913,30 +934,30 @@ ggeffects::ggpredict(m4) %>%
 Replicate model 2
 
 ```{r}
+# Use same variables as model 2 but subset to 
+df_m5 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m5vars <- df_m5 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, lnpop1, dplyr::starts_with("year_"))
+
 # Model
-m5 <- polr(intensity ~ 
-                   NATOmem_MEM +
-                   lnmindistkm_rus +
-                   demo1 +
-                   nuclear1 +
-                   lnpop1 +
-                   lngdppc1_2010const +
-                   year,
-                 data = df_conserv,
+m5 <- polr(intensity ~ .,
+                 data = df_m5vars,
                  method = "probit",
                  Hess = TRUE)
 
 # Country-clustered SE
-m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_conserv$cname1)))
+m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
 
 # Odds ratio
-m5_or <- exp(coef(m5))
-stargazer::stargazer(m5, 
-                     coef = list(m5_or), 
-                     omit = "year",
-                     title = "Model 5 Odds Ratios",
-                     p.auto = FALSE,
-                     type = "text")
+m5_or <- stargazer2(m5, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 5 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model:
@@ -980,31 +1001,30 @@ ggeffects::ggpredict(m5) %>%
 Replicate model 3 on the new sample
 
 ```{r}
+# Use same variables as model 3 but subset to 
+df_m6 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m6vars <- df_m6 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, cinc_ratio, dplyr::starts_with("year_"))
+
 # Model
-m6 <- polr(intensity ~ 
-             NATOmem_MEM +
-             lnmindistkm_rus +
-             demo1 +
-             nuclear1 +
-             lnpop1 +
-             lngdppc1_2010const +
-             cinc_ratio +
-             year,
-           data = df_conserv,
+m6 <- polr(intensity ~ .,
+           data = df_m6vars,
            method = "probit",
            Hess = TRUE)
 
 # Country-clustered SE
-m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_conserv$cname1)))
+m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
 
 # Odds ratio
-m6_or <- exp(coef(m6))
-stargazer::stargazer(m6, 
-                     coef = list(m6_or),
-                     omit = "year",
-                     title = "Model 6 Odds Ratios",
-                     p.auto = FALSE,
-                     type = "text")
+m6_or <- stargazer2(m6, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Model 6 Odds Ratios",
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
 
 Old model:
@@ -1057,36 +1077,52 @@ models <- list(m1, m2, m3, m4, m5, m6)
 
 # HTML version for markdown
 texreg::screenreg(models,
-                  stars = c(0.01, 0.05, 0.1, 0.15),
-                  symbol = "\\dagger",
+                  stars = c(0.01, 0.05, 0.1),
                   omit.coef = "(y)",
                   custom.coef.names = c("NATO member",
                                      "Russia min. distance",
                                      "Democracy",
                                      "Nuclear power",
-                                     "Population",
                                      "GDP per capita",
+                                     "Population",
                                      "CINC ratio"),
                   custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")), 
                   custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
 
 # Tex version for manuscript
 texreg::texreg(models,
-                stars = c(0.01, 0.05, 0.1, 0.15),
-                symbol = "\\dagger",
-                omit.coef = "(y)",
-              custom.coef.names = c("NATO member",
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
                                      "Russia min. distance",
                                      "Democracy",
                                      "Nuclear power",
-                                     "Population",
                                      "GDP per capita",
+                                     "Population",
                                      "CINC ratio"),
-                custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")),
-                custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")),
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
                label = "table:model",
-               caption = "All models are ordinal probits with year fixed effects and standard errors clustered at the country level. Coefficients have been standardized for easier comparison",
+               caption = "All models are ordinal probits with year fixed effects and standard errors clustered at the country level",
                float.pos = "h",
                file = paste0(here::here(), "/paper/figures/","model.tex")
                )
+
+# Odds ratio
+stargazer2(models, 
+           apply.coef = exp,
+           omit = "year",
+           title = "Odds Ratios",
+           column.labels   = c("Full sample", "Relevant states sample"),
+           column.separate = c(3, 3),
+           custom.coef.names = c("NATO member",
+                                 "Russia min. distance",
+                                 "Democracy",
+                                 "Nuclear power",
+                                 "GDP per capita",
+                                 "Population",
+                                 "CINC ratio"),           
+           p.auto = FALSE,
+           t.auto = FALSE,
+           type = "text")
 ```
