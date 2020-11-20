@@ -447,6 +447,19 @@ df <- dplyr::left_join(df, cinc_ccode2)
 df$cinc_ratio <- df$cinc1/(df$cinc1+df$cinc2)
 ```
 
+## Military expenditure
+Since CINC data only goes up to 2012, we supplement it with SIPRI military expenditure data which covers the full temporal span of the data
+```{r}
+# Mil exp data
+sipri <- read.csv(paste0(here::here(), "/inst/extdata/sipri_milex.csv"))
+df <- dplyr::left_join(df, sipri)
+
+# Mil exp per capita
+sipri <- read.csv(paste0(here::here(), "/inst/extdata/sipri_milexpercap.csv"))
+df <- dplyr::left_join(df, sipri)
+
+```
+
 ## Regime type
 We code polity scores to control for whether or not both sides are democracies. In alignment with Gartzke and Jo 2009, they are re-scales from -10-10 to 0-20 so allow for a multiplicative variable. We also convert each to a dummy variable for democracy if polity is greater than 6.
 
@@ -668,6 +681,7 @@ df <- df %>%
                 lncapdistkm_us, lnmindistkm_us, lncapdistkm_rus, lnmindistkm_rus,
                 NATOmem_MEM, NATOdur_MEM,
                 cinc1, cinc2, cinc_ratio,
+                milex_sipri, milexpercap_sipri,
                 nuclear1,
                 gdp1_2010const, lngdp1_2010const, gdp2_2010const, lngdp2_2010const,
                 gdppc1_2010const, lngdppc1_2010const, gdppc2_2010const, lngdppc2_2010const,
@@ -683,6 +697,11 @@ visdat::vis_miss(df)
 
 df %>%
   dplyr::filter(is.na(gdp1_2010const)) %>%
+  DT::datatable()
+
+df %>%
+  dplyr::filter(is.na(milex_sipri | milexpercap_sipri)) %>%
+  dplyr::select(year, cname1, milex_sipri, milexpercap_sipri) %>%
   DT::datatable()
 ```
 

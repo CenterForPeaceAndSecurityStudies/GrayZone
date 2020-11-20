@@ -688,46 +688,15 @@ m1_or <- stargazer2(m1,
            type = "text")
 ```
 
-Old model 1:
-
-```{r, eval = FALSE}
-# Prep matrix inversion option for model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Model
-m1 <- rms::lrm(intensity ~
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 year,
-               data = df,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m1 <- rms::robcov(m1, df$cabbrev1)
-
-# Show results
-texreg::screenreg(m1)
-
-ggstatsplot::ggcoefstats(m1,
-                         title = "Model 1",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m1) %>%
-  plot()
-```
-
 ## Model 2
 Independent variables are NATO membership and logged minimum distance from Russia. Controls include logged GDP per capita, logged population, democracy, and nuclear status. We use year fixed effects.
 
 ```{r}
 # Select model 2 variables
 df_m2 <- df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, lnpop1, dplyr::starts_with("year_"))
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
 
 # Model
 m2 <- polr(intensity ~ .,
@@ -737,6 +706,10 @@ m2 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
+
+texreg::screenreg(m2,
+                  stars = c(0.01, 0.05, 0.1),
+                  omit.coef = "(y)")
 
 # Odds ratio
 m2_or <- stargazer2(m2, 
@@ -748,50 +721,15 @@ m2_or <- stargazer2(m2,
            type = "text")
 ```
 
-Old model 2:
-
-```{r, eval = FALSE}
-# Prep model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Model
-m2 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 lnpop1 +
-                 gdppc1_2010const +
-                 year,
-                data = df,
-                x = TRUE,
-                y = TRUE)
-
-## country-clustered standard errors
-m2 <- rms::robcov(m2, df$cabbrev1)
-
-# Show results
-texreg::screenreg(m2)
-
-ggstatsplot::ggcoefstats(m2,
-                         title = "Model 2",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m2) %>%
-  plot()
-```
-
 ## Model 3
 For the final model, we include controls for CINC ratio, democracy, nuclear status, and civil war with year fixed effects and country-clustered standard errors.
 
 ```{r}
 # Select model 3 variables
 df_m3 <- df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, cinc_ratio, dplyr::starts_with("year_"))
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, cinc_ratio, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
 
 # Model
 m3 <- polr(intensity ~ .,
@@ -810,52 +748,6 @@ m3_or <- stargazer2(m3,
            p.auto = FALSE,
            t.auto = FALSE,
            type = "text")
-```
-
-Old model 3:
-
-```{r, eval = FALSE}
-# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
-df_m3 <- df
-
-df_m3$year <- as.integer(df_m3$year) + 1993
-
-df_m3 <- df_m3 %>%
-  dplyr::filter(year < 2013) %>%
-  dplyr::mutate(year = as.factor(year))
-
-# Reset datadist so levels match
-d <- rms::datadist(df_m3)
-options(datadist = "d")
-
-# Model
-m3 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 cinc_ratio +
-                 gdppc1_2010const +
-                 year,
-               data = df_m3,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m3 <- rms::robcov(m3, df_m3$cabbrev1)
-
-# Show results
-texreg::screenreg(m3)
-
-ggstatsplot::ggcoefstats(m3,
-                         title = "Model 3",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m3) %>%
-  plot()
 ```
 
 # Relevant states sample
@@ -897,39 +789,6 @@ m4_or <- stargazer2(m4,
            type = "text")
 ```
 
-Old model:
-
-```{r, eval = FALSE}
-# Prep matrix inversion option for model
-d <- rms::datadist(df_conserv)
-options(datadist = "d")
-
-# Model
-m4 <- rms::lrm(intensity ~
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 year,
-               data = df_conserv,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m4 <- rms::robcov(m4, df_conserv$cabbrev1)
-
-# Show results
-texreg::screenreg(m4)
-
-ggstatsplot::ggcoefstats(m4,
-                         title = "Model 4",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m4) %>%
-  plot()
-```
-
 ## Model 5
 Replicate model 2
 
@@ -939,7 +798,9 @@ df_m5 <- df %>%
   dplyr::filter(relevant_conserv == 1)
 
 df_m5vars <- df_m5 %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, lnpop1, dplyr::starts_with("year_"))
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
 
 # Model
 m5 <- polr(intensity ~ .,
@@ -960,43 +821,6 @@ m5_or <- stargazer2(m5,
            type = "text")
 ```
 
-Old model:
-
-```{r, eval = FALSE}
-# Prep model
-d <- rms::datadist(df_conserv)
-options(datadist = "d")
-
-# Model
-m5 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 lnpop1 +
-                 gdppc1_2010const +
-                 year,
-               data = df_conserv,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m5 <- rms::robcov(m5, df_conserv$cabbrev1)
-
-# Show results
-texreg::screenreg(m5)
-
-ggstatsplot::ggcoefstats(m5,
-                         title = "Model 2",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m5) %>%
-  plot()
-```
-
 ## Model 6
 Replicate model 3 on the new sample
 
@@ -1006,7 +830,9 @@ df_m6 <- df %>%
   dplyr::filter(relevant_conserv == 1)
 
 df_m6vars <- df_m6 %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, lngdppc1_2010const, cinc_ratio, dplyr::starts_with("year_"))
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, cinc_ratio, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
 
 # Model
 m6 <- polr(intensity ~ .,
@@ -1025,47 +851,6 @@ m6_or <- stargazer2(m6,
            p.auto = FALSE,
            t.auto = FALSE,
            type = "text")
-```
-
-Old model:
-
-```{r, eval = FALSE}
-# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
-df_m6 <- df_conserv
-
-df_m6$year <- as.integer(df_m6$year) + 1993
-
-df_m6 <- df_m6 %>%
-  dplyr::filter(year < 2013) %>%
-  dplyr::mutate(year = as.factor(year))
-
-# Model
-m6 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 cinc_ratio +
-                 year,
-               data = df_m6,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m6 <- rms::robcov(m6, df_m6$cabbrev1)
-
-# Show results
-texreg::screenreg(m6)
-
-ggstatsplot::ggcoefstats(m6,
-                         title = "Model 6",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m6) %>%
-  plot()
 ```
 
 # Compiled results
@@ -1125,4 +910,233 @@ stargazer2(models,
            p.auto = FALSE,
            t.auto = FALSE,
            type = "text")
+```
+
+# Archive
+
+Old model 1:
+
+```{r, eval = FALSE}
+# Prep matrix inversion option for model
+d <- rms::datadist(df)
+options(datadist = "d")
+
+# Model
+m1 <- rms::lrm(intensity ~
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 year,
+               data = df,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m1 <- rms::robcov(m1, df$cabbrev1)
+
+# Show results
+texreg::screenreg(m1)
+
+ggstatsplot::ggcoefstats(m1,
+                         title = "Model 1",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m1) %>%
+  plot()
+```
+
+Old model 2:
+
+```{r, eval = FALSE}
+# Prep model
+d <- rms::datadist(df)
+options(datadist = "d")
+
+# Model
+m2 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 lnpop1 +
+                 gdppc1_2010const +
+                 year,
+                data = df,
+                x = TRUE,
+                y = TRUE)
+
+## country-clustered standard errors
+m2 <- rms::robcov(m2, df$cabbrev1)
+
+# Show results
+texreg::screenreg(m2)
+
+ggstatsplot::ggcoefstats(m2,
+                         title = "Model 2",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m2) %>%
+  plot()
+```
+
+Old model 3:
+
+```{r, eval = FALSE}
+# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
+df_m3 <- df
+
+df_m3$year <- as.integer(df_m3$year) + 1993
+
+df_m3 <- df_m3 %>%
+  dplyr::filter(year < 2013) %>%
+  dplyr::mutate(year = as.factor(year))
+
+# Reset datadist so levels match
+d <- rms::datadist(df_m3)
+options(datadist = "d")
+
+# Model
+m3 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 cinc_ratio +
+                 gdppc1_2010const +
+                 year,
+               data = df_m3,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m3 <- rms::robcov(m3, df_m3$cabbrev1)
+
+# Show results
+texreg::screenreg(m3)
+
+ggstatsplot::ggcoefstats(m3,
+                         title = "Model 3",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m3) %>%
+  plot()
+```
+
+Old model:
+
+```{r, eval = FALSE}
+# Prep matrix inversion option for model
+d <- rms::datadist(df_conserv)
+options(datadist = "d")
+
+# Model
+m4 <- rms::lrm(intensity ~
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 year,
+               data = df_conserv,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m4 <- rms::robcov(m4, df_conserv$cabbrev1)
+
+# Show results
+texreg::screenreg(m4)
+
+ggstatsplot::ggcoefstats(m4,
+                         title = "Model 4",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m4) %>%
+  plot()
+```
+
+Old model:
+
+```{r, eval = FALSE}
+# Prep model
+d <- rms::datadist(df_conserv)
+options(datadist = "d")
+
+# Model
+m5 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 lnpop1 +
+                 gdppc1_2010const +
+                 year,
+               data = df_conserv,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m5 <- rms::robcov(m5, df_conserv$cabbrev1)
+
+# Show results
+texreg::screenreg(m5)
+
+ggstatsplot::ggcoefstats(m5,
+                         title = "Model 2",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m5) %>%
+  plot()
+```
+
+Old model:
+
+```{r, eval = FALSE}
+# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
+df_m6 <- df_conserv
+
+df_m6$year <- as.integer(df_m6$year) + 1993
+
+df_m6 <- df_m6 %>%
+  dplyr::filter(year < 2013) %>%
+  dplyr::mutate(year = as.factor(year))
+
+# Model
+m6 <- rms::lrm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 cinc_ratio +
+                 year,
+               data = df_m6,
+               x = TRUE,
+               y = TRUE)
+
+## country-clustered standard errors
+m6 <- rms::robcov(m6, df_m6$cabbrev1)
+
+# Show results
+texreg::screenreg(m6)
+
+ggstatsplot::ggcoefstats(m6,
+                         title = "Model 6",
+                         package = "ggsci",
+                         only.significant = TRUE,
+                         palette = "category20c_d3",
+                         )
+
+ggeffects::ggpredict(m6) %>%
+  plot()
 ```
