@@ -6,11 +6,10 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     theme: flatly
-    code_download: true
-    df_print: paged
-    number_sections: yes
+    code_download: yes
+    code_folding: hide
     toc: yes
-    toc_depth: '5'
+    number_sections: yes
     toc_float:
       collapsed: yes
 editor_options:

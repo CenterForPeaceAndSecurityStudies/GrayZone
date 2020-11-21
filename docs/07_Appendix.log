@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.6.8)  16 NOV 2020 19:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.6.8)  20 NOV 2020 19:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1390,13 +1390,13 @@ Overfull \hbox (20.04213pt too wide) detected at line 749
  []
 
 [9] [10]
-<07_Appendix_files/figure-latex/xtable-1.pdf, id=163, 367.3725pt x 148.555pt>
+<07_Appendix_files/figure-latex/xtable-1.pdf, id=165, 367.3725pt x 148.555pt>
 File: 07_Appendix_files/figure-latex/xtable-1.pdf Graphic file (type pdf)
 <use 07_Appendix_files/figure-latex/xtable-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/xtable-1.pdf  used on i
 nput line 832.
 (pdftex.def)             Requested size: 367.3884pt x 148.56142pt.
-<../paper/figures/map_prior-data.png, id=164, 659.46375pt x 677.53125pt>
+<../paper/figures/map_prior-data.png, id=166, 659.46375pt x 677.53125pt>
 File: ../paper/figures/map_prior-data.png Graphic file (type png)
 <use ../paper/figures/map_prior-data.png>
 Package pdftex.def Info: ../paper/figures/map_prior-data.png  used on input lin
@@ -1404,7 +1404,7 @@ e 844.
 (pdftex.def)             Requested size: 469.77217pt x 482.64264pt.
 [11 <./07_Appendix_files/figure-latex/xtable-1.pdf>] [12 <../paper/figures/map_
 prior-data.png>]
-<07_Appendix_files/figure-latex/unnamed-chunk-1-1.pdf, id=184, 1283.79625pt x 4
+<07_Appendix_files/figure-latex/unnamed-chunk-1-1.pdf, id=186, 1283.79625pt x 4
 72.76625pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type p
 df)
@@ -1412,7 +1412,7 @@ df)
 Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-1-1.pdf  
 used on input line 915.
 (pdftex.def)             Requested size: 469.7473pt x 172.98746pt.
-<07_Appendix_files/figure-latex/unnamed-chunk-1-2.pdf, id=185, 464.73625pt x 31
+<07_Appendix_files/figure-latex/unnamed-chunk-1-2.pdf, id=187, 464.73625pt x 31
 3.17pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-1-2.pdf Graphic file (type p
 df)
@@ -1430,7 +1430,7 @@ Overfull \hbox (40.12129pt too wide) in paragraph at lines 949--966
  [][] 
  []
 
-<07_Appendix_files/figure-latex/unnamed-chunk-3-1.pdf, id=222, 459.7175pt x 300
+<07_Appendix_files/figure-latex/unnamed-chunk-3-1.pdf, id=224, 459.7175pt x 300
 .12125pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type p
 df)
@@ -1439,7 +1439,7 @@ Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-3-1.pdf
 used on input line 971.
 (pdftex.def)             Requested size: 459.74442pt x 300.13882pt.
 [14 <./07_Appendix_files/figure-latex/unnamed-chunk-1-2.pdf>]
-<07_Appendix_files/figure-latex/unnamed-chunk-4-1.pdf, id=235, 459.7175pt x 313
+<07_Appendix_files/figure-latex/unnamed-chunk-4-1.pdf, id=237, 459.7175pt x 313
 .17pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type p
 df)
@@ -1449,64 +1449,87 @@ used on input line 976.
 (pdftex.def)             Requested size: 459.7304pt x 313.17877pt.
 [15 <./07_Appendix_files/figure-latex/unnamed-chunk-3-1.pdf>] [16 <./07_Appendi
 x_files/figure-latex/unnamed-chunk-4-1.pdf>]
-<07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf, id=262, 459.7175pt x 316
+<07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf, id=264, 459.7175pt x 316
 .18124pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type p
 df)
 <use 07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf  
-used on input line 1027.
+used on input line 1028.
 (pdftex.def)             Requested size: 459.74442pt x 316.19975pt.
-<07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf, id=263, 453.695pt x 304.
+<07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf, id=265, 453.695pt x 304.
 13625pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf Graphic file (type p
 df)
 <use 07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf  
-used on input line 1028.
+used on input line 1029.
 (pdftex.def)             Requested size: 453.6939pt x 304.1355pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1027--1029
+Underfull \hbox (badness 10000) in paragraph at lines 1028--1030
 [][]
  []
 
 [17 <./07_Appendix_files/figure-latex/unnamed-chunk-5-1.pdf>]
-<07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf, id=276, 429.605pt x 263.
-98625pt>
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 1042
+.
+(/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+) [18 <./07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf>]
+<07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf, id=292, 427.5975pt x 263
+.98625pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type p
 df)
 <use 07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf  
-used on input line 1041.
-(pdftex.def)             Requested size: 429.61049pt x 263.98961pt.
-[18 <./07_Appendix_files/figure-latex/unnamed-chunk-5-2.pdf>]
-<07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf, id=290, 427.5975pt x 263
+used on input line 1116.
+(pdftex.def)             Requested size: 427.59645pt x 263.9856pt.
+[19] [20 <./07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf>]
+<07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf, id=310, 427.5975pt x 263
 .98625pt>
 File: 07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf Graphic file (type p
 df)
 <use 07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf  
-used on input line 1066.
+used on input line 1200.
 (pdftex.def)             Requested size: 427.59645pt x 263.9856pt.
-[19 <./07_Appendix_files/figure-latex/unnamed-chunk-7-1.pdf>] [20 <./07_Appendi
-x_files/figure-latex/unnamed-chunk-8-1.pdf>] [21]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1175.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1175.
+[21] [22 <./07_Appendix_files/figure-latex/unnamed-chunk-8-1.pdf>] [23] [24] [2
+5] [26] [27]
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 1619--1619
+[]\T1/lmtt/m/n/10 ## ==========================================================
+=========================================[] 
+ []
+
+
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 1619--1619
+[]\T1/lmtt/m/n/10 ## NATO member Russia min. distance Democracy Nuclear power P
+opulation GDP per capita Mil. expenditure[] 
+ []
+
+
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 1619--1619
+[]\T1/lmtt/m/n/10 ## ----------------------------------------------------------
+-----------------------------------------[] 
+ []
+
+[28]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1639.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1639.
 (./07_Appendix.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1175.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1175.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1175.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1639.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1639.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1639.
  ) 
 Here is how much of TeX's memory you used:
- 33254 strings out of 492982
- 743740 string characters out of 6134897
+ 33312 strings out of 492982
+ 744548 string characters out of 6134897
  973057 words of memory out of 5000000
- 35985 multiletter control sequences out of 15000+600000
- 93041 words of font info for 157 fonts, out of 8000000 for 9000
+ 36024 multiletter control sequences out of 15000+600000
+ 93609 words of font info for 161 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,12n,96p,905b,1953s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
+ips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
 -ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}</usr/share/texmf/f
 onts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.
@@ -1526,11 +1549,12 @@ xmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri
 s/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy5.pfb>
 </usr/share/texmf/fonts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1
 /public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/sh
-are/texmf/fonts/type1/public/lm/lmsy9.pfb>
-Output written on 07_Appendix.pdf (21 pages, 626675 bytes).
+are/texmf/fonts/type1/public/lm/lmsy9.pfb></usr/share/texmf/fonts/type1/public/
+lm/lmtt10.pfb>
+Output written on 07_Appendix.pdf (28 pages, 668697 bytes).
 PDF statistics:
- 539 PDF objects out of 1000 (max. 8388607)
- 442 compressed objects within 5 object streams
- 93 named destinations out of 1000 (max. 500000)
- 20751 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 579 PDF objects out of 1000 (max. 8388607)
+ 474 compressed objects within 5 object streams
+ 101 named destinations out of 1000 (max. 500000)
+ 20759 words of extra memory for PDF output out of 24883 (max. 10000000)
 
