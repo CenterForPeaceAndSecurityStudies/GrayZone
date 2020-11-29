@@ -3,10 +3,9 @@ title: "Appendix"
 author: "Author names redacted"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
+  word_document:
+    toc: no
     toc_depth: '5'
-    number_sections: yes
   html_notebook:
     fig_height: 8
     fig_width: 12
@@ -16,13 +15,14 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  word_document:
-    toc: no
-    toc_depth: '5'
   html_document:
     df_print: paged
     toc: yes
     toc_depth: '5'
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
 editor_options:
   chunk_output_type: inline
 header-includes: 
@@ -554,7 +554,7 @@ The complete dataset is provided in the appropriate .csv file. It includes sourc
 ## Summary statistics
 Although data was compiled on Russian intervention against all states from 1994-2018, the statistical analysis is limited to a sample from European states. In alignment with that, we present descriptive statistics of the sample used in the models provided in the main text
 
-```{r}
+```{r subset}
 df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
 
 # Limit sample to just European states
@@ -572,11 +572,10 @@ df_vars <- df %>%
   dplyr::mutate_if(is.character, as.numeric)
 
 # General summary stats
-DT::datatable(df_vars)
 funModeling::plot_num(df_vars)
 ```
 
-```{r, results = 'asis'}
+```{r summary stats, results = 'asis'}
 stargazer::stargazer(df_vars, 
                      title = "Covariate Summary Statistics",
                      covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "GDP per capita", "Population (log)", "Military Expenditure"),
@@ -588,7 +587,7 @@ stargazer::stargazer(df_vars,
 
 The distribution of our dependent variable, intensity, is shown below for the full sample (including non-European states):
 
-```{r}
+```{r dv}
 df_full %>%
   dplyr::filter(!intensity == 0) %>%
   dplyr::select(intensity) %>%
@@ -620,7 +619,7 @@ df_full %>%
 
 The bivariate correlations between the DV and the two EVs are shown below
 
-```{r}
+```{r correlation}
 # DV and EV correlation
 df %>%
   dplyr::select(intensity, 
@@ -640,14 +639,13 @@ The table of results in the main text shows the odds ratios. The regression resu
 ## Imputed models
 Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here:
 
-```{r}
+```{r missingess}
 naniar::gg_miss_var(df_vars)
-ExPanDaR::prepare_missing_values_graph(df, ts_id = "year")
 ```
 
 We impute values into those control variable columns to avoid losing those observations and display the results below. We do not show results for models 1 and 4 in the original text since those had no missing values and are thus identical.
 
-```{r}
+```{r full impute}
 # Prep imputation model
 d <- rms::datadist(df)
 options(datadist = "d")
@@ -683,7 +681,7 @@ df_imp <- Hmisc::aregImpute(~ cinc1 +
                             pr = FALSE)
 ```
 
-```{r, results = 'asis', echo = FALSE}
+```{r model 2}
 d <- rms::datadist(df)
 options(datadist = "d")
 
@@ -707,7 +705,7 @@ m2_imp <- Hmisc::fit.mult.impute(intensity ~
 m2_imp <- rms::robcov(m2_imp, df$cabbrev1)
 ```
 
-```{r, results = 'asis', echo = FALSE}
+```{r model 3}
 # Model 3, with CINC replacing population and mil expenditure
 m3_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
@@ -728,7 +726,7 @@ m3_imp <- Hmisc::fit.mult.impute(intensity ~
 m3_imp <- rms::robcov(m3_imp, df$cabbrev1)
 ```
 
-```{r}
+```{r relevant impute}
 # We use the subset for models 5 and 6. Imputing for the subsample has to be done separately due to the different n.
 
 # Subset sample
@@ -763,7 +761,7 @@ df_imp_conserv <- Hmisc::aregImpute(~  cinc1 +
                                     pr = FALSE)
 ```
 
-```{r, results = 'asis'}
+```{r model 5}
 # Model 5
 m5_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
@@ -784,7 +782,7 @@ m5_imp <- Hmisc::fit.mult.impute(intensity ~
 m5_imp <- rms::robcov(m5_imp, df_conserv$cabbrev1)
 ```
 
-```{r, results = 'asis'}
+```{r model 6}
 # Model 6
 m6_imp <- Hmisc::fit.mult.impute(intensity ~ 
                                    NATOmem_MEM +
@@ -805,13 +803,12 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 ```
 
-The full results are shown here:
+The full results replicating models 2, 3, 5, and 6 in the original text with imputed missing valus are shown here. Note that for models 3 and 5, CINC ratios replace the military expenditure and population variables since they are components of the composite CINC index:
 
-```{r, results = 'asis'}
+```{r impute results, echo = FALSE}
 models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
-
-table <- sjPlot::tab_model(models_imp,
+imput_tab <- sjPlot::tab_model(models_imp,
                  terms = c("NATOmem_MEM=1",
                            "lnmindistkm_rus",
                            "demo1=1",
@@ -827,13 +824,13 @@ table <- sjPlot::tab_model(models_imp,
                                         "Population",
                                         "CINC ratio"),
                  dv.labels = c("Model 2", "Model 3", "Model 5", "Model 6"),
+                 title = "Models with Imputed Control Variables",
                  collapse.ci = TRUE,
                  p.style = "stars",
-                 no.output = TRUE)
+                 no.output = TRUE,
+                 file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
 
-stargazer::stargazer(m2_imp)
-
-
+webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model_appendix.png")
 ```
 
 # Case Study: US 2016
