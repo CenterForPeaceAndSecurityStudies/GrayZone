@@ -43,7 +43,7 @@ gac <- readRDS(paste0(here::here(), '/data/grayzone_aggregate_new.rds'))
 # Plotting
 ## Avergage severity of Russian attacks
 We now plot changes in the severity of Russian attacks over the time period in question. The severity will be coded as the highest severity in any given year.
-```{r, fig.width = 7.5, fig.height = 7.5}
+```{r, fig.width = 7.5, fig.height = 5}
 #plotting the severity of Russian attacks from 1994-2018.
 gac <- gac[c("target","year_start","resp_convmil_gro","resp_convmil_airsea",
             "resp_paramil","resp_cyberdisrup","resp_infoops")]
@@ -95,12 +95,12 @@ df <- as.data.frame(df)
 
 ## Start bar chart
 g <- ggplot(df, aes(years, severity_avg_annual)) +
-  geom_bar(stat = "identity", width = 1, fill = "gray", color = "black") +
+  geom_bar(stat = "identity", width = 1, fill = "gray") +
   geom_line(aes(y = numint/4)) +
   labs(title = "Russian Interventions (1994-2018)",
        subtitle = "", x = "Year", y = "Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(sec.axis = sec_axis(~ . *4, name = "Number of Interventions"),
+  scale_y_continuous(sec.axis = sec_axis(~ . *4, name = "Yearly Interventions"),
                      breaks = c(1:5), labels = c("1" = "1 Info ops",
                                                  "2" = "2 Cyber Disrup.",
                                                  "3" = "3 Paramil.",
@@ -123,7 +123,7 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
 
 g
 
-ggsave(paste0("average_intensity_russian_aggression.png"), g ,"png", path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+ggsave(paste0("average_intensity_russian_aggression.png"), g ,"png", path = paste0(here::here(), '/paper/figures/'), width = 7.5, height = 5, units = "in")
 ```
 
 ## Maximum intensity
