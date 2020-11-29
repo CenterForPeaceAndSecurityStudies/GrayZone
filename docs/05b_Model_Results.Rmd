@@ -859,264 +859,71 @@ Compiled results of the 6 models are shown below:
 models <- list(m1, m2, m3, m4, m5, m6)
 
 # Main coefficients
-texreg::screenreg(models,
-                  stars = c(0.01, 0.05, 0.1),
-                  omit.coef = "(y)",
-                  custom.coef.names = c("NATO member",
-                                     "Russia min. distance",
+texreg::texreg(models,
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Russia distance",
                                      "Democracy",
                                      "Nuclear power",
                                      "Population",
-                                     "GDP per capita",
-                                     "Mil. expenditure"),
-                  custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes")), 
-                  custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6))
+                                     "GDP per cap",
+                                     "Mil. spending"),
+               custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"),
+                                         "Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               float.pos = "h",
+               file = paste0(here::here(), "/paper/figures/","model.tex"))
+
+# Prep odds ratio
+m1_tr <- texreg::extract(m1)
+m1_tr@coef <- exp(m1_tr@coef)
+
+m2_tr <- texreg::extract(m2)
+m2_tr@coef <- exp(m2_tr@coef)
+
+m3_tr <- texreg::extract(m3)
+m3_tr@coef <- exp(m3_tr@coef)
+
+m4_tr <- texreg::extract(m4)
+m4_tr@coef <- exp(m4_tr@coef)
+
+m5_tr <- texreg::extract(m5)
+m5_tr@coef <- exp(m5_tr@coef)
+
+m6_tr <- texreg::extract(m6)
+m6_tr@coef <- exp(m6_tr@coef)
+
+models_tr <- list(m1_tr, m2_tr, m3_tr, m4_tr, m5_tr, m6_tr)
 
 # Odds ratio
-stargazer2(models, 
-           apply.coef = exp,
-           omit = "year",
-           title = "Odds Ratios",
-           column.labels   = c("Full sample", "Relevant states sample"),
-           column.separate = c(3, 3),
-           custom.coef.names = c("NATO member",
-                                 "Russia min. distance",
-                                 "Democracy",
-                                 "Nuclear power",
-                                 "Population",
-                                 "GDP per capita",
-                                 "Mil. expenditure"),           
-           p.auto = FALSE,
-           t.auto = FALSE,
-           type = "text",
-           out = paste0(here::here(), "/paper/figures/","model_or.tex"))
-```
-
-# Archive
-
-Old model 1:
-
-```{r, eval = FALSE}
-# Prep matrix inversion option for model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Model
-m1 <- rms::lrm(intensity ~
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 year,
-               data = df,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m1 <- rms::robcov(m1, df$cabbrev1)
-
-# Show results
-texreg::screenreg(m1)
-
-ggstatsplot::ggcoefstats(m1,
-                         title = "Model 1",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m1) %>%
-  plot()
-```
-
-Old model 2:
-
-```{r, eval = FALSE}
-# Prep model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Model
-m2 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 lnpop1 +
-                 gdppc1_2010const +
-                 year,
-                data = df,
-                x = TRUE,
-                y = TRUE)
-
-## country-clustered standard errors
-m2 <- rms::robcov(m2, df$cabbrev1)
-
-# Show results
-texreg::screenreg(m2)
-
-ggstatsplot::ggcoefstats(m2,
-                         title = "Model 2",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m2) %>%
-  plot()
-```
-
-Old model 3:
-
-```{r, eval = FALSE}
-# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
-df_m3 <- df
-
-df_m3$year <- as.integer(df_m3$year) + 1993
-
-df_m3 <- df_m3 %>%
-  dplyr::filter(year < 2013) %>%
-  dplyr::mutate(year = as.factor(year))
-
-# Reset datadist so levels match
-d <- rms::datadist(df_m3)
-options(datadist = "d")
-
-# Model
-m3 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 cinc_ratio +
-                 gdppc1_2010const +
-                 year,
-               data = df_m3,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m3 <- rms::robcov(m3, df_m3$cabbrev1)
-
-# Show results
-texreg::screenreg(m3)
-
-ggstatsplot::ggcoefstats(m3,
-                         title = "Model 3",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m3) %>%
-  plot()
-```
-
-Old model:
-
-```{r, eval = FALSE}
-# Prep matrix inversion option for model
-d <- rms::datadist(df_conserv)
-options(datadist = "d")
-
-# Model
-m4 <- rms::lrm(intensity ~
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 year,
-               data = df_conserv,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m4 <- rms::robcov(m4, df_conserv$cabbrev1)
-
-# Show results
-texreg::screenreg(m4)
-
-ggstatsplot::ggcoefstats(m4,
-                         title = "Model 4",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m4) %>%
-  plot()
-```
-
-Old model:
-
-```{r, eval = FALSE}
-# Prep model
-d <- rms::datadist(df_conserv)
-options(datadist = "d")
-
-# Model
-m5 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 lnpop1 +
-                 gdppc1_2010const +
-                 year,
-               data = df_conserv,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m5 <- rms::robcov(m5, df_conserv$cabbrev1)
-
-# Show results
-texreg::screenreg(m5)
-
-ggstatsplot::ggcoefstats(m5,
-                         title = "Model 2",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m5) %>%
-  plot()
-```
-
-Old model:
-
-```{r, eval = FALSE}
-# Exclude post-2012 observations since missing control variables (cinc) cause a singular information matrix for the year variable
-df_m6 <- df_conserv
-
-df_m6$year <- as.integer(df_m6$year) + 1993
-
-df_m6 <- df_m6 %>%
-  dplyr::filter(year < 2013) %>%
-  dplyr::mutate(year = as.factor(year))
-
-# Model
-m6 <- rms::lrm(intensity ~ 
-                 NATOmem_MEM +
-                 lnmindistkm_rus +
-                 demo1 +
-                 nuclear1 +
-                 cinc_ratio +
-                 year,
-               data = df_m6,
-               x = TRUE,
-               y = TRUE)
-
-## country-clustered standard errors
-m6 <- rms::robcov(m6, df_m6$cabbrev1)
-
-# Show results
-texreg::screenreg(m6)
-
-ggstatsplot::ggcoefstats(m6,
-                         title = "Model 6",
-                         package = "ggsci",
-                         only.significant = TRUE,
-                         palette = "category20c_d3",
-                         )
-
-ggeffects::ggpredict(m6) %>%
-  plot()
+texreg::texreg(models_tr,
+                  omit.coef = "(y)",
+                  override.coef = list(exp(coef(m1)),
+                                       exp(coef(m2)),
+                                       exp(coef(m3)),
+                                       exp(coef(m4)),
+                                       exp(coef(m5)),
+                                       exp(coef(m6))),
+                  ci.force = TRUE,
+                  ci.force.level = 0.9,
+                  ci.test = 1,
+                  digits = 2,
+                  custom.coef.names = c("NATO member",
+                                        "Russia distance",
+                                        "Democracy",
+                                        "Nuclear power",
+                                        "Population",
+                                        "GDP per cap",
+                                        "Mil. spending"),
+                  custom.gof.rows = list("Fixed effects" = c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes"),
+                                         "Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+                  custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+                  caption = "Odds ratio estimates", 
+                  custom.note = "Ordered probit with year-fixed effects and country-clustered standard errors. $*$ means null hypothesis falls outside 90\\% confidence interval.",
+                  label = "table:model",
+                  float.pos = "h",
+                  scalebox = 0.9,
+                  use.packages = FALSE,
+                  file = paste0(here::here(), "/paper/figures/","model_or.tex"))
 ```

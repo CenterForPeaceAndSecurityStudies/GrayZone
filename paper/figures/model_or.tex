@@ -1,55 +1,35 @@
 
-% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: Fri, Nov 20, 2020 - 12:22:25 PM
-\begin{table}[!htbp] \centering 
-  \caption{Odds Ratios} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lcccccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{6}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-7} 
-\\[-1.8ex] & \multicolumn{6}{c}{ } \\ 
- & \multicolumn{3}{c}{Full sample} & \multicolumn{3}{c}{Relevant states sample} \\ 
-\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
-\hline \\[-1.8ex] 
- NATOmem\_MEM1 & 0.769 & 0.634$^{**}$ & 0.550$^{***}$ & 0.586$^{**}$ & 0.516$^{**}$ & 0.413$^{***}$ \\ 
-  & (0.218) & (0.199) & (0.216) & (0.252) & (0.264) & (0.169) \\ 
-  & & & & & & \\ 
- lnmindistkm\_rus & 0.911$^{***}$ & 0.908$^{***}$ & 0.891$^{***}$ & 0.987 & 0.960 & 0.984 \\ 
-  & (0.035) & (0.031) & (0.035) & (0.034) & (0.026) & (0.028) \\ 
-  & & & & & & \\ 
- demo11 &  & 1.143 & 1.566 &  & 1.136 & 1.697 \\ 
-  &  & (0.437) & (0.414) &  & (0.550) & (0.549) \\ 
-  & & & & & & \\ 
- nuclear11 &  & 2.570$^{**}$ & 1.525 &  & 1.596 & 3.643$^{*}$ \\ 
-  &  & (0.426) & (0.450) &  & (0.416) & (0.734) \\ 
-  & & & & & & \\ 
- lnpop1 &  & 1.201$^{**}$ & 1.140 &  & 1.130$^{*}$ & 1.226$^{***}$ \\ 
-  &  & (0.085) & (0.112) &  & (0.073) & (0.065) \\ 
-  & & & & & & \\ 
- gdppc &  & 0.989$^{**}$ & 0.986$^{**}$ &  & 0.998 & 1.000 \\ 
-  &  & (0.006) & (0.007) &  & (0.004) & (0.004) \\ 
-  & & & & & & \\ 
- milex &  &  & 1.018$^{*}$ &  &  & 0.976$^{*}$ \\ 
-  &  &  & (0.010) &  &  & (0.014) \\ 
-  & & & & & & \\ 
-\hline \\[-1.8ex] 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{6}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
-
-% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: Fri, Nov 20, 2020 - 12:22:25 PM
-\begin{table}[!htbp] \centering 
-  \caption{Odds Ratios} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}} ccccccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
-NATO member & Russia min. distance & Democracy & Nuclear power & Population & GDP per capita & Mil. expenditure \\ 
-\hline \\[-1.8ex] 
-\end{tabular} 
-\end{table} 
+\begin{table}[h]
+\begin{center}
+\scalebox{0.9}{
+\begin{tabular}{l c c c c c c}
+\hline
+ & \multicolumn{3}{c}{Full sample} & \multicolumn{3}{c}{Relevant states sample} \\
+\cline{2-4} \cline{5-7}
+ & Model 1 & Model 2 & Model 3 & Model 4 & Model 5 & Model 6 \\
+\hline
+NATO member     & $0.77$          & $0.63^{*}$      & $0.55^{*}$      & $0.59$          & $0.52^{*}$      & $0.41^{*}$      \\
+                & $ [0.41; 1.13]$ & $ [0.31; 0.96]$ & $ [0.19; 0.91]$ & $ [0.17; 1.00]$ & $ [0.08; 0.95]$ & $ [0.13; 0.69]$ \\
+Russia distance & $0.91^{*}$      & $0.91^{*}$      & $0.89^{*}$      & $0.99$          & $0.96$          & $0.98$          \\
+                & $ [0.85; 0.97]$ & $ [0.86; 0.96]$ & $ [0.83; 0.95]$ & $ [0.93; 1.04]$ & $ [0.92; 1.00]$ & $ [0.94; 1.03]$ \\
+Democracy       &                 & $1.14$          & $1.57$          &                 & $1.14$          & $1.70$          \\
+                &                 & $ [0.42; 1.86]$ & $ [0.88; 2.25]$ &                 & $ [0.23; 2.04]$ & $ [0.79; 2.60]$ \\
+Nuclear power   &                 & $2.57^{*}$      & $1.53$          &                 & $1.60$          & $3.64^{*}$      \\
+                &                 & $ [1.87; 3.27]$ & $ [0.79; 2.27]$ &                 & $ [0.91; 2.28]$ & $ [2.44; 4.85]$ \\
+Population      &                 & $1.20^{*}$      & $1.14$          &                 & $1.13^{*}$      & $1.23^{*}$      \\
+                &                 & $ [1.06; 1.34]$ & $ [0.95; 1.32]$ &                 & $ [1.01; 1.25]$ & $ [1.12; 1.33]$ \\
+GDP per cap     &                 & $0.99^{*}$      & $0.99^{*}$      &                 & $1.00$          & $1.00$          \\
+                &                 & $ [0.98; 1.00]$ & $ [0.97; 1.00]$ &                 & $ [0.99; 1.00]$ & $ [0.99; 1.01]$ \\
+Mil. spending   &                 &                 & $1.02^{*}$      &                 &                 & $0.98^{*}$      \\
+                &                 &                 & $ [1.00; 1.03]$ &                 &                 & $ [0.95; 1.00]$ \\
+\hline
+Fixed effects   & Yes             & Yes             & Yes             & Yes             & Yes             & Yes             \\
+Observations    & 1,000           & 921             & 891             & 376             & 373             & 346             \\
+\hline
+\multicolumn{7}{l}{\scriptsize{Ordered probit with year-fixed effects and country-clustered standard errors. $*$ means null hypothesis falls outside 90\% confidence interval.}}
+\end{tabular}
+}
+\caption{Odds ratio estimates}
+\label{table:model}
+\end{center}
+\end{table}
