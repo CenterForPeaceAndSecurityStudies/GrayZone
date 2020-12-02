@@ -31,7 +31,7 @@ library("magrittr")
 ```
 
 # Load data
-We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance data represented here was calculated using the code in 02_Distance.Rmd and then inputed into the google spreadsheet.
+We load the data from the google spreadsheet tab that has aggregated the info from previous versions. Each row is now a gray zone case and the columns are coded covariates. The distance data represented here was calculated using the code in 02_Distance.Rmd and then imputed into the google spreadsheet.
 
 For replication, the googlesheet is located in data/raw so access permissions are not a problem
 ```{r}

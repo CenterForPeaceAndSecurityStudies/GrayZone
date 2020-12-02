@@ -101,11 +101,13 @@ g <- ggplot(df, aes(years, severity_avg_annual)) +
        subtitle = "", x = "Year", y = "Average Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
   scale_y_continuous(sec.axis = sec_axis(~ . *4, name = "Yearly Interventions"),
-                     breaks = c(1:5), labels = c("1" = "1 Info ops",
-                                                 "2" = "2 Cyber Disrup.",
-                                                 "3" = "3 Paramil.",
-                                                 "4" = "4 Mil (Air/sea)",
-                                                 "5" = "5 Mil (Gro)")) +
+                     breaks = c(1:5),
+                     limits = c(0, 5),
+                     labels = c("1" = "1 Info ops",
+                                "2" = "2 Cyber Disrup.",
+                                "3" = "3 Paramil.",
+                                "4" = "4 Mil (Air/sea)",
+                                "5" = "5 Mil (Gro)")) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -152,12 +154,12 @@ df_max <- as.data.frame(df_max)
 
 #### bar chart
 g <- ggplot(df_max, aes(years, severity_max_annual)) +
-  geom_bar(stat = "identity", width = 1, fill = "gray", color = "black") +
+  geom_bar(stat = "identity", width = 1, fill = "gray") +
   geom_line(aes(y = numint_max/4)) +
-  labs(title = "Maximum intensity of Russian aggression (1994-2018)",
+  labs(title = "Russian Interventions (1994-2018)",
        subtitle = "", x = "Year", y = "Maximum Intensity") +
   scale_x_continuous(breaks = c(1994:2018)) +
-  scale_y_continuous(sec.axis = sec_axis(~.0:20, name = "Number of Russian Interventions"),
+  scale_y_continuous(sec.axis = sec_axis(~ . *4, name = "Yearly Interventions"),
                      breaks = c(1, 2, 3, 4, 5), labels = c("1" = "1 Info ops",
                                                            "2" = "2 Cyber Disrup.",
                                                            "3" = "3 Paramil.",
@@ -167,16 +169,18 @@ g <- ggplot(df_max, aes(years, severity_max_annual)) +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
-        title = element_text(size = 18),
         axis.ticks.x = element_line(),
-        axis.text.x = element_text(size = 18, angle = 90,vjust = 0.5,
+        title = element_text(size = 18),
+        axis.text.x = element_text(size = 12, 
+                                   angle = 90, 
+                                   vjust = 0.5,
                                    hjust = 0.9),
-        axis.text.y = element_text(size = 14),
+        axis.text.y = element_text(size = 12),
         axis.title.x = element_text(size = 18),
         axis.title.y = element_text(size = 18)
-  )
+        )
 
 g
 
-ggsave(paste0("maximum_intensity_russian_aggression.jpeg"), g, "jpeg", path = paste0(here::here(), '/paper/figures/'), limitsize = FALSE)
+ggsave(paste0("maximum_intensity_russian_aggression.png"), g, "png", path = paste0(here::here(), '/paper/figures/'), width = 7.5, height = 5, units = "in")
 ```

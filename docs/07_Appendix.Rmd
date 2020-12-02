@@ -543,8 +543,8 @@ For each incident, we code whether Russia used conventional ground forces, conve
 
 The following binary coding criteria were used for each case:
 
-- **resp_infoops** - Did Russia use information operations during this event? That includes propaganda, misinformation campaigns, etc
-- **resp_cyberdisrup** - Did Russia use cyber attacks during this operation? That includes hacking, phishing, cyber espionage, DDOS attacks, etc
+- **resp_infoops** - Did Russia use information operations during this event? That includes propaganda, misinformation campaigns, theft of information, and other simple intrusions
+- **resp_cyberdisrup** - Did Russia use cyber attacks during this operation? That includes hacking, phishing, cyber espionage, DDoS attacks, etc. that constitute a system shut down rather than simple intrusions
 - **resp_paramil** - Did Russia use paramilitary troops during this event? Special forces, covert troops, speznatz, etc all count
 - **resp_convmil_airsea** - Did Russia use conventional naval or air forces during this event?
 - **resp_convmil_gro** - Did Russia use conventional ground troops like their army, artillery, tanks, etc during this event?
@@ -834,6 +834,8 @@ webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model
 ```
 
 # Case Study: US 2016
+The main text presents case studies of Russian interventions in Estonia, Ukraine, and Georgia, which are all contiguous to Russia and former Soviet republics, and thus more comparable. Yet we expect the logic of the argument to apply more generally. Thus Russian intervention should be even more restrained against targets that are further away and more capable. Intervention in the 2016 U.S. election is consistent with this expectation.
+
 A U.S. intelligence assessment released soon after the 2016 election concluded with "high confidence" that "Russian President Vladimir Putin ordered an influence campaign in 2016 aimed at the US presidential election. Russia’s goals were to undermine public faith in the US democratic process, denigrate Secretary Clinton, and harm her electability and potential presidency. We further assess Putin and the Russian Government developed a clear preference for President-elect Trump" [@officeofthedirectorofnationalintelligence_assessingrussianactivities_2017]. Moscow’s influence operations might thus be described as unrestrained, even brazen, and thus motivated entirely by efficiency calculations. Yet the choice to pursue this course of action in the first place was very much constrained by the implicit deterrence posture of the United States. Russia could safely assume that the most powerful military in the world would retaliate for armed attacks against U.S. vital interests. While the United States had not designated its electoral process as "critical infrastructure" to explicitly signal that cyber interference was proscribed, Russia still had to consider the potential for American retaliation. Russia thus sought opportunities to impose costs and seek benefits while minimizing the risk of escalation. It found them through covert manipulation of democratic discourse. Indeed, Russia's electoral interference has gone essentially unpunished by the United States to date, aside from the expulsion of some Russian intelligence officers and the application of some additional sanctions to an already heavy regime put in place after Ukraine. Of course, if Trump’s victory in 2016 or any of his administration's subsequent policies can ever be credited to active measures by the Russian Federation, even in part, it would amount to one of the most consequential intelligence coups in history. It is just as likely, however, that the Russian campaign simply added noise to one of the most chaotic campaigns in U.S. presidential history [@gelman_19thingswe_2017]. Russian information operations appear to be a low-cost gamble to influence an over-determined outcome.
 
 # References

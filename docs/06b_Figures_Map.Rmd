@@ -248,7 +248,7 @@ map <- dplyr::left_join(map, world) %>%
 
 # Create color palette
 palette <- RColorBrewer::brewer.pal(n = 5, 
-                                    name = "Purples")
+                                    name = "Reds")
 
 # Plot map
 m <- ggplot(map) +
