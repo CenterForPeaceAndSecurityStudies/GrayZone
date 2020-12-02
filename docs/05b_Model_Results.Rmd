@@ -897,7 +897,7 @@ m6_tr@coef <- exp(m6_tr@coef)
 models_tr <- list(m1_tr, m2_tr, m3_tr, m4_tr, m5_tr, m6_tr)
 
 # Odds ratio
-texreg::texreg(models_tr,
+texreg::screenreg(models_tr,
                   omit.coef = "(y)",
                   override.coef = list(exp(coef(m1)),
                                        exp(coef(m2)),

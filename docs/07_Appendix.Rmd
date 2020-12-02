@@ -3,9 +3,10 @@ title: "Appendix"
 author: "Author names redacted"
 date: "`r Sys.Date()`"
 output:
-  word_document:
-    toc: no
+  pdf_document:
+    toc: yes
     toc_depth: '5'
+    number_sections: yes
   html_notebook:
     fig_height: 8
     fig_width: 12
@@ -19,10 +20,9 @@ output:
     df_print: paged
     toc: yes
     toc_depth: '5'
-  pdf_document:
-    toc: yes
+  word_document:
+    toc: no
     toc_depth: '5'
-    number_sections: yes
 editor_options:
   chunk_output_type: inline
 header-includes: 
@@ -809,26 +809,27 @@ The full results replicating models 2, 3, 5, and 6 in the original text with imp
 models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
 imput_tab <- sjPlot::tab_model(models_imp,
-                 terms = c("NATOmem_MEM=1",
-                           "lnmindistkm_rus",
-                           "demo1=1",
-                           "nuclear1=1",
-                           "gdppc",
-                           "lnpop1",
-                           "cinc_ratio"),
-                 pred.labels = c("NATO member",
-                                        "Russia distance",
-                                        "Democracy",
-                                        "Nuclear power",
-                                        "GDP per cap",
-                                        "Population",
-                                        "CINC ratio"),
-                 dv.labels = c("Model 2", "Model 3", "Model 5", "Model 6"),
-                 title = "Models with Imputed Control Variables",
-                 collapse.ci = TRUE,
-                 p.style = "stars",
-                 no.output = TRUE,
-                 file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
+                               terms = c("NATOmem_MEM=1",
+                                         "lnmindistkm_rus",
+                                         "demo1=1",
+                                         "nuclear1=1",
+                                         "gdppc",
+                                         "lnpop1",
+                                         "cinc_ratio"),
+                               pred.labels = c("NATO member",
+                                               "Russia distance",
+                                               "Democracy",
+                                               "Nuclear power",
+                                               "GDP per cap",
+                                               "Population",
+                                               "CINC ratio"),
+                               dv.labels = c("Model 2", "Model 3", "Model 5", "Model 6"),
+                               title = "Models with Imputed Control Variables",
+                               collapse.ci = TRUE,
+                               p.style = "stars",
+                               p.threshold = c(0.1, 0.05, 0.01),
+                               no.output = TRUE,
+                               file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
 
 webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model_appendix.png")
 ```
