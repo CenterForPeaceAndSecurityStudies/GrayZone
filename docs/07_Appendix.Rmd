@@ -415,8 +415,7 @@ title={Equilibrium Behavior: C's Resolve and D's Gray Zone Efficiency},
 %   \node at (1.3,0.65)  [circle,scale=0.7,draw,fill=black!0] {};
 
 \end{axis}
-\end{tikzpicture}\vspace{0.8cm}
-
+\end{tikzpicture}
 \caption{Extension 1: D's Optimal $d^{*}$}
 \caption*{C's resolve $\theta$ and the inverse D's gray zone efficiency $\frac{1}{\beta_{D}}$ are plotted. The dotted lines separate different kinds of equilibrium play, and the dark black lines denote D's optimal selected $\beta_{D}$. The parameters are $\rho_{0}=0$, $\rho_{W}=0.5$, $\beta_{C}=1$, $\kappa_{C}=0.53$, and $\kappa_{D}=0.1$.}
 \end{figure}
@@ -518,7 +517,7 @@ Finally, note that D's strategies in this game are unchanged from the game witho
 The universe of cases was created by first identifying cases of Russian foreign interventions from 3 prior datasets; ICB, DCID, and REI. Code replicating those findings is provided in the appropriate RMarkdown files. These cases were then supplemented with additional cases of Russian interference the authors were able to identify.
 
 ## Coverage of current datasets
-A comparison of what cases were covered in each individual dataset is provided here:
+A comparison of what cases were covered in each individual dataset is provided here. Note that there significant inconsistency concerning the sample of post-1994 Russian interventions identified by the ICB, DCID, and REI datasets:
 
 ```{r xtable, results = 'asis', echo = FALSE}
 # Read dataset
@@ -563,7 +562,7 @@ df <- df_full %>%
 
 # Subset to variables used in the model
 df_vars <- df %>%
-  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri) %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, cinc_ratio) %>%
   dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
   dplyr::mutate(milex = milex_sipri/1000) %>%
   dplyr::select(-gdppc1_2010const, -milex_sipri) %>%
@@ -578,7 +577,7 @@ funModeling::plot_num(df_vars)
 ```{r summary stats, results = 'asis'}
 stargazer::stargazer(df_vars, 
                      title = "Covariate Summary Statistics",
-                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "GDP per capita", "Population (log)", "Military Expenditure"),
+                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "GDP per capita", "Population (log)", "Military Expenditure", "CINC ratio"),
                      digits = 1,
                      notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
                      header = FALSE,
@@ -606,7 +605,7 @@ df_full %>%
   geom_text(aes(label = count),
             size = 3.5,
             vjust = -0.5) +
-  lims(y = c(0, 41)) +
+  lims(y = c(0, 43)) +
   labs(title = "Intensity of Russia Interventions (1994 - 2018)",
        x = "",
        y = "Number of Country-years"
@@ -617,14 +616,15 @@ df_full %>%
         )
 ```
 
-The bivariate correlations between the DV and the two EVs are shown below
+The bivariate correlations between the DV and the two EVs are shown below. The intensity and NATO variables have been converted to numeric values to simplify visualizing the bivariate correlations. The intensity scale representing the dependent variable (the x-axis) appears to go to 6 instead of 5 because the ordinal value of 0 is numerically coded as 1, so all dependent variable values are shifted by one in this simplified depiction.
 
 ```{r correlation}
 # DV and EV correlation
 df %>%
   dplyr::select(intensity, 
                 NATOmem_MEM, lnmindistkm_rus) %>%
-  dplyr::mutate(intensity = as.numeric(intensity)) %>%
+  dplyr::mutate(NATOmem_MEM = as.numeric(NATOmem_MEM),
+                intensity = as.numeric(intensity)) %>%
   GGally::ggpairs()
 ```
 
@@ -632,9 +632,9 @@ df %>%
 
 We run a set of alternate model specifications as robustness checks. Those results are shown below.
 
-## Main regression results
-The table of results in the main text shows the odds ratios. The regression results used to produce the odds ratios is shown here:
-\input{../paper/figures/model.tex}
+## Odds ratio
+The table of results in the main text shows coefficients from the ordinal probit model. Since those are difficult to interpret, the results as odds ratios are shown here:
+\input{../paper/figures/model_or.tex}
 
 ## Imputed models
 Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here:
@@ -737,7 +737,7 @@ d <- rms::datadist(df_conserv)
 options(datadist = "d")
 
 # Impute
-df_imp_conserv <- Hmisc::aregImpute(~  cinc1 + 
+df_imp_conserv <- Hmisc::aregImpute(~ cinc1 + 
                                       cinc2 +
                                       cinc_ratio +
                                       milex +

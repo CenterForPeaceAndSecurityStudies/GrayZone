@@ -1,7 +1,6 @@
 ---
-title: "05 Model Preparation"
-author: J Andres Gannon, Erik Gartzke, Jon Lindsay, and Peter Schram Center for Peace and Security
-  Studies (cPASS)
+title: "05a Model Preparation"
+author: J Andres Gannon, Center for Peace and Security Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -12,6 +11,11 @@ output:
     number_sections: yes
     toc_float:
       collapsed: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: inline
 ---

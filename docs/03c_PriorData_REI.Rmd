@@ -1,18 +1,21 @@
 ---
-title: "03c_REI"
-author: J Andres Gannon, Erik Gartzke, and Jon Lindsay, Center for Peace and Security
-  Studies (cPASS)
+title: "03c Prior Data: REI"
+author: J Andres Gannon, Center for Peace and Security Studies (cPASS)
 date: "`r Sys.Date()`"
 output:
   html_document:
     theme: flatly
-    code_download: true
-    df_print: paged
-    number_sections: yes
+    code_download: yes
+    code_folding: hide
     toc: yes
-    toc_depth: '5'
+    number_sections: yes
     toc_float:
       collapsed: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: inline
 ---
