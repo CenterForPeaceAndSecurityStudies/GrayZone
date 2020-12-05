@@ -435,6 +435,5 @@ texreg::texreg(models_tr,
                   label = "table:model_or",
                   float.pos = "h",
                   caption = "Intensity of Russian Intervention: Odds Ratios",
-#                  use.packages = FALSE,
                   file = paste0(here::here(), "/paper/figures/","model_or.tex"))
 ```
