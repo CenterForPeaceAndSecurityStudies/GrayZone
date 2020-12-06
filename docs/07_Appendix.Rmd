@@ -681,6 +681,25 @@ df_imp <- Hmisc::aregImpute(~ cinc1 +
                             pr = FALSE)
 ```
 
+```{r model 1}
+d <- rms::datadist(df)
+options(datadist = "d")
+
+# Model 2
+m1_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp,
+                                 data = df,
+                                 x = TRUE,
+                                 y = TRUE,
+                                 pr = FALSE)
+
+# Country-clustered SE
+m1_imp <- rms::robcov(m1_imp, df$cabbrev1)
+```
+
 ```{r model 2}
 d <- rms::datadist(df)
 options(datadist = "d")
@@ -761,6 +780,22 @@ df_imp_conserv <- Hmisc::aregImpute(~ cinc1 +
                                     pr = FALSE)
 ```
 
+```{r model 4}
+# Model 4
+m4_imp <- Hmisc::fit.mult.impute(intensity ~ 
+                                   NATOmem_MEM +
+                                   lnmindistkm_rus,
+                                 fitter = rms::lrm, 
+                                 xtrans = df_imp_conserv,
+                                 data = df_conserv,
+                                 x = TRUE,
+                                 y = TRUE,
+                                 pr = FALSE)
+
+# Country-clustered SE
+m4_imp <- rms::robcov(m4_imp, df_conserv$cabbrev1)
+```
+
 ```{r model 5}
 # Model 5
 m5_imp <- Hmisc::fit.mult.impute(intensity ~ 
@@ -806,7 +841,7 @@ m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 The full results replicating models 2, 3, 5, and 6 in the original text with imputed missing valus are shown here. Note that for models 3 and 5, CINC ratios replace the military expenditure and population variables since they are components of the composite CINC index:
 
 ```{r impute results, echo = FALSE}
-models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
+models_imp <- list(m1_imp, m2_imp, m3_imp, m4_imp, m5_imp, m6_imp)
 
 imput_tab <- sjPlot::tab_model(models_imp,
                                terms = c("NATOmem_MEM=1",
@@ -823,11 +858,11 @@ imput_tab <- sjPlot::tab_model(models_imp,
                                                "GDP per cap",
                                                "Population",
                                                "CINC ratio"),
-                               dv.labels = c("Model 2", "Model 3", "Model 5", "Model 6"),
+                               dv.labels = c("Model 1", "Model 2", "Model 3", "Model 4", "Model 5", "Model 6"),
                                title = "Models with Imputed Control Variables",
                                collapse.ci = TRUE,
                                p.style = "stars",
-                               p.threshold = c(0.1, 0.05, 0.01),
+                               p.threshold = c(0.1, 0.05, 0.01))
                                no.output = TRUE,
                                file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
 
