@@ -1,13 +1,14 @@
 ---
-title: "Appendix"
+title: "Online Appendix: Supporting Information for _The Shadow of Deterrence: Why capable actors engage in conflict short of war_"
 author: "Author names redacted"
 date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
 output:
-  pdf_document:
+  bookdown::pdf_document2:
     toc: yes
     toc_depth: '5'
     number_sections: yes
-  html_notebook:
+  bookdown::html_notebook2:
     fig_height: 8
     fig_width: 12
     number_sections: yes
@@ -16,34 +17,38 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  html_document:
-    df_print: paged
-    toc: yes
-    toc_depth: '5'
-  word_document:
+  bookdown::word_document:
     toc: no
     toc_depth: '5'
 editor_options:
   chunk_output_type: inline
-header-includes: 
-  - \usepackage{tikz}
-  - \usepackage{pgfplots}
-  - \pgfplotsset{compat=newest}
-  - \usetikzlibrary{plotmarks}
-  - \usetikzlibrary{arrows.meta}
-  - \usepgfplotslibrary{patchplots}
-  - \usepackage{grffile}
-  - \usepackage{caption}
+header-includes:
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \pgfplotsset{compat=newest}
+- \usetikzlibrary{plotmarks}
+- \usetikzlibrary{arrows.meta}
+- \usepgfplotslibrary{patchplots}
+- \usepackage{grffile}
+- \usepackage{caption}
+- \newcommand{\beginsupplement}{
+    \setcounter{table}{0}  
+    \renewcommand{\thetable}{A\arabic{table}} 
+    \setcounter{figure}{0} 
+    \renewcommand{\thefigure}{A\arabic{figure}}
+  }
 bibliography: GrayZone.json
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, fig.pos = "h!", out.extra = "", fig.align = "center")
 library(magrittr)
 library(ggplot2)
 ```
 
-This appendix accompanies the paper "After Deterrence: Explaining Conflict Short of War". It provides supplemental information concerning proofs for the formal model, the dataset of Russian gray zone campaigns introduced in the paper, and robustness checks and alternate specifications for the statistical model.
+\beginsupplement
+
+This appendix accompanies the paper "The Shadow of Deterrence: Why capable actors engage in conflict short of war". It provides supplemental information concerning proofs for the formal model, the data set of Russian gray zone campaigns introduced in the paper, and robustness checks and alternate specifications for the statistical model.
 
 # Formal Model
 ## Formal statement of assumptions
@@ -516,10 +521,10 @@ Finally, note that D's strategies in this game are unchanged from the game witho
 # New data
 The universe of cases was created by first identifying cases of Russian foreign interventions from 3 prior datasets; ICB, DCID, and REI. Code replicating those findings is provided in the appropriate RMarkdown files. These cases were then supplemented with additional cases of Russian interference the authors were able to identify.
 
-## Coverage of current datasets
-A comparison of what cases were covered in each individual dataset is provided here. Note that there significant inconsistency concerning the sample of post-1994 Russian interventions identified by the ICB, DCID, and REI datasets:
+## Comparison of current datasets
+A comparison of what cases were covered in each individual dataset is provided in Figure \@ref(fig:venn-diagram). Note that there significant inconsistency concerning the sample of post-1994 Russian interventions identified by the ICB, DCID, and REI datasets.
 
-```{r xtable, results = 'asis', echo = FALSE}
+```{r venn-diagram, fig.cap = "Venn diagram of case overlap among prior datasets", results = 'asis'}
 # Read dataset
 coverage <- readRDS(paste0(here::here(), '/data/coverage.rds'))
 
@@ -529,13 +534,13 @@ coverage_venn <- coverage[ , c('new', 'icb', 'dcid', 'rei')]
 gplots::venn(coverage_venn)
 ```
 
-## Consistency of current datasets
+Aside from the cases covered, the intensity codings for current datasets are difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID [@valeriano_dynamicscyberconflict_2014] and REI [@casey_russianelectoralinterventions_2017] is depicted in Figure \@ref(fig:prior-data). The DCID data identifies the United States, United Kingdom, Poland and Ukraine as targets of the most severe Russian cyber operations. In the cases documented by REI, the most severe Russian attacks occurred against France, Austria, and Ukraine. Part of this discrepancy is due to the respective foci of each dataset; DCID seeks out cases of cyber incidents and disputes while REI focuses on Russian electoral interference. While a majority of the REI cases include some form of Russian cyber activity, there are a few cases where only material support was provided (eg. Moldova 2014 and Belarus 1994).
 
-Aside from the cases covered, the intensity codings for current datasets are difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID [@valeriano_dynamicscyberconflict_2014] and REI [@casey_russianelectoralinterventions_2017] is visualized here:
+```{r prior-data, fig.cap = "Comparison of coding for highest intensity Russian intervention in each target state", out.width = '100%'}
+knitr::include_graphics("../paper/figures/map_prior-data.png")
+```
 
-![](../paper/figures/map_prior-data.png)
-
-The DCID data identifies the United States, United Kingdom, Poland and Ukraine as targets of the most severe Russian cyber operations. In the cases documented by REI, the most severe Russian attacks occurred against France, Austria, and Ukraine. Part of this discrepancy is due to the respective foci of each dataset; DCID seeks out cases of cyber incidents and disputes while REI focuses on Russian electoral interference. While a majority of the REI cases include some form of Russian cyber activity, there are a few cases where only material support was provided (eg. Moldova 2014 and Belarus 1994). This discrepancy exemplifies not only the challenges of relying on open source reporting for identifying cyber influence or disruption campaigns, but also differences in defining what counts as an attack. The only country-year that appears in both datasets is Ukraine 2014. We standardized codings across the two datasets using variable definitions from respective codebooks. A severity less than or equal to 2 in DCID’s coding is synonymous in our recoding with REI’s coding for disinformation, a severity between 3 and 7 equals REI’s coding for cyberattack, and no cases in DCID have a severity greater than 7. We adopted Valeriano and Maness (2014)’s approach of sampling on intensity when there are multiple observations in a given time unit. 
+This discrepancy exemplifies not only the challenges of relying on open source reporting for identifying cyber influence or disruption campaigns, but also differences in defining what counts as an attack. The only country-year that appears in both datasets is Ukraine 2014. We standardized codings across the two datasets using variable definitions from respective codebooks. A severity less than or equal to 2 in DCID’s coding is synonymous in our recoding with REI’s coding for disinformation, a severity between 3 and 7 equals REI’s coding for cyberattack, and no cases in DCID have a severity greater than 7. We adopted Valeriano and Maness (2014)’s approach of sampling on intensity when there are multiple observations in a given time unit. 
 
 ## Variable codings
 For each incident, we code whether Russia used conventional ground forces, conventional air or sea forces, paramilitary or covert forces, cyber disruption, and information operations. By distinguishing between these five types of aggression, we obtain a clearer picture of the intensity of each case of Russian intervention. The vast majority of cases include at least some type of cyber operations. In a few cases, data limitations preclude coding of non-kinetic activity by Russia or other actors. In Moldova 2005, for example, Russia provided material support for the Communist Party but there is no credible evidence of cyber activities.
@@ -551,7 +556,7 @@ The following binary coding criteria were used for each case:
 The complete dataset is provided in the appropriate .csv file. It includes sources used for the codings as well as justifications and explanations where needed.
 
 ## Summary statistics
-Although data was compiled on Russian intervention against all states from 1994-2018, the statistical analysis is limited to a sample from European states. In alignment with that, we present descriptive statistics of the sample used in the models provided in the main text
+Although data was compiled on Russian intervention against all states from 1994-2018, the statistical analysis is limited to a sample from European states. In alignment with that, Table \@ref(tab:summary-stats) present descriptive statistics of the sample used in the models provided in the main text.
 
 ```{r subset}
 df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
@@ -571,20 +576,22 @@ df_vars <- df %>%
   dplyr::mutate_if(is.character, as.numeric)
 ```
 
-```{r summary stats, results = 'asis'}
+```{r summary-stats, results = 'asis'}
 stargazer::stargazer(df_vars, 
                      title = "Covariate Summary Statistics",
                      covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "Population (log)", "CINC ratio", "GDP per capita", "Military expenditure"),
                      digits = 1,
                      notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
                      header = FALSE,
+                     label = "tab:summary-stats",
                      type = "latex")
 ```
 
-The distribution of our dependent variable, intensity, is shown below for the full sample (including non-European states):
+The distribution of our dependent variable, intensity, is shown for the European sample in Figure \@ref(fig:dv). The figure only includes country-years with known attacks (omitting null cases) to allow an easier visual comparison of variation in attack intensity.
 
-```{r dv}
+```{r dv, fig.cap = "Intensity of Russian interventions", results = 'asis', out.width = '90%'}
 df_full %>%
+  dplyr::filter(continent == "Europe") %>%
   dplyr::filter(!intensity == 0) %>%
   dplyr::select(intensity) %>%
   dplyr::group_by(intensity) %>%
@@ -602,7 +609,7 @@ df_full %>%
   geom_text(aes(label = count),
             size = 3.5,
             vjust = -0.5) +
-  lims(y = c(0, 43)) +
+  lims(y = c(0, 32)) +
   labs(title = "Intensity of Russia Interventions (1994 - 2018)",
        x = "",
        y = "Number of Country-years"
@@ -613,9 +620,9 @@ df_full %>%
         )
 ```
 
-The bivariate correlations between the DV and the two EVs are shown below. The intensity and NATO variables have been converted to numeric values to simplify visualizing the bivariate correlations. The intensity scale representing the dependent variable (the x-axis) appears to go to 6 instead of 5 because the ordinal value of 0 is numerically coded as 1, so all dependent variable values are shifted by one in this simplified depiction.
+The bivariate correlations between the DV and the two EVs are shown in Figure \@ref(fig:correlation). The intensity and NATO variables have been converted to numeric values to simplify visualizing the bivariate correlations. The intensity scale representing the dependent variable (the x-axis) appears to go to 6 instead of 5 because the ordinal value of 0 is numerically coded as 1, so all dependent variable values are shifted by one in this simplified depiction.
 
-```{r correlation}
+```{r correlation, fig.cap = "Bivariate correlation of dependent and independent variables", results = 'asis', out.width = '90%'}
 # DV and EV correlation
 df %>%
   dplyr::select(intensity, 
@@ -626,59 +633,6 @@ df %>%
 ```
 
 # Alternate model specifications
-
-We run a set of alternate model specifications as robustness checks. Those results are shown below.
-
-## Odds ratios
-The table of results in the main text shows coefficients from the ordinal probit model. Since those are difficult to interpret, the results as odds ratios are shown here:
-
-\input{../paper/figures/model_or.tex}
-
-## Imputed models
-Models 2 and 3 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown here:
-
-```{r missingess}
-naniar::gg_miss_var(df_vars)
-```
-
-We impute values into those control variable columns to avoid losing those observations and display the results below. We do not show results for models 1 and 4 in the original text since those had no missing values and are thus identical.
-
-```{r full impute}
-# Prep imputation model
-d <- rms::datadist(df)
-options(datadist = "d")
-
-# Create new variables to reduce scale problem 
-df <- df %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::mutate(milex = milex_sipri/1000)
-
-# Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
-df_imp <- Hmisc::aregImpute(~ cinc1 + 
-                              cinc2 +
-                              cinc_ratio +
-                              milex +
-                              milex_sipri +
-                              milexpercap_sipri +
-                              gdp1_2010const +
-                              gdppc1_2010const +
-                              gdppc +
-                              pop1 +
-                              elf +
-                              polity1 +
-                              NATOmem_MEM +
-                              lnmindistkm_rus +
-                              cinc_ratio +
-                              demo1 +
-                              civilwar +
-                              nuclear1,
-                            nk = 0,
-                            tlinear = TRUE, 
-                            data = df,
-                            n.impute = 10, 
-                            pr = FALSE)
-```
-
 ```{r new polr function}
 # Same new polr function from the model results rmd
 
@@ -839,18 +793,367 @@ polr <- function(formula, data, weights, start, ..., subset,
 }
 ```
 
-```{r model 1}
-d <- rms::datadist(df)
-options(datadist = "d")
+We run a set of alternate model specifications as robustness checks. Our results are consistent across alternate modeling specifications including different regression models, control variables, and imputation strategies. We choose the ordered probit results as the main results given the appropriateness of that model specification and to ensure our primary results are not simply an artifact of our imputation strategy. Those results are shown below.
 
-# Select model 1 variables
-## Create year dummies
+## Odds ratios
+
+Given the difficulty of interpreting ordered probit coefficients, Table 2 show the results as odds ratios with confidence intervals in parentheses when all other variables are held at their mean level. To use model 6 as an example for interpretation, for relevant NATO states, the odds of a non-cyber, non-information attack (categories 3, 4, or 5) versus a cyber attack, an information attack, or no attack is 58\% lower.
+
+\input{../paper/figures/model_or.tex}
+
+## OLS regression
+
+Although an ordered probit model is most appropriate given the dependent variable (intensity) is ordinal, we ensure that the sign on our coefficients are consistent with an OLS model that treats intensity as a continuous variable. See Table \@ref(tab:ols-results).
+
+```{r ols model 1}
 df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
   dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
 
-## Select only EVs
+# Select model 1 variables
+df_m1 <- df %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m1 <- plm::plm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus,
+               model = "within",
+               index = "year",
+               data = df_m1)
+
+# Country-clustered SE
+m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovHC(m1, type = "sss", cluster = "group"))
+```
+
+```{r ols model 2}
+# Select model 2 variables
+df_m2 <- df %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m2 <- plm::plm(intensity ~ 
+             NATOmem_MEM +
+             lnmindistkm_rus +
+             demo1 +
+             nuclear1 +
+             gdppc +
+             lnpop1,
+           model = "within",
+           index = "year",
+           data = df_m2)
+
+# Country-clustered SE
+m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovHC(m2, type = "sss", cluster = "group"))
+```
+
+```{r ols model 3}
+df_m3 <- df %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m3 <- plm::plm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 gdppc +
+                 lnpop1 +
+                 milex,
+           model = "within",
+           index = "year",
+           data = df_m3)
+
+# Country-clustered SE
+m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovHC(m3, type = "sss", cluster = "group"))
+```
+
+```{r ols model 4}
+df_sample2 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4 <- df_sample2 %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m4 <- plm::plm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus,
+               model = "within",
+               index = "year",
+               data = df_m4)
+
+# Country-clustered SE
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovHC(m4, type = "sss", cluster = "group"))
+```
+
+```{r ols model 5}
+df_m5 <- df_sample2 %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m5 <- plm::plm(intensity ~ 
+             NATOmem_MEM +
+             lnmindistkm_rus +
+             demo1 +
+             nuclear1 +
+             gdppc +
+             lnpop1,
+           model = "within",
+           index = "year",
+           data = df_m5)
+
+# Country-clustered SE
+m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovHC(m5, type = "sss", cluster = "group"))
+```
+
+```{r ols model 6}
+df_m6 <- df_sample2 %>%
+  dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri) %>%
+  dplyr::mutate(intensity = as.numeric(intensity) - 1)
+
+# Model
+m6 <- plm::plm(intensity ~ 
+                 NATOmem_MEM +
+                 lnmindistkm_rus +
+                 demo1 +
+                 nuclear1 +
+                 gdppc +
+                 lnpop1 +
+                 milex,
+           model = "within",
+           index = "year",
+           data = df_m6)
+
+# Country-clustered SE
+m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovHC(m6, type = "sss", cluster = "group"))
+```
+
+```{r ols-results, results = 'asis'}
+models <- list(m1, m2, m3, m4, m5, m6)
+
+texreg::texreg(models,
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Russia distance",
+                                     "Democracy",
+                                     "Nuclear power",
+                                     "Population",
+                                     "GDP per cap",
+                                     "Mil. spending"),
+               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
+               custom.gof.rows = list("Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
+               float.pos = "h!",
+               label="tab:ols-results",
+               caption = "Intensity of Russian Intervention: OLS Results",
+               use.packages = FALSE)
+```
+
+## Ordered logit
+
+We also run all models as ordered logits instead of ordered probits. Both are generalized linear models appropriate for an ordinal dependent variable that differ only in whether they use a logit link function as opposed to inverse normal link function [@johnston_generalizedorderedprobit_2020]. The results of the ordered logit in Table \@ref(tab:ordered-logit-results) are almost identical to those of the ordered probit, as expected.
+
+```{r ordered logit model 1}
+# Select model 1 variables
 df_m1 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m1 <- polr(intensity ~ .,
+           data = df_m1,
+           method = "logistic",
+           Hess = TRUE)
+
+# Country-clustered SE
+m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
+```
+
+```{r ordered logit model 2}
+# Select model 2 variables
+df_m2 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m2 <- polr(intensity ~ .,
+                 data = df_m2,
+                 method = "logistic",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
+```
+
+```{r ordered logit model 3}
+# Select model 3 variables
+df_m3 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m3 <- polr(intensity ~ .,
+           data = df_m3,
+           method = "logistic",
+           Hess = TRUE)
+
+# Country-clustered SE
+m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
+```
+
+```{r ordered logit model 4}
+# Use same variables as model 1 but subset to 
+df_m4 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4vars <- df_m4 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m4 <- polr(intensity ~ .,
+           data = df_m4vars,
+           method = "logistic",
+           Hess = TRUE)
+
+# Country-clustered SE
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
+```
+
+```{r ordered logit model 5}
+# Use same variables as model 2 but subset to 
+df_m5 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m5vars <- df_m5 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m5 <- polr(intensity ~ .,
+                 data = df_m5vars,
+                 method = "logistic",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
+```
+
+```{r ordered logit model 6}
+# Use same variables as model 3 but subset to 
+df_m6 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m6vars <- df_m6 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m6 <- polr(intensity ~ .,
+           data = df_m6vars,
+           method = "logistic",
+           Hess = TRUE)
+
+# Country-clustered SE
+m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
+```
+
+```{r ordered-logit-results, results = 'asis'}
+# Make list of models
+models <- list(m1, m2, m3, m4, m5, m6)
+
+# Main coefficients
+texreg::texreg(models,
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Russia distance",
+                                     "Democracy",
+                                     "Nuclear power",
+                                     "Population",
+                                     "GDP per cap",
+                                     "Mil. spending"),
+               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
+               custom.gof.rows = list("Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
+               float.pos = "h!",
+               label="tab:ordered-logit-results",
+               caption = "Intensity of Russian Intervention: Ordered Logit Results",
+               use.packages = FALSE)
+```
+
+## Multiple imputation
+
+Models 2, 3, 5, and 6 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown in Figure \@ref(fig:missingness), with all but CINC being used in the models in the main text. We do not use the CINC ratio variable because listwise delection would lose 25\% of our observations in a biased manner given the missingness is for all observations after 2012. Instead, the main model uses population and SIPRI military expenditure variables which adequately proxy for CINC given they are 2 of CINC's 6 components. When imputing missing values, we replace the population and military expenditure variables with CINC since it is more commonly used as an observable indicator for military power, the concept of interest.
+
+```{r missingness, fig.cap = "Number of missing observations for each variable in the dataset", results = 'asis', out.width = '80%'}
+naniar::gg_miss_var(df_vars)
+```
+
+Missing values are calculated using bootstrap re-sampling across 10 different imputations using predictive mean matching [@buuren_fullyconditionalspecification_2006; @white_multipleimputationusing_2011]. The imputation predictions account for the temporal nature of the data The same ordinal probit for each model is run across all 10 imputations and the coefficient estimates and standard errors are pooled across the 10 imputations to account for uncertainty produced by variation across the imputations. Variables not included in the main regression like active civil war, ethno-linguistic fractionalization, and GDP per capita are included to increase the predictive performance of the imputation for variables that the literature suggests are correlated with the variables being imputed.
+
+The results of the original models with imputed control variables are shown in Figure \@ref(fig:impute-results) and Table \@ref(tab:nonimpute-results). We do not show results for models 1 and 4 separately to make clear that they models have no imputed values. The models in \@ref(tab:nonimpute-results) are the same as those reported in models 1 and 4 in the main text, and are only reported here to enable comparison with the imputed models in Figure \@ref(fig:impute-results).
+
+```{r full impute}
+# Prep imputation model
+d <- rms::datadist(df)
+options(datadist = "d")
+
+# Create new variables to reduce scale problem 
+df <- df %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000)
+
+# Run 10 imputations of the variables with missing data using 0 knots for nonlinear terms
+df_imp <- Hmisc::aregImpute(~ cinc1 + 
+                              cinc2 +
+                              cinc_ratio +
+                              milex +
+                              milex_sipri +
+                              milexpercap_sipri +
+                              gdp1_2010const +
+                              gdppc1_2010const +
+                              gdppc +
+                              pop1 +
+                              elf +
+                              polity1 +
+                              NATOmem_MEM +
+                              lnmindistkm_rus +
+                              demo1 +
+                              civilwar +
+                              nuclear1,
+                            nk = 0,
+                            tlinear = TRUE, 
+                            data = df,
+                            n.impute = 10, 
+                            pr = FALSE)
+```
+
+```{r model 1}
+d <- rms::datadist(df)
+options(datadist = "d")
 
 # Model
 m1 <- polr(intensity ~ .,
@@ -1002,40 +1305,36 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 ```
 
-The full results replicating models 2, 3, 5, and 6 in the original text with imputed missing valus are shown here. Note that for models 3 and 5, CINC ratios replace the military expenditure and population variables since they are components of the composite CINC index.
-
-```{r impute results, echo = FALSE}
+```{r impute-results, fig.cap = "Intensity of Russian Intervention: Odds Ratios (Imputed models)", results = 'asis'}
 models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
-imput_tab <- sjPlot::tab_model(models_imp,
-                               terms = c("NATOmem_MEM=1",
-                                         "lnmindistkm_rus",
-                                         "demo1=1",
-                                         "nuclear1=1",
-                                         "gdppc",
-                                         "lnpop1",
-                                         "cinc_ratio"),
-                               pred.labels = c("NATO member",
-                                               "Russia distance",
-                                               "Democracy",
-                                               "Nuclear power",
-                                               "GDP per cap",
-                                               "Population",
-                                               "CINC ratio"),
-                               dv.labels = c("Model 1", "Model 2", "Model 3", "Model 4", "Model 5", "Model 6"),
-                               title = "Models with Imputed Control Variables",
-                               collapse.ci = TRUE,
-                               p.style = "stars",
-                               p.threshold = c(0.1, 0.05, 0.01),
-                               no.output = TRUE,
-                               file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
+imp_tab <- sjPlot::tab_model(models_imp,
+                  terms = c("NATOmem_MEM=1",
+                            "lnmindistkm_rus",
+                            "demo1=1",
+                            "nuclear1=1",
+                            "gdppc",
+                            "lnpop1",
+                            "cinc_ratio"),
+                  pred.labels = c("NATO member",
+                                  "Russia distance",
+                                  "Democracy",
+                                  "Nuclear power",
+                                  "GDP per cap",
+                                  "Population",
+                                  "CINC ratio"),
+                  dv.labels = c("Model 2", "Model 3", "Model 5", "Model 6"),
+                  title = "Models with Imputed Control Variables",
+                  collapse.ci = TRUE,
+                  p.style = "stars",
+                  p.threshold = c(0.1, 0.05, 0.01),
+                  no.output = TRUE,
+                  file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
 
 webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model_appendix.png")
 ```
 
-We produce the same model 1 and model 4 results in a separate table below to avoid confusion since those models have no imputed values
-
-```{r non-impute results, results = 'asis', echo = FALSE}
+```{r nonimpute-results, results = 'asis'}
 # Prep odds ratio
 m1_tr <- texreg::extract(m1)
 m1_tr@coef <- exp(m1_tr@coef)
@@ -1057,11 +1356,14 @@ texreg::texreg(models_tr,
                                      "Russia distance"),
                custom.gof.rows = list("Observations" = c("1,000", "376")), 
                custom.header = list("Full sample" = 1, "Relevant states sample" = 2),
+               custom.model.names = c("Model 1", "Model 4"),
                custom.note = "All models are ordered probits and include year-fixed effects with country-clustered standard errors in parentheses.",
-               float.pos = "h",
+               float.pos = "h!",
+               label="tab:nonimpute-results",
                use.packages = FALSE,
-               caption = "Intensity of Russian Intervention: Odds Ratios")
+               caption = "Intensity of Russian Intervention: Odds Ratios (non-imputed models)")
 ```
+
 # Case Study: US 2016
 The main text presents case studies of Russian interventions in Estonia, Ukraine, and Georgia, which are all contiguous to Russia and former Soviet republics, and thus more comparable. Yet we expect the logic of the argument to apply more generally. Thus Russian intervention should be even more restrained against targets that are further away and more capable. Intervention in the 2016 U.S. election is consistent with this expectation.
 

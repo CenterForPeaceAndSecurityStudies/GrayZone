@@ -1,21 +1,25 @@
 ---
 title: "05b Model Results"
-author: Author names redacted
+author: "Author names redacted"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
-  html_notebook:
-    toc: yes
-    toc_float: yes
-  html_document:
-    theme: flatly
-    code_download: yes
-    code_folding: hide
-    toc: yes
+  bookdown::html_notebook2:
+    fig_height: 8
+    fig_width: 12
     number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 5
     toc_float:
       collapsed: yes
+  bookdown::word_document:
+    toc: no
+    toc_depth: '5'
+  bookdown::pdf_document2:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
+site: bookdown::bookdown_site
 editor_options:
   chunk_output_type: inline
 ---
@@ -386,7 +390,7 @@ texreg::texreg(models,
                label = "table:model",
                float.pos = "h",
                caption = "Intensity of Russian Intervention: Ordered Probit Results",
-               scalebox = 0.9,
+#               scalebox = 0.9,
                use.packages = FALSE,
                file = paste0(here::here(), "/paper/figures/","model.tex"))
 
@@ -435,8 +439,7 @@ texreg::texreg(models_tr,
                   custom.gof.rows = list("Observations" = c("1,000", "921", "891", "376", "373", "346")), 
                   custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
                   custom.note = "All models are ordered probits and include year-fixed effects with country-clustered standard errors in parentheses.",
-                  label = "table:model_or",
-                  float.pos = "h",
+                  float.pos = "h!",
                   caption = "Intensity of Russian Intervention: Odds Ratios",
                   file = paste0(here::here(), "/paper/figures/","model_or.tex"))
 ```
