@@ -1,8 +1,13 @@
 ---
 title: "05b Model Results"
-author: J Andres Gannon and Peter Schram, Center for Peace and Security Studies (cPASS)
+author: Author names redacted
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    toc: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
   html_document:
     theme: flatly
     code_download: yes
@@ -11,18 +16,15 @@ output:
     number_sections: yes
     toc_float:
       collapsed: yes
-  html_notebook:
-    toc: yes
-    toc_float: yes
-  pdf_document:
-    toc: yes
 editor_options:
   chunk_output_type: inline
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(warning = FALSE, error = FALSE)
 library(magrittr)
+library(ggplot2)
+options(scipen = 999)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
 ```
 
 # Load data
@@ -30,10 +32,6 @@ Load the newly created data with all relevant covariates and subset to the Europ
 
 ```{r}
 df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
-
-# Limit sample to just European states
-df <- df_full %>%
-  dplyr::filter(continent == "Europe")
 ```
 
 # Fix polr functions
@@ -57,6 +55,8 @@ We use the polr function from the MASS package to compute an ordered probit. The
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 #
+library(MASS)
+
 polr <- function(formula, data, weights, start, ..., subset,
                  na.action, contrasts = NULL, Hess = FALSE,
                  model = TRUE,
@@ -218,6 +218,9 @@ polr <- function(formula, data, weights, start, ..., subset,
 Create year dummy columns for the year fixed effects
 
 ```{r}
+df <- df_full %>% 
+  dplyr::filter(continent == "Europe")
+
 df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
   dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
 ```

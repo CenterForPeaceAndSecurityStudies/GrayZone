@@ -531,7 +531,7 @@ gplots::venn(coverage_venn)
 
 ## Consistency of current datasets
 
-Aside from the cases covered, the intensity codings for current datasets are difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID (Valeriano and Maness) and REI (Way and Casey) is visualized here:
+Aside from the cases covered, the intensity codings for current datasets are difficult to compare given their different scales. A more thorough analysis is provided in the appropriate R Markdown files, but a comparison of intensity codings in DCID [@valeriano_dynamicscyberconflict_2014] and REI [@casey_russianelectoralinterventions_2017] is visualized here:
 
 ![](../paper/figures/map_prior-data.png)
 
@@ -569,15 +569,12 @@ df_vars <- df %>%
   dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
   dplyr::mutate_if(is.factor, as.character) %>%
   dplyr::mutate_if(is.character, as.numeric)
-
-# General summary stats
-funModeling::plot_num(df_vars)
 ```
 
 ```{r summary stats, results = 'asis'}
 stargazer::stargazer(df_vars, 
                      title = "Covariate Summary Statistics",
-                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "GDP per capita", "Population (log)", "Military Expenditure", "CINC ratio"),
+                     covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "Population (log)", "CINC ratio", "GDP per capita", "Military expenditure"),
                      digits = 1,
                      notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
                      header = FALSE,
@@ -632,8 +629,9 @@ df %>%
 
 We run a set of alternate model specifications as robustness checks. Those results are shown below.
 
-## Odds ratio
+## Odds ratios
 The table of results in the main text shows coefficients from the ordinal probit model. Since those are difficult to interpret, the results as odds ratios are shown here:
+
 \input{../paper/figures/model_or.tex}
 
 ## Imputed models
@@ -681,23 +679,187 @@ df_imp <- Hmisc::aregImpute(~ cinc1 +
                             pr = FALSE)
 ```
 
+```{r new polr function}
+# Same new polr function from the model results rmd
+
+polr <- function(formula, data, weights, start, ..., subset,
+                 na.action, contrasts = NULL, Hess = FALSE,
+                 model = TRUE,
+                 method = c("logistic", "probit", "cloglog", "cauchit"))
+{
+    logit <- function(p) log(p/(1 - p))
+
+    fmin <- function(beta) {
+        theta <- beta[pc + 1L:q]
+        gamm <- c(-Inf, cumsum(c(theta[1L], exp(theta[-1L]))), Inf)
+        eta <- offset
+        if (pc > 0)
+            eta <- eta + drop(x %*% beta[1L:pc])
+        pr <- pfun(gamm[y + 1] - eta) - pfun(gamm[y] - eta)
+        if (all(pr > 0))
+            -sum(wt * log(pr))
+        else Inf
+    }
+
+    gmin <- function(beta)
+    {
+        jacobian <- function(theta) { ## dgamma by dtheta matrix
+            k <- length(theta)
+            etheta <- exp(theta)
+            mat <- matrix(0 , k, k)
+            mat[, 1] <- rep(1, k)
+            for (i in 2:k) mat[i:k, i] <- etheta[i]
+            mat
+        }
+        theta <- beta[pc + 1L:q]
+        gamm <- c(-Inf, cumsum(c(theta[1L], exp(theta[-1L]))), Inf)
+        eta <- offset
+        if(pc > 0) eta <- eta + drop(x %*% beta[1L:pc])
+        pr <- pfun(gamm[y+1] - eta) - pfun(gamm[y] - eta)
+        p1 <- dfun(gamm[y+1] - eta)
+        p2 <- dfun(gamm[y] - eta)
+        g1 <- if(pc > 0) t(x) %*% (wt*(p1 - p2)/pr) else numeric(0)
+        xx <- .polrY1*p1 - .polrY2*p2
+        g2 <- - t(xx) %*% (wt/pr)
+        g2 <- t(g2) %*% jacobian(theta)
+        if(all(pr > 0)) c(g1, g2) else rep(NA, pc+q)
+    }
+
+    m <- match.call(expand.dots = FALSE)
+    method <- match.arg(method)
+    pfun <- switch(method, logistic = plogis, probit = pnorm,
+                   cloglog = pgumbel, cauchit = pcauchy)
+    dfun <- switch(method, logistic = dlogis, probit = dnorm,
+                   cloglog = dgumbel, cauchit = dcauchy)
+    if(is.matrix(eval.parent(m$data)))
+        m$data <- as.data.frame(data)
+    m$start <- m$Hess <- m$method <- m$model <- m$... <- NULL
+    m[[1L]] <- as.name("model.frame")
+    m <- eval.parent(m)
+    Terms <- attr(m, "terms")
+    x <- model.matrix(Terms, m, contrasts)
+    xint <- match("(Intercept)", colnames(x), nomatch=0L)
+    n <- nrow(x)
+    pc <- ncol(x)
+    cons <- attr(x, "contrasts") # will get dropped by subsetting
+    if(xint > 0) {
+        x <- x[, -xint, drop=FALSE]
+        pc <- pc - 1
+    } else warning("an intercept is needed and assumed")
+    wt <- model.weights(m)
+    if(!length(wt)) wt <- rep(1, n)
+    offset <- model.offset(m)
+    if(length(offset) <= 1) offset <- rep(0, n)
+    y <- model.response(m)
+    if(!is.factor(y)) stop("response must be a factor")
+    lev <- levels(y)
+    if(length(lev) <= 2) stop("response must have 3 or more levels")
+    y <- unclass(y)
+    q <- length(lev) - 1
+    Y <- matrix(0, n, q)
+    .polrY1 <- col(Y) == y
+    .polrY2 <- col(Y) == y - 1
+    if(missing(start)) {
+      # try something that should always work -tjb
+      u <- as.integer(table(y))
+      u <- (cumsum(u)/sum(u))[1:q]
+      zetas <-
+         switch(method,
+                "logistic"= qlogis(u),
+                "probit"=   qnorm(u),
+                "cauchit"=  qcauchy(u),
+                "cloglog"=  -log(-log(u)) )
+      s0 <- c(rep(0,pc),zetas[1],log(diff(zetas)))
+
+##         # try logistic/probit regression on 'middle' cut
+##         q1 <- length(lev) %/% 2
+##         y1 <- (y > q1)
+##         X <- cbind(Intercept = rep(1, n), x)
+##         fit <-
+##             switch(method,
+##                    "logistic"= glm.fit(X, y1, wt, family = binomial(), offset = offset),
+##                    "probit" = glm.fit(X, y1, wt, family = binomial("probit"), offset = offset),
+##                    ## this is deliberate, a better starting point
+##                    "cloglog" = glm.fit(X, y1, wt, family = binomial("probit"), offset = offset),
+##                    "cauchit" = glm.fit(X, y1, wt, family = binomial("cauchit"), offset = offset))
+##         if(!fit$converged)
+##             stop("attempt to find suitable starting values failed")
+##         coefs <- fit$coefficients
+##         if(any(is.na(coefs))) {
+##             warning("design appears to be rank-deficient, so dropping some coefs")
+##             keep <- names(coefs)[!is.na(coefs)]
+##             coefs <- coefs[keep]
+##             x <- x[, keep[-1L], drop = FALSE]
+##             pc <- ncol(x)
+##           }
+##         spacing <- logit((1L:q)/(q+1)) # just a guess
+##         if(method != "logistic") spacing <- spacing/1.7
+##         gammas <- -coefs[1L] + spacing - spacing[q1]
+##         thetas <- c(gammas[1L], log(diff(gammas)))
+##         s0 <- c(coefs[-1L], thetas)
+    } else if(length(start) != pc + q)
+	stop("'start' is not of the correct length")
+    else {
+        s0 <- if(pc > 0) c(start[seq_len(pc+1)], log(diff(start[-seq_len(pc)])))
+        else c(start[1L], log(diff(start)))
+      }
+    res <- optim(s0, fmin, gmin, method="BFGS", hessian = Hess, ...)
+    beta <- res$par[seq_len(pc)]
+    theta <- res$par[pc + 1L:q]
+    zeta <- cumsum(c(theta[1L],exp(theta[-1L])))
+    deviance <- 2 * res$value
+    niter <- c(f.evals=res$counts[1L], g.evals=res$counts[2L])
+    names(zeta) <- paste(lev[-length(lev)], lev[-1L], sep="|")
+    if(pc > 0) {
+        names(beta) <- colnames(x)
+        eta <- offset + drop(x %*% beta)
+    } else eta <- offset + rep(0, n)
+
+    cumpr <- matrix(pfun(matrix(zeta, n, q, byrow=TRUE) - eta), , q)
+    fitted <- t(apply(cumpr, 1L, function(x) diff(c(0, x, 1))))
+    dimnames(fitted) <- list(row.names(m), lev)
+    fit <- list(coefficients = beta, zeta = zeta, deviance = deviance,
+                fitted.values = fitted, lev = lev, terms = Terms,
+                df.residual = sum(wt) - pc - q, edf = pc + q, n = sum(wt),
+                nobs = sum(wt),
+                call = match.call(), method = method,
+		convergence = res$convergence, niter = niter, lp = eta)
+    if(Hess) {
+        dn <- c(names(beta), names(zeta))
+        H <- res$hessian
+        dimnames(H) <- list(dn, dn)
+        fit$Hessian <- H
+    }
+    if(model) fit$model <- m
+    fit$na.action <- attr(m, "na.action")
+    fit$contrasts <- cons
+    fit$xlevels <- .getXlevels(Terms, m)
+    class(fit) <- "polr"
+    fit
+}
+```
+
 ```{r model 1}
 d <- rms::datadist(df)
 options(datadist = "d")
 
-# Model 2
-m1_imp <- Hmisc::fit.mult.impute(intensity ~ 
-                                   NATOmem_MEM +
-                                   lnmindistkm_rus,
-                                 fitter = rms::lrm, 
-                                 xtrans = df_imp,
-                                 data = df,
-                                 x = TRUE,
-                                 y = TRUE,
-                                 pr = FALSE)
+# Select model 1 variables
+## Create year dummies
+df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
+  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
+
+## Select only EVs
+df_m1 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m1 <- polr(intensity ~ .,
+           data = df_m1,
+           method = "probit",
+           Hess = TRUE)
 
 # Country-clustered SE
-m1_imp <- rms::robcov(m1_imp, df$cabbrev1)
+m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
 ```
 
 ```{r model 2}
@@ -781,19 +943,21 @@ df_imp_conserv <- Hmisc::aregImpute(~ cinc1 +
 ```
 
 ```{r model 4}
-# Model 4
-m4_imp <- Hmisc::fit.mult.impute(intensity ~ 
-                                   NATOmem_MEM +
-                                   lnmindistkm_rus,
-                                 fitter = rms::lrm, 
-                                 xtrans = df_imp_conserv,
-                                 data = df_conserv,
-                                 x = TRUE,
-                                 y = TRUE,
-                                 pr = FALSE)
+# Use same variables as model 1 but subset to 
+df_m4 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4vars <- df_m4 %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m4 <- polr(intensity ~ .,
+           data = df_m4vars,
+           method = "probit",
+           Hess = TRUE)
 
 # Country-clustered SE
-m4_imp <- rms::robcov(m4_imp, df_conserv$cabbrev1)
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
 ```
 
 ```{r model 5}
@@ -838,10 +1002,10 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 ```
 
-The full results replicating models 2, 3, 5, and 6 in the original text with imputed missing valus are shown here. Note that for models 3 and 5, CINC ratios replace the military expenditure and population variables since they are components of the composite CINC index:
+The full results replicating models 2, 3, 5, and 6 in the original text with imputed missing valus are shown here. Note that for models 3 and 5, CINC ratios replace the military expenditure and population variables since they are components of the composite CINC index.
 
 ```{r impute results, echo = FALSE}
-models_imp <- list(m1_imp, m2_imp, m3_imp, m4_imp, m5_imp, m6_imp)
+models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
 imput_tab <- sjPlot::tab_model(models_imp,
                                terms = c("NATOmem_MEM=1",
@@ -862,13 +1026,42 @@ imput_tab <- sjPlot::tab_model(models_imp,
                                title = "Models with Imputed Control Variables",
                                collapse.ci = TRUE,
                                p.style = "stars",
-                               p.threshold = c(0.1, 0.05, 0.01))
+                               p.threshold = c(0.1, 0.05, 0.01),
                                no.output = TRUE,
                                file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
 
 webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model_appendix.png")
 ```
 
+We produce the same model 1 and model 4 results in a separate table below to avoid confusion since those models have no imputed values
+
+```{r non-impute results, results = 'asis', echo = FALSE}
+# Prep odds ratio
+m1_tr <- texreg::extract(m1)
+m1_tr@coef <- exp(m1_tr@coef)
+
+m4_tr <- texreg::extract(m4)
+m4_tr@coef <- exp(m4_tr@coef)
+
+models_tr <- list(m1_tr, m4_tr)
+
+texreg::texreg(models_tr,
+               omit.coef = "(y)",
+               override.coef = list(exp(coef(m1)),
+                                    exp(coef(m4))),
+               ci.force = TRUE,
+               ci.force.level = 0.9,
+               ci.test = 1,
+               digits = 2,
+               custom.coef.names = c("NATO member",
+                                     "Russia distance"),
+               custom.gof.rows = list("Observations" = c("1,000", "376")), 
+               custom.header = list("Full sample" = 1, "Relevant states sample" = 2),
+               custom.note = "All models are ordered probits and include year-fixed effects with country-clustered standard errors in parentheses.",
+               float.pos = "h",
+               use.packages = FALSE,
+               caption = "Intensity of Russian Intervention: Odds Ratios")
+```
 # Case Study: US 2016
 The main text presents case studies of Russian interventions in Estonia, Ukraine, and Georgia, which are all contiguous to Russia and former Soviet republics, and thus more comparable. Yet we expect the logic of the argument to apply more generally. Thus Russian intervention should be even more restrained against targets that are further away and more capable. Intervention in the 2016 U.S. election is consistent with this expectation.
 
