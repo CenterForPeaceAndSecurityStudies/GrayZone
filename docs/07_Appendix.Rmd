@@ -4,10 +4,6 @@ author: "Author names redacted"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
-  bookdown::pdf_document2:
-    toc: yes
-    toc_depth: '5'
-    number_sections: yes
   bookdown::html_notebook2:
     fig_height: 8
     fig_width: 12
@@ -17,6 +13,10 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
+  bookdown::pdf_document2:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
   bookdown::word_document:
     toc: no
     toc_depth: '5'
@@ -36,7 +36,6 @@ header-includes:
     \renewcommand{\thetable}{A\arabic{table}} 
     \setcounter{figure}{0} 
     \renewcommand{\thefigure}{A\arabic{figure}}
-  }
 bibliography: GrayZone.json
 ---
 
@@ -1114,7 +1113,7 @@ naniar::gg_miss_var(df_vars)
 
 Missing values are calculated using bootstrap re-sampling across 10 different imputations using predictive mean matching [@buuren_fullyconditionalspecification_2006; @white_multipleimputationusing_2011]. The imputation predictions account for the temporal nature of the data The same ordinal probit for each model is run across all 10 imputations and the coefficient estimates and standard errors are pooled across the 10 imputations to account for uncertainty produced by variation across the imputations. Variables not included in the main regression like active civil war, ethno-linguistic fractionalization, and GDP per capita are included to increase the predictive performance of the imputation for variables that the literature suggests are correlated with the variables being imputed.
 
-The results of the original models with imputed control variables are shown in Figure \@ref(fig:impute-results) and Table \@ref(tab:nonimpute-results). We do not show results for models 1 and 4 separately to make clear that they models have no imputed values. The models in \@ref(tab:nonimpute-results) are the same as those reported in models 1 and 4 in the main text, and are only reported here to enable comparison with the imputed models in Figure \@ref(fig:impute-results).
+The results of the original models with imputed control variables are shown in Figure \@ref(fig:impute-results) and Table \@ref(tab:nonimpute-results). We do not show results for models 1 and 4 separately to make clear that they models have no imputed values. The coefficients in \@ref(tab:nonimpute-results) are the same as those reported in models 1 and 4 in the main text and are only reported here to enable comparison with the imputed models in Figure \@ref(fig:impute-results).
 
 ```{r full impute}
 # Prep imputation model
