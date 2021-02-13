@@ -4,6 +4,10 @@ author: "Author names redacted"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
+  bookdown::pdf_document2:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
   bookdown::html_notebook2:
     fig_height: 8
     fig_width: 12
@@ -13,10 +17,6 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  bookdown::pdf_document2:
-    toc: yes
-    toc_depth: '5'
-    number_sections: yes
   bookdown::word_document:
     toc: no
     toc_depth: '5'
@@ -1304,7 +1304,7 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 ```
 
-```{r impute-results, fig.cap = "Intensity of Russian Intervention: Odds Ratios (Imputed models)", results = 'asis'}
+```{r impute-results, fig.cap = "Intensity of Russian Intervention: Odds Ratios (Imputed models)", results = 'asis', eval = FALSE}
 models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
 imp_tab <- sjPlot::tab_model(models_imp,
@@ -1328,7 +1328,7 @@ imp_tab <- sjPlot::tab_model(models_imp,
                   p.style = "stars",
                   p.threshold = c(0.1, 0.05, 0.01),
                   no.output = TRUE,
-                  file = paste0(here::here(), "/paper/figures/","model_appendix.html"))
+                  file = paste0(here::here(), "/paper/figures/", "model_appendix.html"))
 
 webshot::webshot("../paper/figures/model_appendix.html", "../paper/figures/model_appendix.png")
 ```
@@ -1361,6 +1361,83 @@ texreg::texreg(models_tr,
                label="tab:nonimpute-results",
                use.packages = FALSE,
                caption = "Intensity of Russian Intervention: Odds Ratios (non-imputed models)")
+```
+
+## Targeted states sample
+```{r, targeted-states, results = 'asis'}
+df_target <- df %>%
+  dplyr::filter(!intensity == 0) %>%
+  dplyr::select(-dplyr::starts_with("year_"))
+
+df_target$year <- factor(df_target$year)
+df_target$intensity <- factor(df_target$intensity)
+
+df_target <- fastDummies::dummy_cols(df_target, select_columns = 'year') %>%
+  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
+
+# Select model 1 variables
+df_m1target <- df_target %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m1_target <- polr(intensity ~ .,
+           data = df_m1target,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m1_target <- lmtest::coeftest(m1_target, vcov = sandwich::vcovCL(m1_target, factor(df_target$cname1)))
+
+# Select model 2 variables
+df_m2target <- df_target %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m2_target <- polr(intensity ~ .,
+                 data = df_m2target,
+                 method = "probit",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m2_target <- lmtest::coeftest(m2_target, vcov = sandwich::vcovCL(m2_target, factor(df_target$cname1)))
+
+# Select model 3 variables
+df_m3target <- df_target %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m3_target <- polr(intensity ~ .,
+           data = df_m3target,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m3_target <- lmtest::coeftest(m3_target, vcov = sandwich::vcovCL(m3_target, factor(df_target$cname1)))
+
+# Table of results
+models <- list(m1_target, m2_target, m3_target)
+
+texreg::screenreg(models,
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "Russia distance",
+                                     "Democracy",
+                                     "Nuclear power",
+                                     "Population",
+                                     "GDP per cap",
+                                     "Mil. spending"),
+               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
+               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
+               float.pos = "h!",
+               label="tab:targets-results",
+               caption = "Intensity of Russian Intervention: Targeted States Sample",
+               use.packages = FALSE)
 ```
 
 # Case Study: US 2016
