@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.13)  14 FEB 2021 14:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.13)  14 FEB 2021 15:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1011,28 +1011,28 @@ Package pdftex.def Info: 07_Appendix_files/figure-latex/missingness-1.pdf  used
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[15]
+[15] [16 <./07_Appendix_files/figure-latex/missingness-1.pdf>]
+<07_Appendix_files/figure-latex/impute-results-1.png, id=307, 724.7075pt x 544.
+0325pt>
+File: 07_Appendix_files/figure-latex/impute-results-1.png Graphic file (type pn
+g)
+<use 07_Appendix_files/figure-latex/impute-results-1.png>
+Package pdftex.def Info: 07_Appendix_files/figure-latex/impute-results-1.png  u
+sed on input line 806.
+(pdftex.def)             Requested size: 469.7605pt x 352.64569pt.
 
-LaTeX Warning: Reference `fig:impute-results' on page 16 undefined on input lin
-e 802.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-LaTeX Warning: Reference `fig:impute-results' on page 16 undefined on input lin
-e 802.
-
-[16 <./07_Appendix_files/figure-latex/missingness-1.pdf>] [17] [18] (./07_Appen
-dix.aux)
-
-LaTeX Warning: There were undefined references.
-
+[17 <./07_Appendix_files/figure-latex/impute-results-1.png>] [18] [19] (./07_Ap
+pendix.aux)
 Package rerunfilecheck Info: File `07_Appendix.out' has not changed.
-(rerunfilecheck)             Checksum: C57A68E6665B3A0D23C0A59DFC79F9C1;3476.
+(rerunfilecheck)             Checksum: 260BD56B67B09B28EE3DE99EF080D07D;3476.
  ) 
 Here is how much of TeX's memory you used:
- 34731 strings out of 481288
- 798962 string characters out of 5917055
- 1233203 words of memory out of 5000000
- 50691 multiletter control sequences out of 15000+600000
+ 34741 strings out of 481288
+ 799378 string characters out of 5917055
+ 1233300 words of memory out of 5000000
+ 50698 multiletter control sequences out of 15000+600000
  500226 words of font info for 211 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,12n,88p,2174b,2113s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1066,10 +1066,10 @@ ublic/lm/lmri8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy
 TeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/andres/.TinyTeX/texmf-dis
 t/fonts/type1/public/lm/lmsy8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmsy9.pfb>
-Output written on 07_Appendix.pdf (18 pages, 615910 bytes).
+Output written on 07_Appendix.pdf (19 pages, 647361 bytes).
 PDF statistics:
- 457 PDF objects out of 1000 (max. 8388607)
- 390 compressed objects within 4 object streams
- 89 named destinations out of 1000 (max. 500000)
- 51406 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 469 PDF objects out of 1000 (max. 8388607)
+ 399 compressed objects within 4 object streams
+ 91 named destinations out of 1000 (max. 500000)
+ 51411 words of extra memory for PDF output out of 51595 (max. 10000000)
 
