@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.13)  13 FEB 2021 16:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.13)  14 FEB 2021 14:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -781,21 +781,295 @@ Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
 (/home/andres/.TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
-)))
-Runaway argument?
-{ \setcounter {table}{0} \renewcommand {\thetable }{A\arabic {table}}\ETC.
-! File ended while scanning use of \@argdef.
-<inserted text> 
-                \par 
-<*> 07_Appendix.tex
-                    
-Here is how much of TeX's memory you used:
- 32924 strings out of 481288
- 759629 string characters out of 5917055
- 1198784 words of memory out of 5000000
- 49361 multiletter control sequences out of 15000+600000
- 406420 words of font info for 28 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 87i,0n,88p,2174b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+)) (/home/andres/.TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2021-02-06 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count318
+\l__pdf_internal_box=\box66
+) (./07_Appendix.aux)
+\openout1 = `07_Appendix.aux'.
 
-!  ==> Fatal error occurred, no output PDF file produced!
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Info: Redefining \microtypecontext on input line 85.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using protrusion set `basicmath'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
+Package microtype Info: Using default expansion set `alltext-nott'.
+LaTeX Info: Redefining \showhyphens on input line 85.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+) (/home/andres/.TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package hyperref Info: Link coloring OFF on input line 85.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/home/andres/.TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count319
+)
+LaTeX Info: Redefining \ref on input line 85.
+LaTeX Info: Redefining \pageref on input line 85.
+LaTeX Info: Redefining \nameref on input line 85.
+(./07_Appendix.out) (./07_Appendix.out)
+\@outlinefile=\write4
+\openout4 = `07_Appendix.out'.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package pgfplots notification 'compat/show suggested version=true': document ha
+s been generated with the most recent feature set (\pgfplotsset{compat=1.17}).
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 8
+7.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 8
+7.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+87.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+87.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 87.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 87.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 87.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 87.
+
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+) (/home/andres/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 87.
+
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) (/home/andres/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+) (./07_Appendix.toc
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 2.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 2.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 2.
+)
+\tf@toc=\write5
+\openout5 = `07_Appendix.toc'.
+
+[1
+
+{/home/andres/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 2
+09.
+(/home/andres/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+) [4] [5]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 483.
+[6] [7] [8]
+Overfull \hbox (20.04213pt too wide) detected at line 551
+[]
+ []
+
+[9]
+<07_Appendix_files/figure-latex/venn-diagram-1.pdf, id=212, 367.3725pt x 148.55
+5pt>
+File: 07_Appendix_files/figure-latex/venn-diagram-1.pdf Graphic file (type pdf)
+
+<use 07_Appendix_files/figure-latex/venn-diagram-1.pdf>
+Package pdftex.def Info: 07_Appendix_files/figure-latex/venn-diagram-1.pdf  use
+d on input line 600.
+(pdftex.def)             Requested size: 367.3884pt x 148.56142pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<../paper/figures/map_prior-data.png, id=214, 659.46375pt x 677.53125pt>
+File: ../paper/figures/map_prior-data.png Graphic file (type png)
+<use ../paper/figures/map_prior-data.png>
+Package pdftex.def Info: ../paper/figures/map_prior-data.png  used on input lin
+e 611.
+(pdftex.def)             Requested size: 469.77217pt x 482.64264pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[10]
+<07_Appendix_files/figure-latex/dv-1.pdf, id=225, 459.7175pt x 300.12125pt>
+File: 07_Appendix_files/figure-latex/dv-1.pdf Graphic file (type pdf)
+<use 07_Appendix_files/figure-latex/dv-1.pdf>
+Package pdftex.def Info: 07_Appendix_files/figure-latex/dv-1.pdf  used on input
+ line 674.
+(pdftex.def)             Requested size: 422.79791pt x 276.01872pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[11 <./07_Appendix_files/figure-latex/venn-diagram-1.pdf>]
+<07_Appendix_files/figure-latex/correlation-1.pdf, id=242, 459.7175pt x 313.17p
+t>
+File: 07_Appendix_files/figure-latex/correlation-1.pdf Graphic file (type pdf)
+<use 07_Appendix_files/figure-latex/correlation-1.pdf>
+Package pdftex.def Info: 07_Appendix_files/figure-latex/correlation-1.pdf  used
+ on input line 685.
+(pdftex.def)             Requested size: 422.79791pt x 288.01953pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[12 <../paper/figures/map_prior-data.png>] (../paper/figures/model_or.tex
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) [13 <./07_Appendix_files/figure-latex/dv-1.pdf>] [14 <./07_Appendix_files/fig
+ure-latex/correlation-1.pdf>]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<07_Appendix_files/figure-latex/missingness-1.pdf, id=279, 459.7175pt x 316.181
+24pt>
+File: 07_Appendix_files/figure-latex/missingness-1.pdf Graphic file (type pdf)
+<use 07_Appendix_files/figure-latex/missingness-1.pdf>
+Package pdftex.def Info: 07_Appendix_files/figure-latex/missingness-1.pdf  used
+ on input line 793.
+(pdftex.def)             Requested size: 375.82738pt x 258.48389pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[15]
+
+LaTeX Warning: Reference `fig:impute-results' on page 16 undefined on input lin
+e 802.
+
+
+LaTeX Warning: Reference `fig:impute-results' on page 16 undefined on input lin
+e 802.
+
+[16 <./07_Appendix_files/figure-latex/missingness-1.pdf>] [17] [18] (./07_Appen
+dix.aux)
+
+LaTeX Warning: There were undefined references.
+
+Package rerunfilecheck Info: File `07_Appendix.out' has not changed.
+(rerunfilecheck)             Checksum: C57A68E6665B3A0D23C0A59DFC79F9C1;3476.
+ ) 
+Here is how much of TeX's memory you used:
+ 34731 strings out of 481288
+ 798962 string characters out of 5917055
+ 1233203 words of memory out of 5000000
+ 50691 multiletter control sequences out of 15000+600000
+ 500226 words of font info for 211 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 87i,12n,88p,2174b,2113s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/home/andres/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/and
+res/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/andres/.TinyTeX/tex
+mf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/andres/.TinyTeX/texmf-dist/fonts/en
+c/dvips/lm/lm-mathit.enc}{/home/andres/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/l
+m-ts1.enc}{/home/andres/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}</
+home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/andres/
+.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/andres/.TinyTeX/tex
+mf-dist/fonts/type1/public/lm/lmbx9.pfb></home/andres/.TinyTeX/texmf-dist/fonts
+/type1/public/lm/lmbxi10.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/publ
+ic/lm/lmex10.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10
+.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></home/
+andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></home/andres/.TinyT
+eX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></home/andres/.TinyTeX/texmf-dist
+/fonts/type1/public/lm/lmmi7.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/
+public/lm/lmmi8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmm
+i9.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home
+/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/andres/.Tiny
+TeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/andres/.TinyTeX/texmf-dis
+t/fonts/type1/public/lm/lmr5.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/
+public/lm/lmr6.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7
+.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/an
+dres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></home/andres/.TinyTeX/
+texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/andres/.TinyTeX/texmf-dist/f
+onts/type1/public/lm/lmri12.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/p
+ublic/lm/lmri8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy
+10.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></home
+/andres/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></home/andres/.Tiny
+TeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/andres/.TinyTeX/texmf-dis
+t/fonts/type1/public/lm/lmsy8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1
+/public/lm/lmsy9.pfb>
+Output written on 07_Appendix.pdf (18 pages, 615910 bytes).
+PDF statistics:
+ 457 PDF objects out of 1000 (max. 8388607)
+ 390 compressed objects within 4 object streams
+ 89 named destinations out of 1000 (max. 500000)
+ 51406 words of extra memory for PDF output out of 51595 (max. 10000000)
+

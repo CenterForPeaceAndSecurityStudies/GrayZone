@@ -35,7 +35,7 @@ header-includes:
     \setcounter{table}{0}  
     \renewcommand{\thetable}{A\arabic{table}} 
     \setcounter{figure}{0} 
-    \renewcommand{\thefigure}{A\arabic{figure}}
+    \renewcommand{\thefigure}{A\arabic{figure}}}
 bibliography: GrayZone.json
 ---
 
@@ -1304,7 +1304,7 @@ m6_imp <- Hmisc::fit.mult.impute(intensity ~
 m6_imp <- rms::robcov(m6_imp, df_conserv$cabbrev1)
 ```
 
-```{r impute-results, fig.cap = "Intensity of Russian Intervention: Odds Ratios (Imputed models)", results = 'asis', eval = FALSE}
+```{r impute-results, fig.cap = "Intensity of Russian Intervention: Odds Ratios (Imputed models)", results = 'asis'}
 models_imp <- list(m2_imp, m3_imp, m5_imp, m6_imp)
 
 imp_tab <- sjPlot::tab_model(models_imp,
@@ -1364,6 +1364,9 @@ texreg::texreg(models_tr,
 ```
 
 ## Targeted states sample
+
+We run the same models on a third sample of just targeted states. This includes only country-years that were targets of Russian aggression, meaning the intensity variable is greater than 0.
+
 ```{r, targeted-states, results = 'asis'}
 df_target <- df %>%
   dplyr::filter(!intensity == 0) %>%
@@ -1422,7 +1425,7 @@ m3_target <- lmtest::coeftest(m3_target, vcov = sandwich::vcovCL(m3_target, fact
 # Table of results
 models <- list(m1_target, m2_target, m3_target)
 
-texreg::screenreg(models,
+texreg::texreg(models,
                stars = c(0.01, 0.05, 0.1),
                omit.coef = "(y)",
                custom.coef.names = c("NATO member",
