@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.14)  15 FEB 2021 15:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.14)  15 FEB 2021 16:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -946,17 +946,21 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9> on input line 490.
 [6] [7] [8]
-Overfull \hbox (20.04213pt too wide) detected at line 558
+Overfull \hbox (25.81577pt too wide) in paragraph at lines 556--557
+[]\T1/lmr/m/n/10 (-20) Note that based on As-sump-tion 1, the above sign does n
+ot flip. We can say that $\OML/lmm/m/it/10 ^^P^^T[] \OMS/lmsy/m/n/10 ^^@ \OML/l
+mm/m/it/10 ^^P^^L[] [][] >
+ []
+
+
+Overfull \hbox (20.04213pt too wide) detected at line 559
 []
  []
 
 [9] [10]
-Overfull \hbox (46.97598pt too wide) in paragraph at lines 621--640
+Overfull \hbox (46.97598pt too wide) in paragraph at lines 622--641
 [][] 
  []
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [11] [12] [13] [14] [15]
 <07_Appendix_files/figure-latex/venn-diagram-1.pdf, id=257, 367.3725pt x 148.55
@@ -965,21 +969,24 @@ File: 07_Appendix_files/figure-latex/venn-diagram-1.pdf Graphic file (type pdf)
 
 <use 07_Appendix_files/figure-latex/venn-diagram-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/venn-diagram-1.pdf  use
-d on input line 756.
+d on input line 757.
 (pdftex.def)             Requested size: 367.3884pt x 148.56142pt.
-[16 <./07_Appendix_files/figure-latex/venn-diagram-1.pdf>]
-<../paper/figures/map_prior-data.png, id=274, 659.46375pt x 677.53125pt>
+<../paper/figures/map_prior-data.png, id=259, 659.46375pt x 677.53125pt>
 File: ../paper/figures/map_prior-data.png Graphic file (type png)
 <use ../paper/figures/map_prior-data.png>
 Package pdftex.def Info: ../paper/figures/map_prior-data.png  used on input lin
-e 767.
+e 768.
 (pdftex.def)             Requested size: 469.77217pt x 482.64264pt.
-[17 <../paper/figures/map_prior-data.png>]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[16 <./07_Appendix_files/figure-latex/venn-diagram-1.pdf>] [17 <../paper/figure
+s/map_prior-data.png>]
 <07_Appendix_files/figure-latex/dv-1.pdf, id=283, 459.7175pt x 300.12125pt>
 File: 07_Appendix_files/figure-latex/dv-1.pdf Graphic file (type pdf)
 <use 07_Appendix_files/figure-latex/dv-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/dv-1.pdf  used on input
- line 830.
+ line 831.
 (pdftex.def)             Requested size: 422.79791pt x 276.01872pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -989,59 +996,65 @@ t>
 File: 07_Appendix_files/figure-latex/correlation-1.pdf Graphic file (type pdf)
 <use 07_Appendix_files/figure-latex/correlation-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/correlation-1.pdf  used
- on input line 841.
+ on input line 842.
 (pdftex.def)             Requested size: 422.79791pt x 288.01953pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[18]
+(../paper/figures/model_or.tex
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) [18]
 
 LaTeX Warning: Text page 19 contains only floats.
 
 [19 <./07_Appendix_files/figure-latex/dv-1.pdf> <./07_Appendix_files/figure-lat
-ex/correlation-1.pdf>] (../paper/figures/model_or.tex)
+ex/correlation-1.pdf>]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[20] [21]
-<07_Appendix_files/figure-latex/missingness-1.pdf, id=334, 459.7175pt x 316.181
+<07_Appendix_files/figure-latex/missingness-1.pdf, id=320, 459.7175pt x 316.181
 24pt>
 File: 07_Appendix_files/figure-latex/missingness-1.pdf Graphic file (type pdf)
 <use 07_Appendix_files/figure-latex/missingness-1.pdf>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/missingness-1.pdf  used
- on input line 949.
+ on input line 950.
 (pdftex.def)             Requested size: 375.82738pt x 258.48389pt.
-<07_Appendix_files/figure-latex/impute-results-1.png, id=339, 724.7075pt x 544.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[20] [21]
+<07_Appendix_files/figure-latex/impute-results-1.png, id=341, 724.7075pt x 544.
 0325pt>
 File: 07_Appendix_files/figure-latex/impute-results-1.png Graphic file (type pn
 g)
 <use 07_Appendix_files/figure-latex/impute-results-1.png>
 Package pdftex.def Info: 07_Appendix_files/figure-latex/impute-results-1.png  u
-sed on input line 962.
+sed on input line 963.
 (pdftex.def)             Requested size: 469.7605pt x 352.64569pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[22 <./07_Appendix_files/figure-latex/missingness-1.pdf>]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[23 <./07_Appendix_files/figure-latex/impute-results-1.png>] [24] [25] (./07_Ap
-pendix.aux)
+[22 <./07_Appendix_files/figure-latex/missingness-1.pdf>] [23 <./07_Appendix_fi
+les/figure-latex/impute-results-1.png>] [24] [25] (./07_Appendix.aux)
 Package rerunfilecheck Info: File `07_Appendix.out' has not changed.
 (rerunfilecheck)             Checksum: 84BAF9A420B72689503EF79DE48EE672;3852.
  ) 
 Here is how much of TeX's memory you used:
- 34798 strings out of 481288
- 800249 string characters out of 5917055
- 1253201 words of memory out of 5000000
+ 34794 strings out of 481288
+ 800207 string characters out of 5917055
+ 1249602 words of memory out of 5000000
  50701 multiletter control sequences out of 15000+600000
- 501850 words of font info for 226 fonts, out of 8000000 for 9000
+ 501635 words of font info for 224 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,12n,88p,2174b,2113s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,12n,88p,2211b,2113s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/home/andres/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/and
 res/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/andres/.TinyTeX/tex
 mf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/andres/.TinyTeX/texmf-dist/fonts/en
@@ -1073,10 +1086,10 @@ TeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/andres/.TinyTeX/texmf-dis
 t/fonts/type1/public/lm/lmsy8.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmsy9.pfb></home/andres/.TinyTeX/texmf-dist/fonts/type1/public/amsfo
 nts/symbols/msbm10.pfb>
-Output written on 07_Appendix.pdf (25 pages, 695375 bytes).
+Output written on 07_Appendix.pdf (25 pages, 694551 bytes).
 PDF statistics:
- 539 PDF objects out of 1000 (max. 8388607)
- 461 compressed objects within 5 object streams
+ 542 PDF objects out of 1000 (max. 8388607)
+ 464 compressed objects within 5 object streams
  115 named destinations out of 1000 (max. 500000)
  51419 words of extra memory for PDF output out of 51595 (max. 10000000)
 
