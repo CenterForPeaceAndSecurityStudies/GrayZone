@@ -1,5 +1,5 @@
 ---
-title: "Online Appendix: Supporting Information for _The Shadow of Deterrence: Why capable actors engage in conflict short of war_"
+title: "Online Appendix: Supporting Information for _The Shadow of Deterrence: Why capable actors engage in contests short of war_"
 author: "Author names redacted"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -47,7 +47,7 @@ library(ggplot2)
 
 \beginsupplement
 
-This appendix accompanies the paper "The Shadow of Deterrence: Why capable actors engage in conflict short of war". It provides supplemental information concerning proofs for the formal model, the data set of Russian gray zone campaigns introduced in the paper, and robustness checks and alternate specifications for the statistical model.
+This appendix accompanies the paper "The Shadow of Deterrence: Why capable actors engage in contests short of war". It provides supplemental information concerning proofs for the formal model, the data set of Russian gray zone campaigns introduced in the paper, and robustness checks and alternate specifications for the statistical model.
 
 # Formal Model
 ## Formal statement of assumptions
