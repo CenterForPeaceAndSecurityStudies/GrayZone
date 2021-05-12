@@ -1,0 +1,21 @@
+---
+title: EDA Kinne IO 2018
+author: Gannon and Kent
+output:
+  html_document:
+  theme: united
+  toc: true
+---
+
+# Kinne DCA Data
+
+This is a mess...
+
+```{R, eval = FALSE}
+# kinne <- read.table("zz.data", sep = ",", header = TRUE)
+# save.image(file = "kinne.RData")
+
+load("kinne.RData")
+```
+
+

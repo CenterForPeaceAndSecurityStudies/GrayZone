@@ -1,0 +1,339 @@
+---
+title: "Extending Benson and Clinton"
+author: "Kent and Gannon"
+output:
+    tint::tintHtml:
+        toc: true
+    pandoc_args: ["+RTS", "-M1024M", "-RTS"]
+---
+
+
++ Scope: "Alliances vary in the breadth of the circumstances to which the
+obligations of a military alliance have application." p868
++ Depth: "as well as the costliness of the obligations to which signatories commit themselves when they join the alliance." p868
+
+# Variables: What are they and where are they from?
+
++ *atopid*: Alliance ID.
++ *polity*: Mean Polity IV scores of all alliance members.
++ *s_wt_glo*: Mean s-scores for all pairs of alliance members (Signorino and Ritter, 1999)
+    + Note: can use ATOP S-scores in new data
++ *maxmajpow*
++ *consultatop*: Coded as 1 if ATOP == 1, 0 otherwise
++ *nagatop*: IGNORE
++ *neutatop*: Neutrality pact, coded as 1 if ATOP neutral == 1, 0 otherwise
++ *defenseatop*: Defensive alliance, coded as 1 if ATOP defense == 1, 0 otherwise
++ *offenseatop*: Offensive alliance, coded as 1 if ATOP offense == 1, 0 otherwise
++ *secrecy*: Requires secrecy, coded as 0 if public alliance, 1 if only some articles are secret, 2 if entire treaty is secret
++ *conditio*: From ATOP: "Dummy variable coded 1 if any of the primary obligations undertaken by any alliance member (DEFENSE, OFFENSE, NEUTRAL, NONAGG, CONSUL) are conditional upon particular circumstances."
++ *intcom*: Integrated command: coded as 1 if ATOP intcom == 1, otherwise 0
++ *base*: Military basing: requires joint troop placements. Follows ATOP coding. Coded as 0 if no provisions for basing, 1 if joint placements on neutral territory, 2 if all members can station troops in other members' territory or use others' military facilities, 3 if one or more states can station troops in another's territory but promises not reciprocal. 
++ *contrib*: Specific contribution: coded as 1 if ATOP contrib == 1, otherwise 0.
++ *ecaid*: Requires provision of economic aid: code as 1 if ATOP ecaid > 0
++ *milaid*: Military aid: follows ATOP coding. Coded as 0 if no provisions for mil aid, 1 if general or unspecified military assistance, 2 if grants or loans, 3 if military training and/or transfer of technology, 4 if both grants or loans and mil training and/or technology.
++ *organ1*: Requires the creation of any organization. Follows ATOP coding. Coded as 0 if no organizations are created, 1 if regular meetings required, 2 if named organizations and regular mtgs required, 3 if stand-alone organization with permanent bureaucracy is included
++ *scpecthrt*
++ *macowe*: Military action conditional war environment: Coded as 1 if ATOP defcoadv, defcoloc, defcocon, defconum, offcoadv, offcoloc, offcocon, offconum == 1, otherwise 0
++ *maconc*: Military action conditional on non-compliance: coded as 1 if ATOP defcodem, offcodem == 1, otherwise 0.
++ *maconp*: Military action conditional on non-provocation: Coded as 1 if ATOP defconpr == 1, otherwise 0.
++ *nmacowe*: Non-military action conditional on war environment: Coded as 1 if ATOP neucoadv, neucoloc, neucocon, neuconum, neucoatt, concoadv, concoloc, conconon == 1, otherwise 0.
++ *nmaconc*: Non-military action conditional on non-compliance: Coded as 1 if ATOP neucodem == 1, otherwise 0.
++ *nmaconp*: Non-military action conditional on non-provocation: Coded as 1 if ATOP neuconpr == 1, otherwise 0.
++ *nmaroir*: Non-military action required only if requested
+    + concoreq == 1
++ *condother*: Other conditions: promises military or non-military action if any other condition not specified in other variables occurs. Coded as 1 if olimob == 1, otherwise 0. 
++ *speclength*: Specific length: promises military action or non-action only during specified time period. Coded as 1 if ATOP speclgth == 1, otherwise 0.
++ *condlength*: Conditional length: promises military action or non-action if a specified condition does not end the agreement. Coded as 1 if ATOP speclgth == 2, otherwise 0.
++ *renounceok*: Renunciation allowed: promises military action or non-action if no party renounces the agreement with advance notice. Coded as 1 if ATOP renounce == 1, otherwise 0.
++ *renounceproh*: Renunciation prohibited: promises military action or non-action even if a party wishes to renounce the agreement. Coded as 1 if ATOP renounce == 2, otherwise 0.
++ *renouncecond*: Renunciation conditional: promises military action or non-action as long as another member does not take aggressive action that makes renunciation allowable. Coded as 1 if ATOP renounce == 3, otherwise 0.
++ *milcontact*: Military contact: requires contact between members during peacetime. Coded as 1 if ATOP milcon == 2, otherwise 0.
++ *commondef*: Common defense policy: requires alliance members to conduct a common defense policy including common doctrine, coordination of training and procurement, joint planning, etc. Coded as 1 if ATOP milcon == 3, otherwise 0.
++ *lallycount*: Ally count: logged count of total number of alliance members (ATOP, Leeds et al 2002).
++ *lsumcap*: Log of summed CINC scores of all alliance members.
++ *ldistance*: Mean capital-to-capital distance between all pairs of alliance members (Eugene, Bennett and Stam 2000)
++ *compel*: Compellent: promises military action to change the status quo. Coded as 1 if an alliance member makes a compellent promise, otherwise 0.
++ *prob*: IGNORE
++ *deter*: Deterrent: promises military action to secure the status quo. Coded as 1 if an alliance member makes a deterrent promise, otherwise 0.
++ *deterministic*: Promises military action without options for flexible or probabilistic escape. Coded as 1 if an agreement contains non-flexibl   e or non-probabilistic obligation to provide compellent or deterrent military support, 0 otherwise.
++ *unconditional*: Promises military action without conditions on *casus foederis*. Coded as 1 if an agreement requires compellent or deterrent military support without any conditions for *casus foederis*, 0 otherwise.
+
+## Compellent and deterrent alliances
+
++ Do I need to email Benson to ask about? 
+
+# Recreating and extending years of data
+
++ Import data
+
+```{R message = FALSE, eval = FALSE}
+atop <- readr::read_csv("../atop/atop4_01m.csv")
+```
+
++ Benson and Clinton drop obs that are only non-aggression pacts. This is a bunch and drives the NAs later on.
+
+```{R eval = FALSE}
+atop <- dplyr::filter(atop, !(nonagg ==1 & consul == 0 & 
+    neutral == 0 & offense == 0 & defense == 0))
+```
+
++ I'm only working with the variables that Benson and Clinton use to estimate alliance depth and scope.
+
++ Ready data -- this is member-alliance observations.
+    + **Problem: compellent, deterrence, and unconditional variables are all hand-coded by Benson in an earlier paper.** So I can't extend them with ATOP. 
+
+```{R eval = FALSE}
+bc_ext <- dplyr::tibble(
+    "atopid" = atop$atopid, 
+    "member" = atop$member, 
+    "yrent" = atop$yrent, 
+    "yrexit" = atop$yrexit, 
+    ## Military action conditional war environment
+    "macowe" = with(atop, ifelse(
+        defcoadv == 1 | defcoloc == 1 | defcocon == 1| 
+        defconum == 1| offcoadv == 1| offcoloc == 1 |
+        offcocon == 1 | offconum == 1, 
+        1, 0
+    )),
+    ## Military action conditional on non-compliance
+    "maconc" = with(atop, ifelse(
+        defcodem == 1 | offcodem == 1,
+        1, 0
+    )),
+    ## Military action conditional on non-provocation
+    "maconp" = atop$defconpr,
+    ## Non-military action conditional on war environment
+    "nmacowe" = with(atop, ifelse(
+        neucoadv == 1 | neucoloc == 1 | neucocon == 1 | 
+        neuconum == 1 | neucoatt == 1 | concoadv == 1 |
+        concoloc == 1 | concocon == 1, 
+        1, 0 
+    )),
+    ## Non-military action required only if requested
+    "nmaroir" = atop$concoreq,
+    ## Other conditions
+    "condother" = atop$olimob,
+    ## Renunciation allowed
+    "renounceok" = with(atop, ifelse(
+        renounce == 1,
+        1, 0
+    )),
+    ## Renunciation prohibited
+    "renounceproh" = with(atop, ifelse(
+        renounce == 2,
+        1, 0 
+    )),
+    ## Renunciation conditional
+    "renouncecond" = with(atop, ifelse(
+        renounce == 3,
+        1, 0 
+    )),
+    ## Offense alliance
+    "offenseatop" = atop$offense,
+    ## Defense alliance
+    "defenseatop" = atop$defense,
+    ## Neutrality pact
+    "neutatop" = atop$neutral,
+    ## Consultation
+    "consultatop" = atop$consul,
+    ## Military contact
+    "milcontact" = with(atop, ifelse(
+        milcon == 2,
+        1, 0
+    )),
+    ## Common defense pact
+    "commondef" = with(atop, ifelse(
+        milcon == 3,
+        1, 0
+    )),
+    ## Integrated command
+    "intcom" = atop$intcom,
+    ## Military aid
+    "milaid" = atop$milaid,
+    ## Military base
+    "base" = atop$base,
+    ## Specific contribution
+    "contrib" = atop$contrib,
+    ## Requires the creation of any organization
+    "organ1" = atop$organ1,
+    ## Economic aid
+    "ecaid" = with(atop, ifelse(
+        ecaid > 0, 
+        1, 0
+    )),
+    ## Secret pact
+    "secrecy" = atop$pubsecr
+)
+```
+
++ Now, let's take all unique alliances, create a subset, and fill in each observation based on members, and then append to master.
+
+```{R eval = FALSE}
+## blank template
+all_alliances <- dplyr::tibble(
+    "atopid" = as.integer(),
+    "macowe" = as.integer(),
+    "maconc" = as.integer(),
+    "maconp" = as.integer(),
+    "nmacowe" = as.integer(),
+    "nmaroir" = as.integer(),
+    "condother" = as.integer(),
+    "renounceok" = as.integer(),
+    "renounceproh" = as.integer(),
+    "renouncecond" = as.integer(),
+    "offenseatop" = as.integer(),
+    "defenseatop" = as.integer(),
+    "neutatop" = as.integer(),
+    "consultatop" = as.integer(),
+    "milcontact" = as.integer(),
+    "commondef" = as.integer(),
+    "intcom" = as.integer(),
+    "milaid" = as.integer(),
+    "base" = as.integer(),
+    "contrib" = as.integer(),
+    "organ1" = as.integer(),
+    "ecaid" = as.integer(),
+    "secrecy" = as.integer()
+)
+
+## First, list of unique alliance
+alliances <- unique(bc_ext$atopid)
+
+for(i in 1:length(alliances)){
+    ## subset data on all states in alliance
+    temp <- dplyr::filter(bc_ext, atop$atopid == alliances[i])
+    all_alliances[i, 1] <- temp$atopid[1]
+    all_alliances[i, 2] <- sum(temp$macowe)/nrow(temp)
+    all_alliances[i, 3] <- sum(temp$maconc)/nrow(temp)
+    all_alliances[i, 4] <- sum(temp$maconp)/nrow(temp)
+    all_alliances[i, 5] <- sum(temp$nmacowe)/nrow(temp) 
+    all_alliances[i, 6] <- sum(temp$nmaroir)/nrow(temp) 
+    all_alliances[i, 7] <- sum(temp$condother)/nrow(temp) 
+    all_alliances[i, 8] <- sum(temp$renounceok)/nrow(temp) 
+    all_alliances[i, 9] <- sum(temp$renounceproh)/nrow(temp) 
+    all_alliances[i, 10] <- sum(temp$renouncecond)/nrow(temp) 
+    all_alliances[i, 11] <- sum(temp$offenseatop)/nrow(temp) 
+    all_alliances[i, 12] <- sum(temp$defenseatop)/nrow(temp)
+    all_alliances[i, 13] <- sum(temp$neutatop)/nrow(temp) 
+    all_alliances[i, 14] <- sum(temp$consultatop)/nrow(temp)
+    all_alliances[i, 15] <- sum(temp$milcontact)/nrow(temp) 
+    all_alliances[i, 16] <- sum(temp$commondef)/nrow(temp)
+    all_alliances[i, 17] <- sum(temp$intcom)/nrow(temp)
+    all_alliances[i, 18] <- sum(temp$milaid)/nrow(temp) 
+    all_alliances[i, 19] <- sum(temp$base)/nrow(temp)
+    all_alliances[i, 20] <- sum(temp$contrib)/nrow(temp) 
+    all_alliances[i, 21] <- sum(temp$organ1)/nrow(temp)
+    all_alliances[i, 22] <- sum(temp$ecaid)/nrow(temp) 
+    all_alliances[i, 23] <- sum(temp$secrecy)/nrow(temp) 
+}
+```
+
++ Last, for merging purposes, let's drop NA observations.
+
+```{R eval = FALSE}
+all_alliances <- tidyr::drop_na(all_alliances)
+```
+
++ Code for scope estimates:
+    + Missing: compel, deterministic, unconditional
+
+```{R eval = FALSE}
+scope <- MCMCpack::MCMCfactanal(
+    ~ macowe + maconc + maconp + nmacowe + nmaroir + 
+    condother + renounceok + renounceproh + renouncecond + 
+    offenseatop + defenseatop + neutatop + consultatop,
+    data = all_alliances,
+    factors = 1,
+    lambda.constraints = list(compel = list(1, "+")),
+    std.mean = TRUE, 
+    std.var = TRUE,
+    verbose = 100000,
+    mcmc = 1000000, 
+    burnin = 100000, 
+    thin = 1000,
+    store.scores = TRUE)
+
+factor.load3 <- scope[, 1:26]
+apply(factor.load3, 2, mean)
+rbd <- scope[ , -seq(1:26)]
+scope.score <- apply(rbd, 2, mean)
+```
+
++ Code for depth estimates:
+
+```{R eval = FALSE}
+depth <- MCMCpack::MCMCfactanal(
+    ~ milcontact + commondef + intcom + milaid + base +
+    contrib + organ1 + ecaid + secrecy,
+    data = all_alliances,
+    factors = 1,
+    lambda.constraints = list(compel = list(1, "+")),
+    std.mean = TRUE, 
+    std.var = TRUE,
+    verbose = 100000,
+    mcmc = 1000000, 
+    burnin = 100000, 
+    thin = 1000,
+    store.scores = TRUE)
+
+factor.load2 <- depth[, 1:18]
+apply(factor.load2, 2, mean)
+rbd <- depth[,-seq(1:18)]
+depth.score <- apply(rbd, 2, mean)
+```
+
++ Full alliance score data:
+
+```{R eval = FALSE}
+AllianceDataScore <- as.data.frame(cbind(test$atopid,
+    depth.score, scope.score))
+
+AllianceDataScore <- round(AllianceDataScore, digits = 3)
+## write.csv(AllianceDataScore, file = "AllianceDataScore_Kent.csv")
+```
+
++ Let's just use depth because the data for scope is not available. 
+
+# US-Tie Strength
+
+
+```{R eval = FALSE}
+alliance <- readr::read_csv("AllianceDataScore_Kent.csv")
+```
+
++ Get all dyads involving the US from 2001 forward
+
+```{R eval = FALSE}
+atop_dyad <- readr::read_csv("../atop/atop4_01dy.csv")
+
+## year > 2001, mem1 or mem2 == 2
+us_ally <- dplyr::filter(atop_dyad, year >= 2001)
+us_ally <- dplyr::filter(us_ally, mem1 == 2 | mem2 == 2)
+
+## Only keep useful columns
+us_ally <- dplyr::select(us_ally, c("atopid1", "year", "mem1", "mem2"))
+colnames(us_ally) <- c("atopid", "year", "mem1", "mem2")
+
+## Depth for each observation
+depth <- dplyr::select(alliance, c(V1, depth.score))
+colnames(depth) <- c("atopid", "depth")
+
+## Join depth values and us_ally list
+depth_dyad <- dplyr::left_join(us_ally, depth)
+
+## Remove NAs -- lose a lot because of non-aggression pacts
+depth_dyad <- tidyr::drop_na(depth_dyad)
+```
+
+```{R}
+## What does the data look like?
+head(depth_dyad)
+```
+
++ The reason there are NAs is that they are non-aggression pacts, which, per Benson and Clinton, are dropped. 
+
++ Lets save the data for merging.
+
+```{R eval = FALSE}
+rio::export(depth_dyad, "depth_scores.Rds")
+```

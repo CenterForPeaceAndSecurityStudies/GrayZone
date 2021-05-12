@@ -1,0 +1,33 @@
+## These files replicate the analysis in Kinne, Brandon J. 2018. “Defense
+## Cooperation Agreements and the Emergence of a Global Security Network,”
+## International Organization.
+##
+## The models are estimated in Stata, which has better facilities for
+## TSCS and panel data. (Specifically, the models were estimated in Stata/MP
+## 14.2.) The Stata .do file exports the results to raw text files. An
+## accompanying R script conducts post-regression analyses and plots figures.
+##
+## The files should be executed in the order in which they appear. I.e.,
+## first run the file “01.mainEstimates.do” in Stata. Then run the
+## “02.mainFigures.R” file in R. Note that the R script requires a relatively
+## large number of packages. Generally, the code should be compatible
+## with the most recent versions of the required packages. However, some
+## packages (e.g., ggplot2) frequently incorporate version updates that
+## render previous code obsolete. Thus, portions of the code may require
+## tweaking, depending on how far into the future you are.
+## 
+## The additional appendix files replicate the results from the online
+## appendix. The first file, “03.appendixEstimates1.do”, employs the
+## same logit models as in the main paper, with alternative model
+## specifications. These results appear as Tables 3-6 in the appendix. The
+## second file, “04.appendixEstimates2.R”, implements two separate
+## inferential network models (i.e., the TERGM and the SAOM). These
+## results appear as Tables 1-2 in the appendix. Note that the inferential
+## network models may take anywhere from a few hours to a few days to
+## estimate, depending on your hardware. Note as well that because these
+## models employ stochastic estimation algorithms, the replication may not
+## yield the *exact* parameter estimates as displayed in the online appendix.
+## However, any differences should be minuscule and should not affect signs
+## or significance.
+##
+## Questions or problems: bkinne@ucdavis.edu

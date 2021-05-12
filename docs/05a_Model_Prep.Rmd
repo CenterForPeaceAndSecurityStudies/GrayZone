@@ -425,11 +425,62 @@ df <- dplyr::left_join(df, nato)
 df <- df %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
-  dplyr::rename(NATOmem_MEM = nato_memb, NATOdur_MEM = nato_memb_duration, NATOjoined_MEM = join_nato_year) %>%
+  dplyr::mutate(nato_memb_duration = dplyr::if_else(nato_memb_duration < 0, 0, nato_memb_duration)) %>%
+  dplyr::rename(NATOmem_MEM = nato_memb, 
+                NATOdur_MEM = nato_memb_duration, 
+                NATOjoined_MEM = join_nato_year) %>%
   dplyr::select(-NATOjoined_MEM)
 
 df$NATOdur_MEM[is.na(df$NATOdur_MEM)] <- 0
 df$NATOmem_MEM[is.na(df$NATOmem_MEM)] <- 0
+```
+
+## DCAs
+We use Kinne's measure of defense cooperation agreements which has more variation than NATO membership
+```{r}
+dcid <- read.csv(paste0(here::here(), "/inst/extdata/kinne/DCAD-v1.0-dyadic.csv")) %>%
+  dplyr::filter(year > 1993,
+                ccode2 == 2) %>%
+  dplyr::select(year, ccode1, dcaGeneralV1) %>%
+  dplyr::rename(dca = dcaGeneralV1)
+
+df <- dplyr::left_join(df, dcid)
+```
+
+## Alliance depth
+We use Benson and Clinton's measure of alliance depth to get more fine-grained distinctions among alliance commitments
+```{r}
+depth <- read.csv(paste0(here::here(), "/inst/extdata/gannon_kent/AllianceDataScore_Kent.csv"))
+
+depth <- read.csv(paste0(here::here(), "/inst/extdata/gannon_kent/AllianceDataScore.csv"))
+
+## Use the year, country-code and depth for merging. All rows concern alliance depth with the United States
+depth <- depth %>%
+  dplyr::select(V1, depth.score) %>%
+  dplyr::rename(atopid = V1,
+                alliance_depth = depth.score)
+
+# Get country code IDs based off ATOP IDs
+atop <- read.csv(paste0(here::here(), "/inst/extdata/ATOP 5_0/atop5_0dy.csv"))
+
+atop <- atop %>%
+  dplyr::select(atopid1, year, mem1, mem2) %>%
+  dplyr::rename(atopid = atopid1)
+
+depth_dyad <- dplyr::left_join(atop, depth)
+
+depth_dyad <- depth_dyad %>%
+  dplyr::filter(mem1 == 2) %>%
+  dplyr::filter(year > 1993) %>%
+  dplyr::select(-mem1, -atopid, -year) %>%
+  dplyr::distinct() %>%
+  dplyr::rename(ccode1 = mem2) %>%
+  dplyr::mutate(ccode1 = as.numeric(ccode1))
+
+# Merge with original data
+df <- dplyr::left_join(df, depth_dyad)
+
+sort(unique(df$alliance_depth))
 ```
 
 ## CINC scores
