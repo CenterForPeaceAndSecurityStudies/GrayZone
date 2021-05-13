@@ -404,25 +404,56 @@ naniar::vis_miss(df)
 We code NATO membership as a binary variable for each country-year
 ```{r}
 # Load NATO membership data
-nato <- read.csv(paste0(here::here(), "/data/membership.csv"))
+nato <- read.csv(paste0(here::here(), "/data/membership.csv")) %>%
+  dplyr::select(state, dplyr::starts_with("join_"))
 
+# Create dataframe of all of these countries from 1948 (year before NATO was founded) to 2018 (last year in our data)
+nato_long <- nato %>%
+  dplyr::filter(!is.na(join_nato_year)) %>%
+  dplyr::select(state) %>%
+  dplyr::mutate(start_year = 1948,
+                end_year = 2018) %>%
+  dplyr::mutate(year = purrr::map2(start_year, end_year, `:`)) %>% 
+  dplyr::select(-start_year, -end_year) %>%
+  tidyr::unnest() %>%
+  dplyr::select(year, state)
 
-# Filter out irrelevant columns
-nato <- nato %>%
-  dplyr::select(state, join_nato_year) %>%
-  dplyr::filter(!join_nato_year == "NA")
+nato_long$nato_stage <- NA
+nato_long$nato_stage <- as.character(nato_long$nato_stage)
+
+nato_long <- dplyr::left_join(nato_long, nato) %>%
+  dplyr::mutate(nato_stage = dplyr::if_else(year == join_pfp_year, "PfP", nato_stage),
+                nato_stage = dplyr::if_else(year == join_intdial_year & is.na(nato_stage), "IntDial", nato_stage),
+                nato_stage = dplyr::if_else(year == join_map_year & is.na(nato_stage), "MAP", nato_stage),
+                nato_stage = dplyr::if_else(year == join_nato_year & is.na(nato_stage), "Full", nato_stage)) %>%
+  dplyr::mutate(nato_stage = dplyr::if_else(join_nato_year < year & is.na(nato_stage), "Full", nato_stage),
+                nato_stage = dplyr::if_else(is.na(join_pfp_year) & 
+                                              is.na(join_intdial_year) &
+                                              is.na(join_map_year) &
+                                              year < join_nato_year,
+                                            "Non-member", nato_stage),
+                nato_stage = dplyr::if_else(is.na(nato_stage) &
+                                              year < join_pfp_year,
+                                            "Non-member", nato_stage)) %>%
+  tidyr::fill(nato_stage) %>%
+  dplyr::select(year, state, nato_stage)
 
 # Create COW code column for merging
-nato$ccode1 <- countrycode::countrycode(nato$state, "country.name", "cown")
-
-nato <- nato %>%
+nato_long$ccode1 <- countrycode::countrycode(nato_long$state, "country.name", "cown")
+nato_long <- nato_long %>%
   dplyr::select(-state)
 
-# Merge
+nato$ccode1 <- countrycode::countrycode(nato$state, "country.name", "cown")
+nato <- nato %>%
+  dplyr::select(ccode1, join_nato_year)
+
+# Merge both
+df <- dplyr::left_join(df, nato_long)
 df <- dplyr::left_join(df, nato)
 
 # Clean
 df <- df %>%
+  dplyr::mutate(nato_stage = dplyr::if_else(is.na(nato_stage), "Non-member", nato_stage)) %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
   dplyr::mutate(nato_memb_duration = dplyr::if_else(nato_memb_duration < 0, 0, nato_memb_duration)) %>%
@@ -449,9 +480,8 @@ df <- dplyr::left_join(df, dcid)
 
 ## Alliance depth
 We use Benson and Clinton's measure of alliance depth to get more fine-grained distinctions among alliance commitments
-```{r}
-depth <- read.csv(paste0(here::here(), "/inst/extdata/gannon_kent/AllianceDataScore_Kent.csv"))
-
+```{r, eval = FALSE}
+# depth <- read.csv(paste0(here::here(), "/inst/extdata/gannon_kent/AllianceDataScore_Kent.csv"))
 depth <- read.csv(paste0(here::here(), "/inst/extdata/gannon_kent/AllianceDataScore.csv"))
 
 ## Use the year, country-code and depth for merging. All rows concern alliance depth with the United States
@@ -479,8 +509,33 @@ depth_dyad <- depth_dyad %>%
 
 # Merge with original data
 df <- dplyr::left_join(df, depth_dyad)
+```
 
-sort(unique(df$alliance_depth))
+## Troop basing
+There is data on US troop basing provided by Allen, Michael A., Michael E. Flynn, and Carla Martinez Machain. 2021. “Global U.S. military deployment data: 1950-2020.” Working Paper
+```{r}
+# Pull US troop deployment data at the country level and merge 
+troops <- troopdata::get_troopdata(startyear = 1994,
+                         endyear = 2018) %>%
+  dplyr::select(year, ccode, troops) %>%
+  dplyr::rename(ccode1 = ccode,
+                ustroops = troops)
+
+df <- dplyr::left_join(df, troops)
+
+# Pull US base data at the base level, aggregate to country level, and merge
+bases <- troopdata::get_basedata(country_count = TRUE) %>%
+  dplyr::select(ccode, base, lilypad) %>%
+  dplyr::group_by(ccode) %>%
+  dplyr::summarise(usbases_main = sum(base),
+                   usbases_lilypads = sum(lilypad),
+                   usbases_all = sum(base) + sum(lilypad)) %>%
+  dplyr::rename(ccode1 = ccode)
+
+df <- dplyr::left_join(df, bases)
+df$usbases_all[is.na(df$usbases_all)] <- 0
+df$usbases_main[is.na(df$usbases_main)] <- 0
+df$usbases_lilypads[is.na(df$usbases_lilypads)] <- 0
 ```
 
 ## CINC scores
@@ -683,6 +738,8 @@ df$cname2 <- as.factor(df$cname2)
 df$cabbrev2 <- as.factor(df$cabbrev2)
 
 df$NATOmem_MEM <- factor(df$NATOmem_MEM, level = c("0", "1"), ordered = FALSE)
+df$nato_stage <- factor(df$nato_stage, levels = c("Non-member", "PfP", "IntDial", "MAP", "Full"), ordered = FALSE)
+df$dca <- factor(df$dca, level = c("0", "1"), ordered = FALSE)
 df$nuclear1 <- factor(df$nuclear1, level = c("0", "1"), ordered = FALSE)
 df$demo1 <- factor(df$demo1, level = c("0", "1"), ordered = FALSE)
 df$demo2 <- factor(df$demo2, level = c("0", "1"), ordered = FALSE)
@@ -733,7 +790,8 @@ df <- df %>%
                 intensity,
                 capdistkm_us, mindistkm_us, capdistkm_rus, mindistkm_rus,
                 lncapdistkm_us, lnmindistkm_us, lncapdistkm_rus, lnmindistkm_rus,
-                NATOmem_MEM, NATOdur_MEM,
+                NATOmem_MEM, NATOdur_MEM, nato_stage, dca,
+                ustroops, usbases_main, usbases_lilypads, usbases_all,
                 cinc1, cinc2, cinc_ratio,
                 milex_sipri, milexpercap_sipri,
                 nuclear1,

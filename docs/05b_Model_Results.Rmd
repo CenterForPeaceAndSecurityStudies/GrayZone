@@ -220,7 +220,6 @@ polr <- function(formula, data, weights, start, ..., subset,
 
 # European sample
 Create year dummy columns for the year fixed effects
-
 ```{r}
 df <- df_full %>% 
   dplyr::filter(continent == "Europe")
