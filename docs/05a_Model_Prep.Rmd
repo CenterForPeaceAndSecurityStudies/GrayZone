@@ -457,6 +457,8 @@ df <- df %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
   dplyr::mutate(nato_memb_duration = dplyr::if_else(nato_memb_duration < 0, 0, nato_memb_duration)) %>%
+  dplyr::mutate(nato_prememb = dplyr::if_else(nato_stage %in% c("PfP", "IntDial", "MAP") , 1, 0)) %>%
+  dplyr::mutate(nato_prememb = tidyr::replace_na(nato_prememb, 0)) %>%
   dplyr::rename(NATOmem_MEM = nato_memb, 
                 NATOdur_MEM = nato_memb_duration, 
                 NATOjoined_MEM = join_nato_year) %>%
@@ -468,7 +470,7 @@ df$NATOmem_MEM[is.na(df$NATOmem_MEM)] <- 0
 
 ## DCAs
 We use Kinne's measure of defense cooperation agreements which has more variation than NATO membership
-```{r}
+```{r, eval = FALSE}
 dcid <- read.csv(paste0(here::here(), "/inst/extdata/kinne/DCAD-v1.0-dyadic.csv")) %>%
   dplyr::filter(year > 1993,
                 ccode2 == 2) %>%
@@ -513,7 +515,7 @@ df <- dplyr::left_join(df, depth_dyad)
 
 ## Troop basing
 There is data on US troop basing provided by Allen, Michael A., Michael E. Flynn, and Carla Martinez Machain. 2021. “Global U.S. military deployment data: 1950-2020.” Working Paper
-```{r}
+```{r, eval = FALSE}
 # Pull US troop deployment data at the country level and merge 
 troops <- troopdata::get_troopdata(startyear = 1994,
                          endyear = 2018) %>%
@@ -739,7 +741,6 @@ df$cabbrev2 <- as.factor(df$cabbrev2)
 
 df$NATOmem_MEM <- factor(df$NATOmem_MEM, level = c("0", "1"), ordered = FALSE)
 df$nato_stage <- factor(df$nato_stage, levels = c("Non-member", "PfP", "IntDial", "MAP", "Full"), ordered = FALSE)
-df$dca <- factor(df$dca, level = c("0", "1"), ordered = FALSE)
 df$nuclear1 <- factor(df$nuclear1, level = c("0", "1"), ordered = FALSE)
 df$demo1 <- factor(df$demo1, level = c("0", "1"), ordered = FALSE)
 df$demo2 <- factor(df$demo2, level = c("0", "1"), ordered = FALSE)
@@ -790,8 +791,7 @@ df <- df %>%
                 intensity,
                 capdistkm_us, mindistkm_us, capdistkm_rus, mindistkm_rus,
                 lncapdistkm_us, lnmindistkm_us, lncapdistkm_rus, lnmindistkm_rus,
-                NATOmem_MEM, NATOdur_MEM, nato_stage, dca,
-                ustroops, usbases_main, usbases_lilypads, usbases_all,
+                NATOmem_MEM, NATOdur_MEM, nato_stage, nato_prememb,
                 cinc1, cinc2, cinc_ratio,
                 milex_sipri, milexpercap_sipri,
                 nuclear1,

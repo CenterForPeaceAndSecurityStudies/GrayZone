@@ -4,6 +4,10 @@ author: "Author names redacted"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
+  bookdown::pdf_document2:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
   bookdown::html_notebook2:
     fig_height: 8
     fig_width: 12
@@ -13,10 +17,6 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  bookdown::pdf_document2:
-    toc: yes
-    toc_depth: '5'
-    number_sections: yes
   bookdown::word_document:
     toc: no
     toc_depth: '5'
@@ -951,365 +951,138 @@ polr <- function(formula, data, weights, start, ..., subset,
 
 We run a set of alternate model specifications as robustness checks. Our results are consistent across alternate modeling specifications including different regression models, control variables, and imputation strategies. We choose the ordered probit results as the main results given the appropriateness of that model specification and to ensure our primary results are not simply an artifact of our imputation strategy. Those results are shown below.
 
-## Alternate alliance measures
-NATO membership is a crude observable measure of alliances that proxy for deterrence. We use a series of alternate measures of alliances as deterrence here. We run the new models using the relevant states sample used in models 4-6 in the main text.
-```{r}
-df <- df %>%
-  dplyr::filter(relevant_conserv == 1)
+## Alternate alliance measure
+NATO membership is a crude observable measure of alliances that proxy for deterrence. In \@ref(tab:prenato-results) use an alternate measure that also includes pre-NATO membership, which accounts for country-years in the PfP, MAP, or Intensified Dialogue stage regardless of contemporary NATO status (meaning a state in MAP at the time of this writing is considered pre-NATO even if it has not yet joined NATO). We run the new models using all models from both samples in the main text.
+
+```{r prenato models}
+# For models 1-3, use European subset of the data
+df <- df_full %>% 
+  dplyr::filter(continent == "Europe")
 
 df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
   dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
-```
 
-### NATO duration
-Instead of NATO membership as a dummy, we use years of NATO membership to account for intra-alliance variation in extended deterrence. Those results are shown in \@ref(tab:alt1-results).
-
-```{r}
-df_m1avars <- df %>%
-  dplyr::select(intensity, NATOdur_MEM, lnmindistkm_rus, dplyr::starts_with("year_"))
+# Select model 1 variables
+df_m1 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, dplyr::starts_with("year_"))
 
 # Model
-m1a <- polr(intensity ~ .,
-           data = df_m1avars,
+m1 <- polr(intensity ~ .,
+           data = df_m1,
            method = "probit",
            Hess = TRUE)
 
 # Country-clustered SE
-m1a <- lmtest::coeftest(m1a, vcov = sandwich::vcovCL(m1a, factor(df$cname1)))
-```
+m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
 
-```{r}
-df_m1bvars <- df %>%
-  dplyr::select(intensity, NATOdur_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+# Select model 2 variables
+df_m2 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
   dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
   dplyr::select(-gdppc1_2010const)
 
 # Model
-m1b <- polr(intensity ~ .,
-                 data = df_m1bvars,
+m2 <- polr(intensity ~ .,
+                 data = df_m2,
                  method = "probit",
                  Hess = TRUE)
 
 # Country-clustered SE
-m1b <- lmtest::coeftest(m1b, vcov = sandwich::vcovCL(m1b, factor(df$cname1)))
-```
+m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
 
-```{r}
-df_m1cvars <- df %>%
-  dplyr::select(intensity, NATOdur_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+# Select model 3 variables
+df_m3 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
   dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
   dplyr::mutate(milex = milex_sipri/1000) %>%
   dplyr::select(-gdppc1_2010const, -milex_sipri)
 
 # Model
-m1c <- polr(intensity ~ .,
-           data = df_m1cvars,
+m3 <- polr(intensity ~ .,
+           data = df_m3,
            method = "probit",
            Hess = TRUE)
 
 # Country-clustered SE
-m1c <- lmtest::coeftest(m1c, vcov = sandwich::vcovCL(m1c, factor(df$cname1)))
+m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
+
+# Use same variables as model 1 but subset to relevant state sample
+df_m4 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4vars <- df_m4 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m4 <- polr(intensity ~ .,
+           data = df_m4vars,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
+
+# Use same variables as model 2 but subset to 
+df_m5 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m5vars <- df_m5 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m5 <- polr(intensity ~ .,
+                 data = df_m5vars,
+                 method = "probit",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
+
+# Use same variables as model 3 but subset to 
+df_m6 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m6vars <- df_m6 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m6 <- polr(intensity ~ .,
+           data = df_m6vars,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
 ```
 
-```{r}
-models <- list(m1a, m1b, m1c)
+```{r prenato-results, results = 'asis'}
+# Make list of models
+models <- list(m1, m2, m3, m4, m5, m6)
 
+# Main coefficients
 texreg::screenreg(models,
                stars = c(0.01, 0.05, 0.1),
                omit.coef = "(y)",
-               custom.coef.names = c("NATO member duration",
+               custom.coef.names = c("NATO member",
+                                     "NATO pre-member",
                                      "Russia distance",
                                      "Democracy",
                                      "Nuclear power",
                                      "Population",
                                      "GDP per cap",
                                      "Mil. spending"),
-               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
-               custom.gof.rows = list("Observations" = c("376", "373", "346")), 
+               groups = (list("Independent Variables" = 1:3, "Controls" = 4:8)),
+               custom.gof.rows = list("Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
                custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
-               float.pos = "h!",
-               label="tab:alt1-results",
-               caption = "Intensity of Russian Intervention: Alternate deterrence variable",
-               use.packages = FALSE)
-```
-
-### NATO stage
-We here account for pre-NATO membership by using an ordered factor variable for the stages of NATO membership; non-member, Partnership for Peace (PfP), Intensive Dialogue, Membership Action Plan (MAP), and full member. Those results are shown in \@ref(tab:alt2-results).
-
-```{r}
-df_m2avars <- df %>%
-  dplyr::select(intensity, nato_stage, lnmindistkm_rus, dplyr::starts_with("year_"))
-
-# Model
-m2a <- polr(intensity ~ .,
-           data = df_m2avars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m2a <- lmtest::coeftest(m2a, vcov = sandwich::vcovCL(m2a, factor(df$cname1)))
-```
-
-```{r}
-df_m2bvars <- df %>%
-  dplyr::select(intensity, nato_stage, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::select(-gdppc1_2010const)
-
-# Model
-m2b <- polr(intensity ~ .,
-                 data = df_m2bvars,
-                 method = "probit",
-                 Hess = TRUE)
-
-# Country-clustered SE
-m2b <- lmtest::coeftest(m2b, vcov = sandwich::vcovCL(m2b, factor(df$cname1)))
-```
-
-```{r}
-df_m2cvars <- df %>%
-  dplyr::select(intensity, nato_stage, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::mutate(milex = milex_sipri/1000) %>%
-  dplyr::select(-gdppc1_2010const, -milex_sipri)
-
-# Model
-m2c <- polr(intensity ~ .,
-           data = df_m2cvars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m2c <- lmtest::coeftest(m2c, vcov = sandwich::vcovCL(m2c, factor(df$cname1)))
-```
-
-```{r}
-models <- list(m2a, m2b, m2c)
-
-texreg::screenreg(models,
-               stars = c(0.01, 0.05, 0.1),
-               omit.coef = "(y)",
-               custom.gof.rows = list("Observations" = c("376", "373", "346")), 
-               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
-               float.pos = "h!",
-               label="tab:alt2-results",
-               caption = "Intensity of Russian Intervention: Alternate deterrence variable",
-               use.packages = FALSE)
-```
-
-### DCAs
-We here use defense cooperation agreements (DCAs) as an alternate measure of alliance ties produced by @kinne_defensecooperationagreement_2020. Those results are shown in \@ref(tab:alt3-results).
-
-```{r}
-df_m3avars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, dplyr::starts_with("year_"))
-
-# Model
-m3a <- polr(intensity ~ .,
-           data = df_m3avars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m3a <- lmtest::coeftest(m3a, vcov = sandwich::vcovCL(m3a, factor(df$cname1)))
-```
-
-```{r}
-df_m3bvars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::select(-gdppc1_2010const)
-
-# Model
-m3b <- polr(intensity ~ .,
-                 data = df_m3bvars,
-                 method = "probit",
-                 Hess = TRUE)
-
-# Country-clustered SE
-m3b <- lmtest::coeftest(m3b, vcov = sandwich::vcovCL(m3b, factor(df$cname1)))
-```
-
-```{r}
-df_m3cvars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::mutate(milex = milex_sipri/1000) %>%
-  dplyr::select(-gdppc1_2010const, -milex_sipri)
-
-# Model
-m3c <- polr(intensity ~ .,
-           data = df_m3cvars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m3c <- lmtest::coeftest(m3c, vcov = sandwich::vcovCL(m3c, factor(df$cname1)))
-```
-
-```{r}
-models <- list(m3a, m3b, m3c)
-
-texreg::screenreg(models,
-               stars = c(0.01, 0.05, 0.1),
-               omit.coef = "(y)",
-               custom.coef.names = c("Defense Cooperation Agreement",
-                                     "Russia distance",
-                                     "Democracy",
-                                     "Nuclear power",
-                                     "Population",
-                                     "GDP per cap",
-                                     "Mil. spending"),
-               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
-               custom.gof.rows = list("Observations" = c("376", "373", "346")), 
-               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
-               float.pos = "h!",
-               label="tab:alt3-results",
-               caption = "Intensity of Russian Intervention: Alternate deterrence variable",
-               use.packages = FALSE)
-```
-
-### US troop presence
-We here use counts of the number of US troops from @allen_globalmilitarydeployment_2021. Those results are shown in \@ref(tab:alt4-results).
-
-```{r}
-df_m4avars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, dplyr::starts_with("year_"))
-
-# Model
-m4a <- polr(intensity ~ .,
-           data = df_m4avars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m4a <- lmtest::coeftest(m4a, vcov = sandwich::vcovCL(m4a, factor(df$cname1)))
-```
-
-```{r}
-df_m4bvars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::select(-gdppc1_2010const)
-
-# Model
-m4b <- polr(intensity ~ .,
-                 data = df_m4bvars,
-                 method = "probit",
-                 Hess = TRUE)
-
-# Country-clustered SE
-m4b <- lmtest::coeftest(m4b, vcov = sandwich::vcovCL(m4b, factor(df$cname1)))
-```
-
-```{r}
-df_m4cvars <- df %>%
-  dplyr::select(intensity, dca, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::mutate(milex = milex_sipri/1000) %>%
-  dplyr::select(-gdppc1_2010const, -milex_sipri)
-
-# Model
-m4c <- polr(intensity ~ .,
-           data = df_m4cvars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m4c <- lmtest::coeftest(m4c, vcov = sandwich::vcovCL(m4c, factor(df$cname1)))
-```
-
-```{r}
-models <- list(m4a, m4b, m4c)
-
-texreg::screenreg(models,
-               stars = c(0.01, 0.05, 0.1),
-               omit.coef = "(y)",
-               custom.coef.names = c("US troop presence",
-                                     "Russia distance",
-                                     "Democracy",
-                                     "Nuclear power",
-                                     "Population",
-                                     "GDP per cap",
-                                     "Mil. spending"),
-               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
-               custom.gof.rows = list("Observations" = c("376", "373", "346")), 
-               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
-               float.pos = "h!",
-               label="tab:alt4-results",
-               caption = "Intensity of Russian Intervention: Alternate deterrence variable",
-               use.packages = FALSE)
-```
-
-### US bases
-We similarly use counts of US bases in each state, also from @allen_globalmilitarydeployment_2021. Those results are shown in \@ref(tab:alt5-results).
-
-```{r}
-df_m5avars <- df %>%
-  dplyr::select(intensity, usbases_main, lnmindistkm_rus, dplyr::starts_with("year_"))
-
-# Model
-m5a <- polr(intensity ~ .,
-           data = df_m5avars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m5a <- lmtest::coeftest(m5a, vcov = sandwich::vcovCL(m5a, factor(df$cname1)))
-```
-
-```{r}
-df_m5bvars <- df %>%
-  dplyr::select(intensity, usbases_main, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::select(-gdppc1_2010const)
-
-# Model
-m5b <- polr(intensity ~ .,
-                 data = df_m5bvars,
-                 method = "probit",
-                 Hess = TRUE)
-
-# Country-clustered SE
-m5b <- lmtest::coeftest(m5b, vcov = sandwich::vcovCL(m5b, factor(df$cname1)))
-```
-
-```{r}
-df_m5cvars <- df %>%
-  dplyr::select(intensity, usbases_main, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
-  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
-  dplyr::mutate(milex = milex_sipri/1000) %>%
-  dplyr::select(-gdppc1_2010const, -milex_sipri)
-
-# Model
-m5c <- polr(intensity ~ .,
-           data = df_m5cvars,
-           method = "probit",
-           Hess = TRUE)
-
-# Country-clustered SE
-m5c <- lmtest::coeftest(m5c, vcov = sandwich::vcovCL(m5c, factor(df$cname1)))
-```
-
-```{r}
-models <- list(m5a, m5b, m5c)
-
-texreg::screenreg(models,
-               stars = c(0.01, 0.05, 0.1),
-               omit.coef = "(y)",
-               custom.coef.names = c("US bases hosted",
-                                     "Russia distance",
-                                     "Democracy",
-                                     "Nuclear power",
-                                     "Population",
-                                     "GDP per cap",
-                                     "Mil. spending"),
-               groups = (list("Independent Variables" = 1:2, "Controls" = 3:7)),
-               custom.gof.rows = list("Observations" = c("376", "373", "346")), 
-               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
-               float.pos = "h!",
-               label="tab:alt5-results",
-               caption = "Intensity of Russian Intervention: Alternate deterrence variable",
+               label = "table:model",
+               float.pos = "h",
+               caption = "Intensity of Russian Intervention: Ordered Probit Results",
                use.packages = FALSE)
 ```
 

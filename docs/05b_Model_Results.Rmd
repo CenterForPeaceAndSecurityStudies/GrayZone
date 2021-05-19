@@ -300,7 +300,7 @@ We run the same models as above on a different sample. Here, we limit sample to 
 Replicate model 1 with the new sample.
 
 ```{r}
-# Use same variables as model 1 but subset to 
+# Use same variables as model 1 but subset to relevant states
 df_m4 <- df %>%
   dplyr::filter(relevant_conserv == 1)
 
