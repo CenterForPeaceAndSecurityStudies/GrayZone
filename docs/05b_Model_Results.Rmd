@@ -3,6 +3,13 @@ title: "05b Model Results"
 author: "Author names redacted"
 date: "`r Sys.Date()`"
 output:
+  bookdown::pdf_document2:
+    toc: yes
+    toc_depth: '5'
+    number_sections: yes
+  bookdown::word_document:
+    toc: no
+    toc_depth: '5'
   bookdown::html_notebook2:
     fig_height: 8
     fig_width: 12
@@ -12,13 +19,6 @@ output:
     toc_depth: 5
     toc_float:
       collapsed: yes
-  bookdown::word_document:
-    toc: no
-    toc_depth: '5'
-  bookdown::pdf_document2:
-    toc: yes
-    toc_depth: '5'
-    number_sections: yes
 site: bookdown::bookdown_site
 editor_options:
   chunk_output_type: inline
@@ -439,6 +439,150 @@ texreg::texreg(models_tr,
                   custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
                   custom.note = "All models are ordered probits and include year-fixed effects with country-clustered standard errors in parentheses.",
                   float.pos = "h!",
-                  caption = "Intensity of Russian Intervention: Odds Ratios",
+                  caption = "Odds Ratios",
                   file = paste0(here::here(), "/paper/figures/","model_or.tex"))
+```
+
+# With pre-NATO variable
+## Model 1
+```{r prenato model 1}
+# Select model 1 variables
+df_m1 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m1 <- polr(intensity ~ .,
+           data = df_m1,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
+```
+
+## Model 2
+```{r prenato model 2}
+# Select model 2 variables
+df_m2 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m2 <- polr(intensity ~ .,
+                 data = df_m2,
+                 method = "probit",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
+```
+
+## Model 3
+```{r prenato model 3}
+# Select model 3 variables
+df_m3 <- df %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m3 <- polr(intensity ~ .,
+           data = df_m3,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
+```
+
+## Model 4
+```{r prenato model 4}
+# Use same variables as model 1 but subset to relevant state sample
+df_m4 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m4vars <- df_m4 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, dplyr::starts_with("year_"))
+
+# Model
+m4 <- polr(intensity ~ .,
+           data = df_m4vars,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
+```
+
+## Model 5
+```{r prenato model 5}
+# Use same variables as model 2 but subset to relevant state sample
+df_m5 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m5vars <- df_m5 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::select(-gdppc1_2010const)
+
+# Model
+m5 <- polr(intensity ~ .,
+                 data = df_m5vars,
+                 method = "probit",
+                 Hess = TRUE)
+
+# Country-clustered SE
+m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
+```
+
+## Model 6
+```{r prenato model 6}
+# Use same variables as model 3 but subset to relevant state sample
+df_m6 <- df %>%
+  dplyr::filter(relevant_conserv == 1)
+
+df_m6vars <- df_m6 %>%
+  dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
+  dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
+  dplyr::mutate(milex = milex_sipri/1000) %>%
+  dplyr::select(-gdppc1_2010const, -milex_sipri)
+
+# Model
+m6 <- polr(intensity ~ .,
+           data = df_m6vars,
+           method = "probit",
+           Hess = TRUE)
+
+# Country-clustered SE
+m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
+```
+
+## Compiled results
+```{r prenato-results, results = 'asis'}
+# Make list of models
+models <- list(m1, m2, m3, m4, m5, m6)
+
+# Main coefficients
+texreg::texreg(models,
+               stars = c(0.01, 0.05, 0.1),
+               omit.coef = "(y)",
+               custom.coef.names = c("NATO member",
+                                     "NATO pre-member",
+                                     "Russia distance",
+                                     "Democracy",
+                                     "Nuclear power",
+                                     "Population",
+                                     "GDP per cap",
+                                     "Mil. spending"),
+               groups = (list("Independent Variables" = 1:3, "Controls" = 4:8)),
+               custom.gof.rows = list("Observations" = c("1,000", "921", "891", "376", "373", "346")), 
+               custom.header = list("Full sample" = 1:3, "Relevant states sample" = 4:6),
+               custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
+               label = "table:prenato-results",
+               float.pos = "h",
+               caption = "Pre-NATO Variable Robustness Check",
+               use.packages = FALSE,
+               file = paste0(here::here(), "/paper/figures/","model_appendix.tex"))
 ```
