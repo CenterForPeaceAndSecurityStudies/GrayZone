@@ -946,13 +946,15 @@ We run a set of alternate model specifications as robustness checks. Our results
 ## Alternate alliance measure
 NATO membership is a crude observable measure of alliances that proxy for deterrence. In \@ref(tab:prenato-results) use an alternate measure that also includes pre-NATO membership, which accounts for country-years in the PfP, MAP, or Intensified Dialogue stage regardless of contemporary NATO status (meaning a state in MAP at the time of this writing is considered pre-NATO even if it has not yet joined NATO). We run the new models using all models from both samples in the main text.
 
-```{r prenato model 1}
-# Make year dummies
+```{r model df prep}
+# Make year dummies and subset to European sample
 df <- df_full %>%
   fastDummies::dummy_cols(select_columns = 'year') %>%
   dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_")) %>%
   dplyr::filter(continent == "Europe")
+```
 
+```{r prenato model 1}
 # Select model 1 variables
 df_m1 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, dplyr::starts_with("year_"))
@@ -964,10 +966,10 @@ m1 <- polr(intensity ~ .,
            Hess = TRUE)
 
 # Country-clustered SE
-m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
+ m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
 ```
 
-```{r prenato model 2}
+```{r prenato model 2, eval = FALSE}
 # Select model 2 variables
 df_m2 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
@@ -984,7 +986,7 @@ m2 <- polr(intensity ~ .,
 m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
 ```
 
-```{r prenato model 3}
+```{r prenato model 3, eval = FALSE}
 # Select model 3 variables
 df_m3 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
@@ -1002,7 +1004,7 @@ m3 <- polr(intensity ~ .,
 m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
 ```
 
-```{r prenato model 4}
+```{r prenato model 4, eval = FALSE}
 # Use same variables as model 1 but subset to relevant state sample
 df_m4 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1020,7 +1022,7 @@ m4 <- polr(intensity ~ .,
 m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
 ```
 
-```{r prenato model 5}
+```{r prenato model 5, eval = FALSE}
 # Use same variables as model 2 but subset to relevant state sample
 df_m5 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1040,7 +1042,7 @@ m5 <- polr(intensity ~ .,
 m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
 ```
 
-```{r prenato model 6}
+```{r prenato model 6, eval = FALSE}
 # Use same variables as model 3 but subset to relevant state sample
 df_m6 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1061,7 +1063,7 @@ m6 <- polr(intensity ~ .,
 m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
 ```
 
-```{r prenato-results, results = 'asis'}
+```{r prenato-results, results = 'asis', eval = FALSE}
 # Make list of models
 models <- list(m1, m2, m3, m4, m5, m6)
 

@@ -751,7 +751,7 @@ df$cabbrev2 <- as.factor(df$cabbrev2)
 
 df$NATOmem_MEM <- factor(df$NATOmem_MEM, level = c("0", "1"), ordered = FALSE)
 df$nato_stage <- factor(df$nato_stage, levels = c("Non-member", "PfP", "IntDial", "MAP", "Full"), ordered = FALSE)
-df$prememb <- factor(df$nato_prememb, level = c("0", "1"), ordered = FALSE)
+df$nato_prememb <- factor(df$nato_prememb, level = c("0", "1"), ordered = FALSE)
 df$nuclear1 <- factor(df$nuclear1, level = c("0", "1"), ordered = FALSE)
 df$demo1 <- factor(df$demo1, level = c("0", "1"), ordered = FALSE)
 df$demo2 <- factor(df$demo2, level = c("0", "1"), ordered = FALSE)
