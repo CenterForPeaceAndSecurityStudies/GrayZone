@@ -128,7 +128,6 @@ fsu <- fsu %>%
 contig <- haven::read_dta(paste0(here::here(),"/inst/extdata/DirectContiguity320/contdird.dta"))
 
 contig <- contig %>%
-  dplyr::filter(year > 1945 & year < 1994) %>%
   dplyr::filter(state1no == 365) %>%
   dplyr::mutate(contig = conttype < 4) %>%
   dplyr::select(state2no, year, contig) %>%
@@ -166,8 +165,19 @@ full <- dplyr::left_join(full, fsu)
 full <- dplyr::left_join(full, contig)
 full <- dplyr::left_join(full, cyber)
 
+# Fix continents again, since they got lost in the merge
+full$continent <- countrycode::countrycode(full$country_code_cow, 'cown', 'continent')
+full$continent[full$country_code_cow %in% c("315", # Czech Republic
+                                            "316", # Czech Republic
+                                            "345", # Yugoslavia
+                                            "347", # Kosovo
+                                            "372", # Georgia
+                                            "640" #Turkey
+                                            )] <- "Europe"
+
+
 full <- full %>%
-  dplyr::mutate(relevant_conserv = continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1)) %>%
+  dplyr::mutate(relevant_conserv = (continent == "Europe" & (disphist == 1 | fsu_wp == 1 | contig == 1))) %>%
   dplyr::mutate(relevant_expansive = (disphist == 1 | fsu_wp == 1 | contig == 1 | interv == 1)) %>%
   dplyr::select(stateabb, country_code_cow, year, relevant_conserv, relevant_expansive)
 
@@ -741,6 +751,7 @@ df$cabbrev2 <- as.factor(df$cabbrev2)
 
 df$NATOmem_MEM <- factor(df$NATOmem_MEM, level = c("0", "1"), ordered = FALSE)
 df$nato_stage <- factor(df$nato_stage, levels = c("Non-member", "PfP", "IntDial", "MAP", "Full"), ordered = FALSE)
+df$prememb <- factor(df$nato_prememb, level = c("0", "1"), ordered = FALSE)
 df$nuclear1 <- factor(df$nuclear1, level = c("0", "1"), ordered = FALSE)
 df$demo1 <- factor(df$demo1, level = c("0", "1"), ordered = FALSE)
 df$demo2 <- factor(df$demo2, level = c("0", "1"), ordered = FALSE)

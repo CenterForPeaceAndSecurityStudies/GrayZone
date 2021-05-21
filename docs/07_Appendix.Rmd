@@ -710,27 +710,19 @@ The complete dataset is provided in the appropriate .csv file. It includes sourc
 ## Summary statistics
 Although data was compiled on Russian intervention against all states from 1994-2018, the statistical analysis is limited to a sample from European states. In alignment with that, Table \@ref(tab:summary-stats) present descriptive statistics of the sample used in the models provided in the main text.
 
-```{r subset}
+```{r summary-stats, results = 'asis'}
 df_full <- readRDS(paste0(here::here(), '/data/grayzone_model.rds'))
 
-# Limit sample to just European states
-df <- df_full %>%
-  dplyr::filter(continent == "Europe")
-
-# Subset to variables used in the model
-df_vars <- df %>%
+df_full %>%
+  dplyr::filter(continent == "Europe") %>%
   dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, cinc_ratio) %>%
   dplyr::mutate(gdppc = gdppc1_2010const/1000) %>%
   dplyr::mutate(milex = milex_sipri/1000) %>%
   dplyr::select(-gdppc1_2010const, -milex_sipri) %>%
   dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
   dplyr::mutate_if(is.factor, as.character) %>%
-  dplyr::mutate_if(is.character, as.numeric)
-```
-
-```{r summary-stats, results = 'asis'}
-stargazer::stargazer(df_vars, 
-                     title = "Covariate Summary Statistics",
+  dplyr::mutate_if(is.character, as.numeric) %>%
+  stargazer::stargazer(title = "Covariate Summary Statistics",
                      covariate.labels = c("Intensity", "NATO member", "Dist. from Russia (minimum, log)", "Democracy", "Nuclear state", "Population (log)", "CINC ratio", "GDP per capita", "Military expenditure"),
                      digits = 1,
                      notes = "Sample includes all European states (1994-2018). Binary variables converted to numeric.",
@@ -776,7 +768,7 @@ The bivariate correlations between the DV and the two EVs are shown in Figure \@
 
 ```{r correlation, fig.cap = "Bivariate correlation of dependent and independent variables", results = 'asis', out.width = '90%'}
 # DV and EV correlation
-df %>%
+df_full %>%
   dplyr::select(intensity, 
                 NATOmem_MEM, lnmindistkm_rus) %>%
   dplyr::mutate(NATOmem_MEM = as.numeric(NATOmem_MEM),
@@ -954,13 +946,12 @@ We run a set of alternate model specifications as robustness checks. Our results
 ## Alternate alliance measure
 NATO membership is a crude observable measure of alliances that proxy for deterrence. In \@ref(tab:prenato-results) use an alternate measure that also includes pre-NATO membership, which accounts for country-years in the PfP, MAP, or Intensified Dialogue stage regardless of contemporary NATO status (meaning a state in MAP at the time of this writing is considered pre-NATO even if it has not yet joined NATO). We run the new models using all models from both samples in the main text.
 
-```{r prenato models}
-# For models 1-3, use European subset of the data
-df <- df_full %>% 
+```{r prenato model 1}
+# Make year dummies
+df <- df_full %>%
+  fastDummies::dummy_cols(select_columns = 'year') %>%
+  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_")) %>%
   dplyr::filter(continent == "Europe")
-
-df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
-  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
 
 # Select model 1 variables
 df_m1 <- df %>%
@@ -974,7 +965,9 @@ m1 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m1 <- lmtest::coeftest(m1, vcov = sandwich::vcovCL(m1, factor(df$cname1)))
+```
 
+```{r prenato model 2}
 # Select model 2 variables
 df_m2 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, dplyr::starts_with("year_")) %>%
@@ -989,7 +982,9 @@ m2 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m2 <- lmtest::coeftest(m2, vcov = sandwich::vcovCL(m2, factor(df$cname1)))
+```
 
+```{r prenato model 3}
 # Select model 3 variables
 df_m3 <- df %>%
   dplyr::select(intensity, NATOmem_MEM, nato_prememb, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, dplyr::starts_with("year_")) %>%
@@ -1005,7 +1000,9 @@ m3 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m3 <- lmtest::coeftest(m3, vcov = sandwich::vcovCL(m3, factor(df$cname1)))
+```
 
+```{r prenato model 4}
 # Use same variables as model 1 but subset to relevant state sample
 df_m4 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1021,7 +1018,9 @@ m4 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
+```
 
+```{r prenato model 5}
 # Use same variables as model 2 but subset to 
 df_m5 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1039,7 +1038,9 @@ m5 <- polr(intensity ~ .,
 
 # Country-clustered SE
 m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
+```
 
+```{r prenato model 6}
 # Use same variables as model 3 but subset to 
 df_m6 <- df %>%
   dplyr::filter(relevant_conserv == 1)
@@ -1065,7 +1066,7 @@ m6 <- lmtest::coeftest(m6, vcov = sandwich::vcovCL(m6, factor(df_m6$cname1)))
 models <- list(m1, m2, m3, m4, m5, m6)
 
 # Main coefficients
-texreg::screenreg(models,
+texreg::texreg(models,
                stars = c(0.01, 0.05, 0.1),
                omit.coef = "(y)",
                custom.coef.names = c("NATO member",
@@ -1097,9 +1098,6 @@ Given the difficulty of interpreting ordered probit coefficients, Table 2 show t
 Although an ordered probit model is most appropriate given the dependent variable (intensity) is ordinal, we ensure that the sign on our coefficients are consistent with an OLS model that treats intensity as a continuous variable. See Table \@ref(tab:ols-results).
 
 ```{r ols model 1}
-df <- fastDummies::dummy_cols(df, select_columns = 'year') %>%
-  dplyr::mutate_each(dplyr::funs(factor(.)), dplyr::starts_with("year_"))
-
 # Select model 1 variables
 df_m1 <- df %>%
   dplyr::select(year, cname1, intensity, NATOmem_MEM, lnmindistkm_rus) %>%
@@ -1253,7 +1251,7 @@ texreg::texreg(models,
                custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
                float.pos = "h!",
                label="tab:ols-results",
-               caption = "Intensity of Russian Intervention: OLS Results",
+               caption = "OLS Results",
                use.packages = FALSE)
 ```
 
@@ -1391,7 +1389,7 @@ texreg::texreg(models,
                custom.note = "All models include year-fixed effects with country-clustered standard errors in parentheses. %stars",
                float.pos = "h!",
                label="tab:ordered-logit-results",
-               caption = "Intensity of Russian Intervention: Ordered Logit Results",
+               caption = "Ordered Logit Results",
                use.packages = FALSE)
 ```
 
@@ -1400,7 +1398,9 @@ texreg::texreg(models,
 Models 2, 3, 5, and 6 lose some observations due to missing values for control variables; primarily those not available after 2012. Variables with missing data are shown in Figure \@ref(fig:missingness), with all but CINC being used in the models in the main text. We do not use the CINC ratio variable because listwise delection would lose 25\% of our observations in a biased manner given the missingness is for all observations after 2012. Instead, the main model uses population and SIPRI military expenditure variables which adequately proxy for CINC given they are 2 of CINC's 6 components. When imputing missing values, we replace the population and military expenditure variables with CINC since it is more commonly used as an observable indicator for military power, the concept of interest.
 
 ```{r missingness, fig.cap = "Number of missing observations for each variable in the dataset", results = 'asis', out.width = '80%'}
-naniar::gg_miss_var(df_vars)
+df %>%
+  dplyr::select(intensity, NATOmem_MEM, lnmindistkm_rus, demo1, nuclear1, gdppc1_2010const, lnpop1, milex_sipri, cinc_ratio) %>%
+  naniar::gg_miss_var()
 ```
 
 Missing values are calculated using bootstrap re-sampling across 10 different imputations using predictive mean matching [@buuren_fullyconditionalspecification_2006; @white_multipleimputationusing_2011]. The imputation predictions account for the temporal nature of the data. The same ordinal probit for each model is run across all 10 imputations and the coefficient estimates and standard errors are pooled across the 10 imputations to account for uncertainty produced by variation across the imputations. Variables not included in the main regression like ethno-linguistic fractionalization, and GDP per capita are included to increase the predictive performance of the imputation for variables that the literature suggests are correlated with the variables being imputed.
@@ -1651,13 +1651,13 @@ texreg::texreg(models_tr,
                float.pos = "h!",
                label="tab:nonimpute-results",
                use.packages = FALSE,
-               caption = "Intensity of Russian Intervention: Odds Ratios (non-imputed models)")
+               caption = "Odds Ratios (non-imputed models)")
 ```
 
 ## Targeted states sample
 We run the same models on a third sample of just targeted states as empirical support for the endogeneous bargaining and information asymmetry model extension offered in section 1.6 in the appendix. This includes only country-years that were targets of Russian aggression, meaning the intensity variable is greater than 0. Those results are shown in Table \@ref(tab:targets-results) and are consistent with the results produced by the other models.
 
-```{r, targeted-states, results = 'asis'}
+```{r targeted-states, results = 'asis'}
 df_target <- df %>%
   dplyr::filter(!intensity == 0) %>%
   dplyr::select(-dplyr::starts_with("year_"))
@@ -1729,7 +1729,7 @@ texreg::texreg(models,
                custom.note = "All models include year-fixed effects. %stars",
                float.pos = "h!",
                label="tab:targets-results",
-               caption = "Intensity of Russian Intervention: Targeted States Sample",
+               caption = "Targeted States Sample",
                use.packages = FALSE)
 ```
 
