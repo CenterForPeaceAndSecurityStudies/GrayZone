@@ -1021,7 +1021,7 @@ m4 <- lmtest::coeftest(m4, vcov = sandwich::vcovCL(m4, factor(df_m4$cname1)))
 ```
 
 ```{r prenato model 5}
-# Use same variables as model 2 but subset to 
+# Use same variables as model 2 but subset to relevant state sample
 df_m5 <- df %>%
   dplyr::filter(relevant_conserv == 1)
 
@@ -1041,7 +1041,7 @@ m5 <- lmtest::coeftest(m5, vcov = sandwich::vcovCL(m5, factor(df_m5$cname1)))
 ```
 
 ```{r prenato model 6}
-# Use same variables as model 3 but subset to 
+# Use same variables as model 3 but subset to relevant state sample
 df_m6 <- df %>%
   dplyr::filter(relevant_conserv == 1)
 
