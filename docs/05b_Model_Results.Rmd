@@ -441,6 +441,8 @@ texreg::texreg(models_tr,
                   float.pos = "h!",
                   caption = "Odds Ratios",
                   file = paste0(here::here(), "/paper/figures/","model_or.tex"))
+
+
 ```
 
 # With pre-NATO variable
