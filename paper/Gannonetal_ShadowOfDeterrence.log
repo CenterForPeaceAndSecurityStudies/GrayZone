@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.13)  10 MAR 2023 15:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.13)  10 MAR 2023 17:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -734,24 +734,24 @@ File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 ) (./Gannonetal_ShadowOfDeterrence.aux)
 \openout1 = `Gannonetal_ShadowOfDeterrence.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 123.
-LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 121.
+LaTeX Font Info:    ... okay on input line 121.
  (/home/andresgannon/.TinyTeX/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count343
@@ -814,7 +814,7 @@ Package caption Info: End \AtBeginDocument code.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 123.
+Package hyperref Info: Link coloring OFF on input line 121.
 (./Gannonetal_ShadowOfDeterrence.out) (./Gannonetal_ShadowOfDeterrence.out)
 \@outlinefile=\write4
 \openout4 = `Gannonetal_ShadowOfDeterrence.out'.
@@ -822,66 +822,66 @@ Package hyperref Info: Link coloring OFF on input line 123.
 
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 126.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 124.
 (/home/andresgannon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 126.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 124.
  (/home/andresgannon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 126.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 124.
  (/home/andresgannon/.TinyTeX/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 ) [0
 
 {/home/andresgannon/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [1] [2] [3] [4] [5] [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 207--224
+Underfull \hbox (badness 10000) in paragraph at lines 203--220
 
  []
 
 [8] [9] [10] [11] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 261--262
+Underfull \hbox (badness 10000) in paragraph at lines 257--258
 []\T1/cmr/m/n/10.95 C's se-lec-tion across these five po-ten-tial chal-lenges (i.e. se-lect-ing $\OML/cmm/m/it/10.95 g[] \OMS/cmsy/m/n/10.95 2
  []
 
 
-Overfull \hbox (10.16055pt too wide) in paragraph at lines 368--369
+Overfull \hbox (10.16055pt too wide) in paragraph at lines 364--365
 [][]
  []
 
 
-Overfull \hbox (17.93835pt too wide) in paragraph at lines 475--476
+Overfull \hbox (17.93835pt too wide) in paragraph at lines 471--472
 [][] 
  []
 
 
-Overfull \hbox (17.93835pt too wide) in paragraph at lines 583--584
+Overfull \hbox (17.93835pt too wide) in paragraph at lines 579--580
 [][] 
  []
 
 [13] [14] [15]
-Overfull \hbox (7.781pt too wide) in paragraph at lines 766--767
+Overfull \hbox (7.781pt too wide) in paragraph at lines 762--763
 [][]
  []
 
 
-Overfull \hbox (7.781pt too wide) in paragraph at lines 927--928
+Overfull \hbox (7.781pt too wide) in paragraph at lines 923--924
 [][] 
  []
 
 [16] [17]
-Underfull \hbox (badness 1424) in paragraph at lines 950--954
+Underfull \hbox (badness 1424) in paragraph at lines 946--950
 []\T1/cmr/m/it/10.95 Sometimes War, In-ter-nal Ef-fi-ciency Binds: \T1/cmr/m/n/10.95 C sets $\OML/cmm/m/it/10.95 g[] \OT1/cmr/m/n/10.95 = \OML/cmm/m/it/10.95 g[]$ \T1/cmr/m/n/10.95 if $\OML/cmm/m/it/10.95 g[] > g[]$\T1/cmr/m/n/10.95 ,
  []
 
 [18] [19] [20] [21] [22] [23] [24]
-Underfull \hbox (badness 3735) in paragraph at lines 1475--1475
+Underfull \hbox (badness 3735) in paragraph at lines 1471--1471
 []|\T1/cmr/m/n/10.95 C's se-lected chal-lenge in-ten-sity un-der a range of $\OML/cmm/m/it/10.95 ^^L[]$\T1/cmr/m/n/10.95 's are plot-ted. $\OML/cmm/m/it/10.95 ^^L[]$ \T1/cmr/m/n/10.95 is where
  []
 
 
-Underfull \hbox (badness 3138) in paragraph at lines 1475--1475
+Underfull \hbox (badness 3138) in paragraph at lines 1471--1471
 \OT1/cmr/m/n/10.95 (1 \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 !\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ^^R [] \OT1/cmr/m/n/10.95 + \OML/cmm/m/it/10.95 ! [] \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 ^^L[] [][] \OT1/cmr/m/n/10.95 = \OML/cmm/m/it/10.95 ^^R [] \OMS/cmsy/m/n/10.95 ^^@
  []
 
@@ -892,13 +892,13 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 <./figures//average_intensity_russian_aggression.png, id=550, 542.025pt x 361.35pt>
 File: ./figures//average_intensity_russian_aggression.png Graphic file (type png)
 <use ./figures//average_intensity_russian_aggression.png>
-Package pdftex.def Info: ./figures//average_intensity_russian_aggression.png  used on input line 1497.
+Package pdftex.def Info: ./figures//average_intensity_russian_aggression.png  used on input line 1493.
 (pdftex.def)             Requested size: 469.75502pt x 313.181pt.
  [28 <./figures//average_intensity_russian_aggression.png>]
 <./figures//map_aggregate_europe.png, id=559, 542.025pt x 361.35pt>
 File: ./figures//map_aggregate_europe.png Graphic file (type png)
 <use ./figures//map_aggregate_europe.png>
-Package pdftex.def Info: ./figures//map_aggregate_europe.png  used on input line 1507.
+Package pdftex.def Info: ./figures//map_aggregate_europe.png  used on input line 1503.
 (pdftex.def)             Requested size: 469.75502pt x 313.181pt.
  [29 <./figures//map_aggregate_europe.png (PNG copy)>] [30] (./figures/model.tex
 Overfull \hbox (6.52686pt too wide) in paragraph at lines 4--33
@@ -906,12 +906,12 @@ Overfull \hbox (6.52686pt too wide) in paragraph at lines 4--33
  []
 
 ) [31] [32] [33] [34] [35] [36]
-Overfull \hbox (4.29959pt too wide) in paragraph at lines 1709--1710
+Overfull \hbox (4.29959pt too wide) in paragraph at lines 1705--1706
 [][]
  []
 
 
-Overfull \hbox (4.29959pt too wide) in paragraph at lines 1878--1879
+Overfull \hbox (4.29959pt too wide) in paragraph at lines 1874--1875
 [][] 
  []
 
@@ -937,13 +937,13 @@ Package rerunfilecheck Info: File `Gannonetal_ShadowOfDeterrence.out' has not ch
 Here is how much of TeX's memory you used:
  37694 strings out of 474968
  878167 string characters out of 5774092
- 1324102 words of memory out of 5000000
+ 1324093 words of memory out of 5000000
  58308 multiletter control sequences out of 15000+600000
  499005 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  91i,15n,91p,3432b,2116s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/home/andresgannon/.TinyTeX/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/home/andresgannon/.TinyTeX/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbi1095.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb></home/andresgannon/.TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on Gannonetal_ShadowOfDeterrence.pdf (50 pages, 1143615 bytes).
+Output written on Gannonetal_ShadowOfDeterrence.pdf (50 pages, 1143663 bytes).
 PDF statistics:
  950 PDF objects out of 1000 (max. 8388607)
  816 compressed objects within 9 object streams
