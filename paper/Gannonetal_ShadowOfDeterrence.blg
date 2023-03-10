@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Gannonetal_ShadowOfDeterrence.aux
+The style file: apsr.bst
+Database file #1: GrayZone.bib
+Warning--empty institution in bragg_integrationreportgray_2017
+Warning--empty note in kenkel_uncertaintycrisisbargaining_2021
+You've used 92 entries,
+            2874 wiz_defined-function locations,
+            1155 strings with 19913 characters,
+and the built_in function-call counts, 293448 in all, are:
+= -- 47609
+> -- 2915
+< -- 2
++ -- 21509
+- -- 1101
+* -- 24179
+:= -- 60259
+add.period$ -- 375
+call.type$ -- 92
+change.case$ -- 1203
+chr.to.int$ -- 92
+cite$ -- 94
+duplicate$ -- 1390
+empty$ -- 3045
+format.name$ -- 1220
+if$ -- 52534
+int.to.chr$ -- 5
+int.to.str$ -- 0
+missing$ -- 92
+newline$ -- 393
+num.names$ -- 1001
+pop$ -- 424
+preamble$ -- 1
+purify$ -- 1380
+quote$ -- 0
+skip$ -- 1145
+stack$ -- 0
+substring$ -- 66193
+swap$ -- 177
+text.length$ -- 1290
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 338
+warning$ -- 2
+while$ -- 2124
+width$ -- 0
+write$ -- 1264
+(There were 2 warnings)

@@ -1,0 +1,36 @@
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{l c c c c c c}
+\hline
+ & \multicolumn{3}{c}{Full sample} & \multicolumn{3}{c}{Relevant states sample} \\
+\cline{2-4} \cline{5-7}
+ & Model 1 & Model 2 & Model 3 & Model 4 & Model 5 & Model 6 \\
+\hline
+Independent Variables &               &               &               &             &              &              \\
+                      &               &               &               &             &              &              \\
+\quad NATO distance   & $0.07^{*}$    & $0.10^{***}$  & $0.13^{***}$  & $0.10^{**}$ & $0.12^{***}$ & $0.14^{***}$ \\
+                      & $(0.04)$      & $(0.03)$      & $(0.03)$      & $(0.04)$    & $(0.04)$     & $(0.04)$     \\
+\quad Russia distance & $-0.10^{***}$ & $-0.10^{***}$ & $-0.12^{***}$ & $-0.04$     & $-0.08^{**}$ & $-0.09^{**}$ \\
+                      & $(0.03)$      & $(0.03)$      & $(0.03)$      & $(0.04)$    & $(0.04)$     & $(0.04)$     \\
+Controls              &               &               &               &             &              &              \\
+                      &               &               &               &             &              &              \\
+\quad Democracy       &               & $0.15$        & $0.43$        &             & $0.09$       & $0.40$       \\
+                      &               & $(0.41)$      & $(0.41)$      &             & $(0.42)$     & $(0.41)$     \\
+\quad Nuclear power   &               & $0.99^{**}$   & $0.44$        &             & $0.97^{*}$   & $0.98$       \\
+                      &               & $(0.44)$      & $(0.47)$      &             & $(0.50)$     & $(0.80)$     \\
+\quad Population      &               & $0.18^{**}$   & $0.12$        &             & $0.16^{*}$   & $0.17$       \\
+                      &               & $(0.09)$      & $(0.11)$      &             & $(0.09)$     & $(0.11)$     \\
+\quad GDP per cap     &               & $-0.01^{**}$  & $-0.01^{**}$  &             & $-0.01$      & $-0.01$      \\
+                      &               & $(0.01)$      & $(0.01)$      &             & $(0.01)$     & $(0.01)$     \\
+\quad Mil. spending   &               &               & $0.02^{*}$    &             &              & $0.00$       \\
+                      &               &               & $(0.01)$      &             &              & $(0.02)$     \\
+\hline
+Observations          & 1,000         & 921           & 891           & 376         & 373          & 346          \\
+\hline
+\multicolumn{7}{l}{\scriptsize{All models include year-fixed effects with country-clustered standard errors in parentheses. $^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{NATO Distance Measure Robustness Check}
+\label{table:alt-dist}
+\end{center}
+\end{table}

@@ -1,6 +1,6 @@
 ---
 title: "05a Model Preparation"
-author: Author names redacted
+author: J Andres Gannon
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -280,134 +280,110 @@ df <- df %>%
 
 ## Distance
 ### From US
-This is an independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the cshapes package.
+This is an independent variable of interest, coding how far the target state is from the US as the geographic proxy for deterrence. We code capital to capital distance using the 2022 release of the cshapes package.
 ```{r}
-# Capital distance
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
-
-df_dist <- df_dist %>%
-  dplyr::filter(numb == 2) %>%
-  dplyr::select(ida, numa, kmdist) %>%
-  dplyr::rename(capdistkm_us = kmdist, ccode1 = numa, cabbrev1 = ida)
-
-# Recode cabbrev1 for the UK and Romania, which are given 2 letter abbreviations
-df_dist$cabbrev1[df_dist$ccode1 == 200] <- "UKG"
-df_dist$cabbrev1[df_dist$ccode1 == 360] <- "ROM"
+# US based distance
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/cshapes_2.0_dist_COW.csv'), header = TRUE, sep = ",") %>%
+  dplyr::filter(ccode2 == 2 &
+                  year >= 1994) %>%
+  dplyr::select(year, ccode1, dplyr::ends_with("dist")) %>%
+  dplyr::rename(mindist_us = mindist,
+                capdist_us = capdist,
+                centdist_us = centdist)
 
 df <- dplyr::left_join(df, df_dist)
 
-## Fix edge cases where distance measures don't exist yet
-### Kosovo KOS 347. We calculate the great circle distance between Washington, DC and Pristina, Kosovo using distancecalculator.net. This is the same measure used in the cshapes package, which does not include Kosovo since it ends in 2008
-df$capdistkm_us[df$cabbrev1 == "KOS"] <- 7770
+# Fix edge cases
+## Kosovo KOS 347. We take the 2090 distance and apply it to 2008
+df$mindist_us[df$cabbrev1 == "KOS"] <- 6571.54
+df$capdist_us[df$cabbrev1 == "KOS"] <- 7790.441
+df$centdist_us[df$cabbrev1 == "KOS"] <- 9197.661
 
-### United States USA 2
-df$capdistkm_us[df$cabbrev1 == "USA"] <- 0
-
-# Minimum distance
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE, sep = " ")
-
-df_dist <- df_dist %>%
-  dplyr::filter(ccode2 == 2) %>%
-  dplyr::select(ccode1, mindist, year) %>%
-  round(df_dist$mindist) %>%
-  dplyr::rename(mindistkm_us = mindist)
-df <- dplyr::left_join(df, df_dist)
-
-## Fix edge cases. These values exist for other years, so we just paste them in for the years that are missing
-### Montenegro MNG 341
-df$mindistkm_us[df$cabbrev1 == "MNG"] <- 6451.2804
-
-### Kosovo KOS 347
-df$mindistkm_us[df$cabbrev1 == "KOS"] <- 6571.540
-
-### Saudi Arabia SAU 670
-df$mindistkm_us[df$cabbrev1 == "SAU"] <- 8457.862
+## Montenegro MNG 341
+df$mindist_us[df$cabbrev1 == "MNG"] <- 6450.735
+df$capdist_us[df$cabbrev1 == "MNG"] <- 7675.717
+df$centdist_us[df$cabbrev1 == "MNG"] <- 9108.594
 ```
 
 ### From Russia
 We code distance from Russia to control for Russian resolve using the same data as above.
 ```{r}
-# Capital distance
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/capdist.csv'), header = TRUE, sep = ",")
-
-df_dist <- df_dist %>%
-  dplyr::filter(numb == 365) %>%
-  dplyr::select(ida, numa, kmdist) %>%
-  dplyr::rename(capdistkm_rus = kmdist, ccode1 = numa, cabbrev1 = ida)
-
-# Recode cabbrev1 for the UK and Romania, which are given 2 letter abbreviations
-df_dist$cabbrev1[df_dist$ccode1 == 200] <- "UKG"
-df_dist$cabbrev1[df_dist$ccode1 == 360] <- "ROM"
+# Russia based distance
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/cshapes_2.0_dist_COW.csv'), header = TRUE, sep = ",") %>%
+  dplyr::filter(ccode2 == 365 &
+                  year >= 1994) %>%
+  dplyr::select(year, ccode1, dplyr::ends_with("dist")) %>%
+  dplyr::rename(mindist_rus = mindist,
+                capdist_rus = capdist,
+                centdist_rus = centdist)
 
 df <- dplyr::left_join(df, df_dist)
 
-## Edge cases
-### Kosovo
-df$capdistkm_rus[df$cabbrev1 == "KOS"] <- 1873
+# Edge cases
+## Kosovo KOS 347. We take the 2090 distance and apply it to 2008
+df$mindist_rus[df$cabbrev1 == "KOS"] <- 1220.7768
+df$capdist_rus[df$cabbrev1 == "KOS"] <- 1875.417
+df$centdist_rus[df$cabbrev1 == "KOS"] <- 5247.687
 
-## Russia
-df$capdistkm_rus[df$cabbrev1 == "RUS"] <- 0
-
-# Minimum distance
-df_dist <- read.table(paste0(here::here(), '/inst/extdata/distance.txt'), header = TRUE, sep = " ")
-
-df_dist <- df_dist %>%
-  dplyr::filter(ccode2 == 365) %>%
-  dplyr::select(ccode1, mindist, year) %>%
-  round(df_dist$mindist) %>%
-  dplyr::rename(mindistkm_rus = mindist)
-
-df <- dplyr::left_join(df, df_dist)
-
-## Fix edge cases. These values exist for other years, so we just paste them in for the years that are missing
-### Kosovo KOS 347
-df$mindistkm_rus[df$cabbrev1 == "KOS"] <- 1223.033956969140035653
-
-### Montenegro
-df$mindistkm_rus[df$cabbrev1 == "MNG"] <- 1211
-
-### Saudi Arabia
-df$mindistkm_rus[df$cabbrev1 == "SAU"] <- 1206.6503
-
-# Round distance columns to the nearest kilometer
-df$capdistkm_us <- round(df$capdistkm_us)
-df$mindistkm_us <- round(df$mindistkm_us)
-
-df$capdistkm_rus <- round(df$capdistkm_rus)
-df$mindistkm_rus <- round(df$mindistkm_rus)
+## Montenegro MNG 341
+df$mindist_rus[df$cabbrev1 == "MNG"] <- 1212.709
+df$capdist_rus[df$cabbrev1 == "MNG"] <- 1984.534
+df$centdist_rus[df$cabbrev1 == "MNG"] <- 5312.238
 ```
 
-### Recent years
-For both countries and both measures, we do not have minimum distance data for 2017 and 2018. We impute the values from 2016 into each of those, with the assumption that land borders for European states have not changed since 2016
+### From NATO headquarters (Brussels) contingent on distance from Russia
+NATO HQ is in Brussels (capital of Belgium). and Supreme Headquarters Allied Powers Europe (SHAPE) and Allied Command Operations (ACO) are also in Belgium at Casteau and Mons.
+
+The NATO Defense College: Navigating Between Critical Analysis, Strategic Education, and Partnerships
+Trine Villumsen Berling and Brooke A. Smith-Windsor
+p 163-186
+
 ```{r}
-naniar::vis_miss(df)
+# NATO based capital distance
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/cshapes_2.0_dist_COW.csv'), header = TRUE, sep = ",") %>%
+  dplyr::filter(ccode2 == 211 &
+                  year >= 1994) %>%
+  dplyr::select(year, ccode1, capdist) %>%
+  dplyr::rename(capdist_natohq = capdist)
 
-# Create list of 2016 minimum distances
-mindist <- df %>%
-  dplyr::select(year, ccode1, mindistkm_us, mindistkm_rus) %>%
-  dplyr::filter(year == 2016) %>%
-  dplyr::select(-year) %>%
-  dplyr::rename(mindistkm_us_impute = mindistkm_us, mindistkm_rus_impute = mindistkm_rus)
+df <- dplyr::left_join(df, df_dist)
 
-# Convert that into a df with year values
-countries <- as.character(sort(unique(mindist$ccode1)))
+# Edge cases
+## Kosovo KOS 347. We take the 2090 distance and apply it to 2008
+df$capdist_natohq[df$cabbrev1 == "KOS"] <- 1568.424
 
-newdist <- data.frame(expand.grid(ccode1 = c(countries),
-                                  year = 2017:2018))
-newdist$ccode1 <- as.numeric(as.character(newdist$ccode1))
+## Montenegro MNG 341
+df$capdist_natohq[df$cabbrev1 == "MNG"] <- 1470.748
 
-newdist <- dplyr::left_join(newdist, mindist)
+# Create new var of relative NATO HQ to Russia distance. Higher values mean a state is closer to NATO than to Moscow
+df$capdist_natorelative <- df$capdist_rus - df$capdist_natohq
+```
 
-# Merge into original df
-df <- dplyr::left_join(df, newdist)
+### From any NATO member
+Calculate each state's distance from its nearest NATO member. NATO states are coded as distance 0
+```{r}
+df_dist <- read.table(paste0(here::here(), '/inst/extdata/cshapes_2.0_dist_COW.csv'), header = TRUE, sep = ",") %>%
+  dplyr::filter(year >= 1994) %>%
+  dplyr::select(year, ccode1, ccode2, capdist)
 
-# Replace NAs in original distance columns with new imputed columns and then delete imputed columns
-df <- df %>%
-  dplyr::mutate(mindistkm_us = dplyr::coalesce(mindistkm_us, mindistkm_us_impute)) %>%
-  dplyr::mutate(mindistkm_rus = dplyr::coalesce(mindistkm_rus, mindistkm_rus_impute)) %>%
-  dplyr::select(-mindistkm_us_impute, -mindistkm_rus_impute)
+nato <- read.csv(paste0(here::here(), "/data/membership.csv")) %>%
+  dplyr::mutate(ccode2 = countrycode::countrycode(state, "country.name", "cown")) %>%
+  dplyr::select(ccode2, join_nato_year)
 
-naniar::vis_miss(df)
+df_dist <- dplyr::left_join(df_dist, nato) %>%
+  dplyr::mutate(ccode2_nato = ifelse(join_nato_year <= year, 1, 0)) %>%
+  dplyr::filter(ccode2_nato == 1)
+
+df_natodist <- df_dist %>%
+  dplyr::select(year, ccode1)
+
+df_natodist <- dplyr::left_join(df_natodist, df_dist) %>%
+  dplyr::group_by(year, ccode1) %>%
+  dplyr::slice(which.min(capdist)) %>%
+  dplyr::mutate(capdist_natomin = capdist) %>%
+  dplyr::select(year, ccode1, capdist_natomin)
+
+df <- dplyr::left_join(df, df_natodist)
 ```
 
 ## NATO membership
@@ -466,7 +442,7 @@ df <- df %>%
   dplyr::mutate(nato_stage = dplyr::if_else(is.na(nato_stage), "Non-member", nato_stage)) %>%
   dplyr::mutate(nato_memb_duration = year - join_nato_year) %>%
   dplyr::mutate(nato_memb = ifelse(nato_memb_duration >= 0, 1, 0)) %>%
-  dplyr::mutate(nato_memb_duration = dplyr::if_else(nato_memb_duration < 0, 0, nato_memb_duration)) %>%
+  dplyr::mutate(nato_memb_duration = ifelse(nato_memb_duration < 0, 0, nato_memb_duration)) %>%
   dplyr::mutate(nato_prememb = dplyr::if_else(nato_stage %in% c("PfP", "IntDial", "MAP") , 1, 0)) %>%
   dplyr::mutate(nato_prememb = tidyr::replace_na(nato_prememb, 0)) %>%
   dplyr::rename(NATOmem_MEM = nato_memb, 
@@ -578,7 +554,6 @@ df <- dplyr::left_join(df, sipri)
 # Mil exp per capita
 sipri <- read.csv(paste0(here::here(), "/inst/extdata/sipri_milexpercap.csv"))
 df <- dplyr::left_join(df, sipri)
-
 ```
 
 ## Regime type
@@ -775,10 +750,17 @@ df <- df %>%
 
 # Log distance and GDP measures
 # Add 1.01 to account for values of 0 in distance
-df$lncapdistkm_us <- log(df$capdistkm_us + 1.01)
-df$lnmindistkm_us <- log(df$mindistkm_us + 1.01)
-df$lncapdistkm_rus <- log(df$capdistkm_rus + 1.01)
-df$lnmindistkm_rus <- log(df$mindistkm_rus + 1.01)
+df$lncapdist_us <- log(df$capdist_us + 1.01)
+df$lnmindist_us <- log(df$mindist_us + 1.01)
+df$lncentdist_us <- log(df$centdist_us + 1.01)
+
+df$lncapdist_rus <- log(df$capdist_rus + 1.01)
+df$lnmindist_rus <- log(df$mindist_rus + 1.01)
+df$lncentdist_rus <- log(df$centdist_rus + 1.01)
+
+df$lncapdist_natohq <- log(df$capdist_natohq + 1.01)
+df$lncapdist_natorelative <- log(df$capdist_natorelative + 1.01 + abs(min(df$capdist_natorelative)))
+df$lncapdist_natomin <- log(df$capdist_natomin + 1.01)
 
 # Log gdp measures
 df$lngdp1_2010const <- log(df$gdp1_2010const)
@@ -800,8 +782,13 @@ df <- df %>%
                 cname2, cabbrev2, ccode2,
                 continent, relevant_expansive, relevant_conserv,
                 intensity,
-                capdistkm_us, mindistkm_us, capdistkm_rus, mindistkm_rus,
-                lncapdistkm_us, lnmindistkm_us, lncapdistkm_rus, lnmindistkm_rus,
+                capdist_us, mindist_us, centdist_us, 
+                lncapdist_us, lnmindist_us, lncentdist_us,
+                capdist_rus, mindist_rus, centdist_rus,
+                lncapdist_rus, lnmindist_rus, lncentdist_rus,
+                capdist_natohq, capdist_natorelative,
+                lncapdist_natohq, lncapdist_natorelative,
+                capdist_natomin, lncapdist_natomin,
                 NATOmem_MEM, NATOdur_MEM, nato_stage, nato_prememb,
                 cinc1, cinc2, cinc_ratio,
                 milex_sipri, milexpercap_sipri,
